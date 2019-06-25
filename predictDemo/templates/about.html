@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="jumbotron">
+          <a href="{% url 'home' %}">
+            <img src={% static "images/prediCt_logo_transparent.png" %} width="300px" alt="PrediCt logo"> 
+          </a>
+        </div>
+        <h2>Application</h2>
+        <h2>Contact</h2>
+        <p>Institute for Medical Informatics and Biometry [<a href="https://tu-dresden.de/med/mf/imb">homepage</a>]<br />
+Medizinische Fakultät Carl Gustav Carus, Technische Universität Dresden<br/>
+If you have any questions or recommendations please contact Katja Hoffmann. <p>
+        <h2>Disclaimer</h2>
+        <p>The demo server is provided to the research community in good faith without guarantees of any kind.</p>
+        <h2>Licenses</h2>
+    </div>
+{% endblock content %}

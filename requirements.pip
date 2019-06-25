@@ -1,0 +1,31 @@
+# This file collects all required third-party applications that are needed
+# to run this project. Later you can install all these apps in a row
+# using pip. Example::
+#
+#     pip install -r requirements.pip
+
+# Django
+django==2.2.1
+
+# postgresSQL adapter for python
+psycopg2==2.7.7
+psycopg2-binary==2.7.7
+
+# rendering datepicker
+django-bootstrap4==0.0.8
+#django-bootstrap-datepicker-plus==3.0.5
+
+# Documentation tool with collected packages
+Sphinx==1.8.5
+
+# Managing temporary guest accounts
+django-lazysignup==2.0.0
+
+# Dashboard application framework
+#dash==0.42.0 # the core dash backend
+#dash-daq==0.1.0 # DAQ components
+dash-renderer
+dash-core-components
+dash-html-components
+django_plotly_dash==0.9.11
+

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load plotly_dash %}
+
+{% block title %}Dash Example{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Dash Example</h1>
+    {% plotly_app name="WebsocketExample" ratio=0.5 %}
+  </div>
+{% endblock content %}
+

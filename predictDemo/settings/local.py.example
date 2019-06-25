@@ -1,0 +1,28 @@
+"""
+Example settings for local development
+
+Use this file as a base for your local development settings and copy
+it to predictDemo/settings/local.py. It should not be checked into
+your code repository.
+
+"""
+from predictDemo.settings.base import *
+
+ALLOWED_HOSTS = ['192.168.56.10']
+DEBUG = True
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+WSGI_APPLICATION = 'imbintra.wsgi.local.application'

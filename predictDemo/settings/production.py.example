@@ -1,0 +1,26 @@
+"""
+Setting file with local configuration. It should not be checked into your code repository.
+"""
+
+from predictDemo.settings.base import *
+
+ALLOWED_HOSTS = ['']
+
+DEBUG = False
+
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+WSGI_APPLICATION = 'predictDemo.wsgi.production.application'
