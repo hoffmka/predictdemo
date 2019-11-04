@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n lazysignup_tags %}
+{% load permission_tags %}
+
+{% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+
+{% block title %}
+  Document update
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_detail' document.trial.pk %}">Details of <strong>{{ document.trial.name }}</strong></a></li>
+            <li class="breadcrumb-item active" aria-current="page">Document update</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+    <h2>Document update</h2>
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        {{ form.media }}
+        <div class="row">
+        <div class="col-12">
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-success">Save changes</button>
+            <a href="{% url 'trials:trials_detail' document.trial.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+        </div>
+        </div>
+    </form>
+{% endblock %}

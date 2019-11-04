@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+
+{% block title %}
+  Trial update
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit trial</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="mb-4">
+    {% csrf_token %}
+    {{ form.media }}
+    <div class="row">
+      <div class="col-12">
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success">Save changes</button>
+        <a href="{% url 'trials:trials_detail' trial.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+      </div>
+    </div>
+  </form>
+{% endblock %}

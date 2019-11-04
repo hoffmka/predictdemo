@@ -85,6 +85,23 @@ a.adddetailslink {
     padding-left:19px;
 }
 
+a.downloadlink {
+    background:url("/static/images/download-2-16.ico") no-repeat left center;
+    padding-left:19px;
+}
+
+/* for diabled links */
+.isDisabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .isDisabled > a {
+    color: currentColor;
+    display: inline-block;  /* For IE11/ MS Edge bug */
+    pointer-events: none;
+    text-decoration: none;
+  }
+
 .list-inline-item:not(:last-child) {
     margin-right: 3rem;
 }

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- Title -->
+{% block title %}
+  Trials delete
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete trial</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete the trial with following values?</p>
+            <dl class="row">
+                <dt class="col-sm-3">Trial name:</dt>
+                <dd class="col-sm-9">{{ trial.name }}</dd>
+
+                <dt class="col-sm-3">Study code:</dt>
+                <dd class="col-sm-9">{{ trial.studyCode }}</dd>
+
+                <dt class="col-sm-3">Description:</dt>        
+                <dd class="col-sm-9">{{ trial.description }}</dd>
+
+                <dt class="col-sm-3"><a href="https://clinicaltrials.gov/">ClinicalTrials.gov:</a></dt>        
+                <dd class="col-sm-9">{{ trial.clinicalTrials }}</dd>
+
+                <dt class="col-sm-3">EutraCT:</dt>        
+                <dd class="col-sm-9">{{ trial.clinicalTrials }}</dd>
+
+                <dt class="col-sm-3">Created At:</dt>        
+                <dd class="col-sm-9">{{ trial.createdAt }}</dd>
+
+                <dt class="col-sm-3">Created by:</dt>        
+                <dd class="col-sm-9">{{ trial.createdBy }}</dd>
+            </dl>
+            <input class="btn btn-success" type="submit" value="Confirm">
+            <a href="{% url 'trials:trials_detail' trial.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}

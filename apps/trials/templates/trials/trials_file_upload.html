@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+<!-- Title -->
+{% block title %}
+  Trial Upload
+{% endblock %}
+
+<!-- breadcrumb -->
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'trials:trials_detail' trial.pk %}">Details of trial: {{ trial.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">File upload for trial: <strong>{{ trial.name }}</strong></li>        
+        </ol>
+{% endblock %}
+
+{% block content %}
+  <h2>File upload</h2>
+  <form method="post" class="mb-4" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+    <div class="row">
+      <div class="col-6">
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success">Upload file</button>
+        <a href="{% url 'trials:trials_detail' trial.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+      </div>
+    </div>
+  </form>
+{% endblock %}

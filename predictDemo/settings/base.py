@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     # my apps
     'apps.accounts',
     'apps.dashtest',
+    'apps.patients',
+    'apps.trials',
 
     #third party apps
-#    'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html
+    'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html
     'django_plotly_dash.apps.DjangoPlotlyDashConfig', # for implementation dash apps in django --> https://django-plotly-dash.readthedocs.io/en/latest/index.html
     'bootstrap4',
 #    'channels',
@@ -89,6 +91,9 @@ STATICFILES_DIRS = [
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 STATIC_ROOT = os.path.join(PROJECT_DIR,'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 #STATIC_ROOT = os.path.join(PROJECT_DIR, 'collectstatic')
@@ -174,6 +179,9 @@ AUTHENTICATION_BACKENDS = (
 #==============================================================================
 # Third party app settings
 #==============================================================================
+
+# for role permissions
+#-----------------------
 
 ROLEPERMISSIONS_MODULE = 'predictDemo.roles.base'
 ROLEPERMISSIONS_REGISTER_ADMIN = True

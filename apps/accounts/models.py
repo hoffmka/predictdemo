@@ -1,12 +1,8 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 
-"""# Create your models here.
-class User(AbstractUser):
-  USER_TYPE_CHOICES = (
-      (1, 'client'),
-      (2, 'consultant'),
-      (3, 'consultant_admin'),
-  )
+""" Override the default representation of user 'username' with 'lastname, firstname""" 
+# def get_full_name(self):
+#     return self.last_name + ', '+ self.first_name
 
-  user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)"""
+# User.add_to_class("__str__", get_full_name)

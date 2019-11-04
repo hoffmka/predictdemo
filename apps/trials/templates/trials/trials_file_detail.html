@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n lazysignup_tags %}
+{% load permission_tags %}
+
+{% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+
+{% block title %}
+  Document detail
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_detail' document.trial.pk %}">Details of <strong>{{ document.trial.name }}</strong></a></li>
+            <li class="breadcrumb-item active" aria-current="page">Document details</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+    <h2>Document details</h2>
+    <ul class="list-inline">
+        <li class="list-inline-item"><a class="changelink" href="{% url 'trials:trials_upload_update' document.pk %}">Edit</a></li>
+        {% comment %} <li class="list-inline-item"><a class="deletelink" href="{% url 'trials:trials_delete' trial.pk%}">Delete</a></li> {% endcomment %}
+    </ul>
+    <hr />
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Document:</dt>
+        <dd class="col-sm-9">{{ document.filename }}</dd>
+        <dt class="col-sm-3">Description:</dt>
+        <dd class="col-sm-9">{{ document.description|linebreaks }}</dd>
+        <dt class="col-sm-3">Uploaded at:</dt>
+        <dd class="col-sm-9">{{ document.uploaded_at }}</dd>
+        <dt class="col-sm-3">Uploaded by:</dt>
+        <dd class="col-sm-9">{{ document.uploaded_by }}</dd>
+    </dl>
+{% endblock content %}

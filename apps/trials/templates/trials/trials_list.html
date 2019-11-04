@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n lazysignup_tags %}
+{% load permission_tags %}
+<!-- Title -->
+{% block title %}
+  Trials
+{% endblock %}
+
+<!-- breadcrumb -->
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            {% comment %} <li class="breadcrumb-item"><a href="{% url 'planning:capacity_list' %}">List capacity</a></li> {% endcomment %}
+            <li class="breadcrumb-item active" aria-current="page">List trials</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+    <ul class="list-inline">
+    {% if user.is_authenticated and not user|is_lazy_user %}
+        <li class="list-inline-item"><a class="addlink" href="{% url 'trials:trials_create' %}">Add trial</a></li>
+    {% else %}
+        <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add trial</a></span></li>
+    {% endif %}
+    </ul>
+    <hr>
+    <table class="table">
+        <thead>
+            <th></th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>ClinicalTrials.gov</th>
+            <th>EudraCT</th>
+        </thead>
+        <tbody>
+            {% for trial in object_list %}
+                <tr>
+                    <td>
+                        {% can "access_trial" trial user=user as can_access_trial %}
+                        {% if can_access_trial %}
+                            <li class="list-inline-item"><a class="viewdetailslink" href="{% url 'trials:trials_detail' trial.pk %}">Details</a></li>
+                            {% else %}
+                            <li class="list-inline-item"><span class="isDisabled"><a class="viewdetailslink">Details</a></span></li>
+                        {% endif %}
+                    </td>
+                    <td>{{ trial.name }}</td>
+                    <td>{{ trial.studyCode }}</td>
+                    <td>{{ trial.clinicalTrials }}</td>
+                    <td>{{ trial.eudraCT }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

@@ -21,11 +21,14 @@ Sphinx==1.8.5
 # Managing temporary guest accounts
 django-lazysignup==2.0.0
 
+# Django Role permissions app
+django-role-permissions==2.2.1
+
 # Dashboard application framework
 #dash==0.42.0 # the core dash backend
 #dash-daq==0.1.0 # DAQ components
 dash-renderer
 dash-core-components
 dash-html-components
-django_plotly_dash==0.9.11
+django_plotly_dash==0.9.13
 

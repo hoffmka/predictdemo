@@ -37,7 +37,12 @@ urlpatterns = [
     path('convert/', include('lazysignup.urls')), #convert lazy accounts to real accounts
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('dash/', views.dashtest, name='dash'),
+    path('patients/', include('apps.patients.urls', namespace='patients')),
+    path('trials/', include('apps.trials.urls', namespace='trials')),
     
     # django_plotly_dash app
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
+
+if settings.DEBUG: # for serving media files locally
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
