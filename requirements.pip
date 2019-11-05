@@ -32,3 +32,4 @@ dash-core-components
 dash-html-components
 django_plotly_dash==0.9.13
 
+pandas==0.25.3
