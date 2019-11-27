@@ -5,11 +5,25 @@
 #     pip install -r requirements.pip
 
 # Django
-django==2.2.1
+django==2.2.7
 
 # postgresSQL adapter for python
 psycopg2==2.7.7
 psycopg2-binary==2.7.7
+
+# MS SQL adapter for python
+#sudo apt-get install unixodbc-dev
+pyodbc==4.0.27
+django-mssql-backend==2.3.0
+
+# MS SQL Driver (FreeTDS)
+# Install pre-requesite packages
+# sudo apt-get install unixodbc unixodbc-dev freetds-dev freetds-bin tdsodbc
+# set in odbcinst.ini -->
+#[FreeTDS]
+#Description = v0.91 with protocol v7.2
+#Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+
 
 # rendering datepicker
 django-bootstrap4==0.0.8

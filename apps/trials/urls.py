@@ -14,4 +14,5 @@ urlpatterns = [
     path('upload/<int:trial_pk>/', views.trials_file_upload, name='trials_file_upload'),
     path('upload/detail/<int:document_pk>/', TrialUploadDetailView.as_view(), name='trials_upload_detail'),
     path('upload/edit/<int:document_pk>/', TrialUploadUpdateView.as_view(), name='trials_upload_update'),
+    path('destiny/view1/', views.cml_destiny_view1, name='cml_destiny_view1'),
 ]
