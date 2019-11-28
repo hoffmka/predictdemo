@@ -44,7 +44,14 @@ django-lazysignup==2.0.0
 # Django Role permissions app
 django-role-permissions==2.2.1
 
-# 
+# Rendering data tables
+django-tables2==2.2.1
+
+# Django Filter / Search app
+django-filter==2.2.0
+
+# Export data tables
+tablib==0.13.0
 
 # Dashboard application framework
 #dash==0.42.0 # the core dash backend

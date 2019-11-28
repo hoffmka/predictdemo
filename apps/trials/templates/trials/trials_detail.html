@@ -101,42 +101,51 @@
 
     <h2>Permissions</h2>
     {% can "admin_trial" trial user=user as can_admin_trial %}
-        <ul class="list-inline">
-            {% if can_admin_trial %}
-                <li class="list-inline-item"><a class="addlink" href="">Add permission</a></li>
-            {% else %}
-                <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add permission</a></span></li>
-            {% endif %}
-        </ul>
-        {% if trial.trialpermission_set.all %}   
-            <p>In addition to the full access of the creator, access rights are set as follows.</p>
-            <table class="table">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>User</th>
-                        <th>Permission</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-            {% for permission in trial.trialpermission_set.all %}
-                <tr>
-                    <td>{{ permission.user }}</td>
-                    <td>{{ permission.get_permission_display }}</td>
-                    {% if can_admin_trial %}
-                        <td><a class="changelink" href="">Edit</a></td>
-                        <td><a class="deletelink" href="">Delete</a></td>
-                    {% else %}
-                        <td><span class="isDisabled"><a class="changelink">Edit</a></span></td>
-                        <td><span class="isDisabled"><a class="deletelink">Delete</a></span></td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </table>
+    <ul class="list-inline">
+        {% if can_admin_trial %}
+            <li class="list-inline-item"><a class="addlink" href="">Add permission</a></li>
         {% else %}
-            <p>No further permissions available. Only the trial creator has full access.</p>
+            <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add permission</a></span></li>
         {% endif %}
-        <div class="alert alert-info" role="alert">
-            At present, add, edit and delete permissions aren't implemented in frontend. Changes can be done by admins via Django admin site.
-        </div>
+    </ul>
+    {% if trial.trialpermission_set.all %}
+        <p>In addition to the full access of the creator, access rights are set as follows.</p>
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>User</th>
+                    <th>Permission</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        {% for permission in trial.trialpermission_set.all %}
+            <tr>
+                <td>{{ permission.user }}</td>
+                <td>{{ permission.get_permission_display }}</td>
+                {% if can_admin_trial %}
+                    <td><a class="changelink" href="">Edit</a></td>
+                    <td><a class="deletelink" href="">Delete</a></td>
+                {% else %}
+                    <td><span class="isDisabled"><a class="changelink">Edit</a></span></td>
+                    <td><span class="isDisabled"><a class="deletelink">Delete</a></span></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p>No further permissions available. Only the trial creator has full access.</p>
+    {% endif %}
+    <div class="alert alert-info" role="alert">
+        At present, add, edit and delete permissions aren't implemented in frontend. Changes can be done by admins via Django admin site.
+    </div>
+    <hr />
+    <h2>User defined views</h2>
+    {% if trial.id == 18 %}
+        <ul>
+            <li><a href={% url 'udv_destiny:cml_destiny_view1' %}>CML Destiny View bla<a></li>
+            <li>View blu</li>
+            <li>View blub</li>
+        </ul>
+    {% endif %}
 {% endblock content %}

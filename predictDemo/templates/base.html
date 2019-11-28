@@ -45,15 +45,11 @@
                                             <a class="dropdown-item" href="#">Submenu</a>
                                         </div>
                                     </li>
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="Trials" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <li class="nav.item">
+                                        <a class="nav-link" href="{% url 'trials:trials_list' %}">
                                         Trials
-                                        </a>
-                                        <!--consulting menu-->
-                                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="Trials">
-                                            <a class="dropdown-item" href="{% url 'trials:trials_list' %}">List</a>
-                                        </div>
-                                    </li>
+                                        </a>                                        
+                                    </li>                                    
                                     <li class="nav.item">
                                         <a class="nav-link" href="{% url 'dash' %}">
                                         DashExample
