@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}
+  Destiny View1
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Destiny view 1</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+    {% for study in studies %}
+        <tr>
+            <td>
+            {{ study.StudyCode }}
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock content %}

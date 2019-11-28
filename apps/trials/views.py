@@ -1,4 +1,3 @@
-from django.db import connections, transaction
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse,reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
@@ -124,20 +123,3 @@ class TrialUploadUpdateView(HasObjectPermissionMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('trials:trials_upload_detail', kwargs={'document_pk' : self.object.pk})
-
-def cml_destiny_view1(request):
-    with connections['HaematoOPT'].cursor() as cursor:
-        cursor.execute('Select * from studies')
-        studies =  cursor.fetchall()
-    
-    return render(request, 'trials/cml_destiny_view1.html', {
-        "studies": studies,
-    })
-
-def dictfetchall(cursor):
-    "Return all rows from a cursor as a dict"
-    columns = [col[0] for col in cursor.description]
-    return [
-        dict(zip(columns, row))
-        for row in cursor.fetchall()
-    ]

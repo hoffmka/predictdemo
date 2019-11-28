@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'apps.dashtest',
     'apps.patients',
     'apps.trials',
+    'apps.udv_destiny', # user defined views for destiny trial
 
     #third party apps
     'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html

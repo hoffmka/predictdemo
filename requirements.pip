@@ -11,10 +11,16 @@ django==2.2.7
 psycopg2==2.7.7
 psycopg2-binary==2.7.7
 
+# MS SQLDriver
+#install dependencies
+#sudo apt-get install libc6 libstdc++6 libkrb5-3 libcurl3 openssl debconf unixodbc unixodbc-dev
+#install Driver
+#sudo dpkg -i msodbcsql17_17.4.2.1-1_amd64.deb
+
 # MS SQL adapter for python
-#sudo apt-get install unixodbc-dev
 pyodbc==4.0.27
 django-mssql-backend==2.3.0
+
 
 # MS SQL Driver (FreeTDS)
 # Install pre-requesite packages
@@ -37,6 +43,8 @@ django-lazysignup==2.0.0
 
 # Django Role permissions app
 django-role-permissions==2.2.1
+
+# 
 
 # Dashboard application framework
 #dash==0.42.0 # the core dash backend
