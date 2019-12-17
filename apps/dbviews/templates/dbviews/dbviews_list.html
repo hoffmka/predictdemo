@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load django_tables2 %}
+
+{% block title %}
+  Views
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item active"><a href="">Views list</a></li>
+            {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+        </ol>
+{% endblock %}
+
+
+{% block content %}
+    <div class="alert alert-primary" role="alert">
+    Here a filter will be implemented to search for a views.
+    </div>
+    {% comment %} {% render_table table %} {% endcomment %}
+{% endblock content %}

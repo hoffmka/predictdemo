@@ -3,7 +3,7 @@ from .models import Trial, TrialPermission, Document
 # Register your models here.
 
 class TrialAdmin(admin.ModelAdmin):
-    list_display = ('studyCode', 'name', 'description', 'clinicalTrials', 'eudraCT', 'createdAt', 'createdBy')
+    list_display = ('studyCode', 'name', 'description', 'clinicalTrials', 'eudraCT', 'hopt_studyid', 'disease', 'createdAt', 'createdBy')
 
 class TrialPermissionAdmin(admin.ModelAdmin):
     list_display = ('trial', 'user', 'permission', 'createdAt', 'createdBy')

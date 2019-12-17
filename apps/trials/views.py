@@ -15,7 +15,7 @@ class TrialListView(ListView):
     This view will list the trials
     """
     #allowed_roles = 'consultant_admin'
-    queryset = Trial.objects.all()
+    queryset = Trial.objects.order_by('name')
     context_object_name = 'trials_list'
     template_name = 'trials/trials_list.html'
 
@@ -64,7 +64,7 @@ class TrialUpdateView(HasObjectPermissionMixin, UpdateView):
     #allowed_roles = 'consultant_admin'
     checker_name = 'change_trial'
     model = Trial
-    fields =('studyCode', 'name', 'description', 'clinicalTrials', 'eudraCT')
+    fields =('studyCode', 'name', 'description', 'clinicalTrials', 'eudraCT', 'disease')
     template_name = 'trials/trials_update.html'
     pk_url_kwarg = 'trial_pk'
     context_object_name = 'trial'
@@ -112,7 +112,7 @@ class TrialUploadDetailView(HasObjectPermissionMixin, DetailView):
 
 class TrialUploadUpdateView(HasObjectPermissionMixin, UpdateView):
     """
-    This view will update a trial
+    This view will update a document
     """
     checker_name = 'access_trial_upload'
     model = Document
@@ -123,3 +123,16 @@ class TrialUploadUpdateView(HasObjectPermissionMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('trials:trials_upload_detail', kwargs={'document_pk' : self.object.pk})
+
+class TrialUploadDeleteView(HasObjectPermissionMixin, DeleteView):
+    """
+    This view will delete the trial
+    """
+    checker_name = 'access_trial_upload'
+    model = Document
+    template_name = 'trials/trials_file_delete.html'
+    pk_url_kwarg = 'document_pk'
+
+    def get_success_url(self):
+        trial = self.object.trial
+        return reverse_lazy('trials:trials_detail', kwargs={'trial_pk': trial.pk})

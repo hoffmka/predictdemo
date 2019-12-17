@@ -26,7 +26,7 @@
         <div class="col-12">
             {% bootstrap_form form %}
             <button type="submit" class="btn btn-success">Save changes</button>
-            <a href="{% url 'trials:trials_detail' document.trial.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+            <a href="{% url 'trials:trials_upload_detail' document.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
         </div>
         </div>
     </form>

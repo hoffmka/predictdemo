@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load django_tables2 %}
+
+{% block title %}
+  Diagnostic values
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item active"><a href="">Diagnostic values</a></li>
+            {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+        </ol>
+{% endblock %}
+
+
+{% block content %}
+    <div class="alert alert-primary" role="alert">
+    Here a filter will be implemented to search for a specific checkupvalues.
+    </div>
+    {% render_table sdv_diagnostic_values_table %}
+{% endblock content %}

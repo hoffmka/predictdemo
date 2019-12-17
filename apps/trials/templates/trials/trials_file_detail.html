@@ -21,7 +21,7 @@
     <h2>Document details</h2>
     <ul class="list-inline">
         <li class="list-inline-item"><a class="changelink" href="{% url 'trials:trials_upload_update' document.pk %}">Edit</a></li>
-        {% comment %} <li class="list-inline-item"><a class="deletelink" href="{% url 'trials:trials_delete' trial.pk%}">Delete</a></li> {% endcomment %}
+        <li class="list-inline-item"><a class="deletelink" href="{% url 'trials:trials_upload_delete' document.pk%}">Delete</a></li>
     </ul>
     <hr />
     <hr />

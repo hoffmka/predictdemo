@@ -31,6 +31,7 @@
             <th>Code</th>
             <th>ClinicalTrials.gov</th>
             <th>EudraCT</th>
+            <th>Disease</th>
         </thead>
         <tbody>
             {% for trial in object_list %}
@@ -47,6 +48,7 @@
                     <td>{{ trial.studyCode }}</td>
                     <td>{{ trial.clinicalTrials }}</td>
                     <td>{{ trial.eudraCT }}</td>
+                    <td>{{ trial.disease }}</td>
                 </tr>
             {% endfor %}
         </tbody>

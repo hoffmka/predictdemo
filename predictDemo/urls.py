@@ -39,6 +39,7 @@ urlpatterns = [
     path('dash/', views.dashtest, name='dash'),
     path('patients/', include('apps.patients.urls', namespace='patients')),
     path('trials/', include('apps.trials.urls', namespace='trials')),
+    path('views/', include('apps.dbviews.urls', namespace='dbviews')),
     path('destiny/', include('apps.udv_destiny.urls', namespace='udv_destiny')),
 
     # django_plotly_dash app

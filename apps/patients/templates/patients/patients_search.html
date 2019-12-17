@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item active"><a href="">Patients search</a></li>
+            {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+        </ol>
+{% endblock %}
+
+{% block content %}
+<h2>Search for a patient via <strong>Independant Trust centre</strong></h2>
+<div class="alert alert-primary" role="alert">
+<p>Clinician should search for a patient by patient identifying data (e.g. Name, Date of birth).</p>
+<p>This will be implemented here.</p>
+</div>
+<h2>Search for pseudonymized patients by trial</h2>
+<div class="alert alert-primary" role="alert">
+<p>Adding checkbox for trial and go</p>
+<p>Example: DESTINY --> <a href="{% url 'patients:patients_list' 15 %}">GO</a></p>
+</div>
+{% endblock content %}

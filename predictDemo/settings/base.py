@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'apps.dashtest',
     'apps.patients',
     'apps.trials',
+    'apps.dbviews', # Standard and user defined views
     'apps.udv_destiny', # user defined views for destiny trial
 
     #third party apps
@@ -96,7 +97,7 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__
 STATIC_ROOT = os.path.join(PROJECT_DIR,'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 
 #PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 #STATIC_ROOT = os.path.join(PROJECT_DIR, 'collectstatic')

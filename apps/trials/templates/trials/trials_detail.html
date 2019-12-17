@@ -49,6 +49,9 @@
         <dt class="col-sm-3">EutraCT:</dt>        
         <dd class="col-sm-9">{{ trial.clinicalTrials }}</dd>
 
+        <dt class="col-sm-3">Disease:</dt>        
+        <dd class="col-sm-9">{{ trial.disease }}</dd>
+
         <dt class="col-sm-3">Created At:</dt>        
         <dd class="col-sm-9">{{ trial.createdAt }}</dd>
 
@@ -140,8 +143,18 @@
         At present, add, edit and delete permissions aren't implemented in frontend. Changes can be done by admins via Django admin site.
     </div>
     <hr />
+    <h2>Standard views</h2>
+    <ul>
+        <li><a href={% url 'patients:patients_list' trial.pk %}>Patients list<a></li>
+        <li><a href="">Patient data</a></li>
+        <li><a href="{% url 'dbviews:sdv_diagnostic_values' trial.pk%}">Diagnostics</a></li>
+        <li><a href="">Treatments</a></li>
+        <li><a href="">Adverse Effects</a></li>
+        <li><a href="">Evaluation</a></li>
+    </ul>
+    <hr />
     <h2>User defined views</h2>
-    {% if trial.id == 18 %}
+    {% if trial.studyCode == "DESTINY" %}
         <ul>
             <li><a href={% url 'udv_destiny:cml_destiny_view1' %}>CML Destiny View bla<a></li>
             <li>View blu</li>
