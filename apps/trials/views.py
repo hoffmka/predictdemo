@@ -77,6 +77,14 @@ class TrialUpdateView(HasObjectPermissionMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('trials:trials_detail', kwargs={'trial_pk' : self.object.pk})
 
+class TrialUploadListView(HasObjectPermissionMixin, DetailView):
+    """
+    This view will list the documents for selected trial
+    """
+    checker_name = 'access_trial'
+    model = Trial
+    template_name = 'trials/trials_file_list.html'
+    pk_url_kwarg = 'trial_pk'
 
 def trials_file_upload(request, trial_pk):
     """
@@ -91,7 +99,7 @@ def trials_file_upload(request, trial_pk):
             fs.trial = trial
             fs.uploaded_by = request.user
             fs.save()
-            redirect_to = reverse('trials:trials_detail', kwargs={'trial_pk': trial_pk})
+            redirect_to = reverse('trials:trials_file_list', kwargs={'trial_pk': trial_pk})
             return redirect(redirect_to)
     else:
         form = DocumentForm()
@@ -135,4 +143,4 @@ class TrialUploadDeleteView(HasObjectPermissionMixin, DeleteView):
 
     def get_success_url(self):
         trial = self.object.trial
-        return reverse_lazy('trials:trials_detail', kwargs={'trial_pk': trial.pk})
+        return reverse_lazy('trials:trials_file_list', kwargs={'trial_pk': trial.pk})

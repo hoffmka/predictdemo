@@ -10,15 +10,11 @@
 
 {% block breadcrumb %}
     <div class="container">
-        <ol class="breadcrumb my-4">
-            <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Details of <strong>{{ trial.name }}</strong> </li>
-        </ol>
+    {% include "trials/trials_breadcrumb.html" %}
 {% endblock %}
 
 {% block content %}
-    <h2>Trial details</h2>
-    <ul class="list-inline">
+    <h2>Trial details of trial {{trial.studyCode}} </h2>
     {% can "change_trial" trial user=user as can_change_trial %}
     {% if can_change_trial %}
         <li class="list-inline-item"><a class="changelink" href="{% url 'trials:trials_update' trial.pk %}">Edit</a></li>
@@ -31,7 +27,7 @@
     {% else %}
         <li class="list-inline-item"><span class="isDisabled"><a class="deletelink">Delete</a></span></li>
     {% endif %}
-    </ul>
+
     <hr />
     <dl class="row">
         <dt class="col-sm-3">Trial name:</dt>
@@ -58,48 +54,6 @@
         <dt class="col-sm-3">Created by:</dt>        
         <dd class="col-sm-9">{{ trial.createdBy }}</dd>
     </dl>
-    <hr />
-
-    <h2>Documents</h2>
-    <ul class="list-inline">
-        {% if can_change_trial %}
-            <li class="list-inline-item"><a class="addlink" href="{% url 'trials:trials_file_upload' trial.pk %}">Add file</a></li>
-        {% else %}
-            <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add file</a></span></li>
-        {% endif %}
-    </ul>
-    {% if trial.document_set.all %}
-        <table class="table">
-            <thead class="thead-inverse">
-                <tr>
-                    <th></th>
-                    <th>Document</th>
-                    <th>Description</th>
-                    <th>Uploaded at</th>
-                    <th class="text-right">Uploaded by</th>
-
-                </tr>
-            </thead>
-            {% for document in trial.document_set.all %}
-                <tr>
-                    <td>
-                        {% if can_change_trial %}
-                            <a class="viewdetailslink" href="{% url 'trials:trials_upload_detail' document.pk %}">Details</a>
-                        {% else %}
-                            <span class="isDisabled"><a class="viewdetailslink">Details</a></span>
-                        {% endif %}
-                    </td>
-                    <td><a class="downloadlink" href="{{ document.document.url }}" target="blank">{{ document.filename }}</a></td>
-                    <td>{{ document.description|linebreaks|truncatechars:150 }}</td>
-                    <td>{{ document.uploaded_at }}</td>
-                    <td class="text-right">{{ document.uploaded_by }}</td>
-                    <td></td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No documents available.</p>
-    {% endif %}
     <hr />
 
     <h2>Permissions</h2>

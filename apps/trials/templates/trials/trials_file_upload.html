@@ -10,8 +10,11 @@
     <div class="container">
         <ol class="breadcrumb my-4">
             <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'trials:trials_detail' trial.pk %}">Details of trial: {{ trial.name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">File upload for trial: <strong>{{ trial.name }}</strong></li>        
+            <li class="breadcrumb-item"><a class="viewdetailslink" href="{% url 'trials:trials_detail' trial.pk %}">Details</a></li>
+            <li class="breadcrumb-item"><a class="documentslink" href="{% url 'trials:trials_file_list' trial.pk %}">Documents</a></li>
+            <li class="breadcrumb-item active" aria-current="page">File upload</strong></li>       
+            <li class="breadcrumb-item"><a class="dbviewslink" href="">Views</a></li>
+            <li class="breadcrumb-item"><a class="permissionlink" href="">Permissions</a></li>             
         </ol>
 {% endblock %}
 
