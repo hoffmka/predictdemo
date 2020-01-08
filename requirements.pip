@@ -11,32 +11,17 @@ django==2.2.7
 psycopg2==2.7.7
 psycopg2-binary==2.7.7
 
-# MS SQLDriver
-#install dependencies
-#sudo apt-get install libc6 libstdc++6 libkrb5-3 libcurl3 openssl debconf unixodbc unixodbc-dev
-#install Driver
-#sudo dpkg -i msodbcsql17_17.4.2.1-1_amd64.deb
-
 # MS SQL adapter for python
 pyodbc==4.0.27
 django-mssql-backend==2.3.0
-
-
-# MS SQL Driver (FreeTDS)
-# Install pre-requesite packages
-# sudo apt-get install unixodbc unixodbc-dev freetds-dev freetds-bin tdsodbc
-# set in odbcinst.ini -->
-#[FreeTDS]
-#Description = v0.91 with protocol v7.2
-#Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
-
 
 # rendering datepicker
 django-bootstrap4==0.0.8
 #django-bootstrap-datepicker-plus==3.0.5
 
 # Documentation tool with collected packages
-Sphinx==1.8.5
+Sphinx==2.3.1
+sphinx-rtd-theme==0.4.3
 
 # Managing temporary guest accounts
 django-lazysignup==2.0.0
