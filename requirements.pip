@@ -44,6 +44,6 @@ tablib==0.13.0
 dash-renderer
 dash-core-components
 dash-html-components
-django_plotly_dash==0.9.13
+django_plotly_dash==1.1.5
 
 pandas==0.25.3
