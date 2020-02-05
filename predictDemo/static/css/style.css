@@ -61,32 +61,49 @@ a.btn-info:hover {
 a.nav-link {
     color: #fff;
 }
-a.addlink, a.add-row {
+
+
+.addlink, .add-row {
     background:url("/static/images/plus-16.ico") no-repeat left center;
     padding-left:19px;
 }
 
-a.changelink {
+.changelink {
     background:url("/static/images/edit-3-16.ico") no-repeat left center;
     padding-left:19px;
 }
-a.deletelink, a.delete-row {
+.deletelink, .delete-row {
     background:url("/static/images/delete-2-16.ico") no-repeat left center;
     padding-left:19px;
 }
 
-a.viewdetailslink {
+.viewdetailslink {
     background:url("/static/images/view-details-16.ico") no-repeat left center;
     padding-left:19px;
 }
 
-a.adddetailslink {
+.adddetailslink {
     background:url("/static/images/add-list-16.ico") no-repeat left center;
     padding-left:19px;
 }
 
-a.downloadlink {
+.downloadlink {
     background:url("/static/images/download-2-16.ico") no-repeat left center;
+    padding-left:19px;
+}
+
+.dbviewslink {
+    background:url("/static/images/dbviews.ico") no-repeat left center;
+    padding-left:19px;
+}
+
+.permissionlink {
+    background:url("/static/images/permissionlink.ico") no-repeat left center;
+    padding-left:19px;
+}
+
+.documentslink {
+    background:url("/static/images/documentslink.ico") no-repeat left center;
     padding-left:19px;
 }
 
