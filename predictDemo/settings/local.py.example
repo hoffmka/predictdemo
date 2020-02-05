@@ -36,9 +36,6 @@ DATABASES = {
     }
 }
 
-<<<<<<< HEAD
+MOSAIC_HOST = 'http://...'
+
 WSGI_APPLICATION = 'predictDemo.wsgi.local.application'
-=======
-MOSAIC_HOST = ''
-WSGI_APPLICATION = 'imbintra.wsgi.local.application'
->>>>>>> af05b9428f5c5757a57fb272d952d546839cba8f
