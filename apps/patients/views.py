@@ -1,4 +1,8 @@
 from django.db import connections
+
+# for shiny contents
+from django.http import JsonResponse
+
 from django.shortcuts import redirect, render
 
 from django_tables2.config import RequestConfig
@@ -8,6 +12,10 @@ from ..trials.models import Trial
 from .forms import THSSearchPsnByPatientForm
 from .tables import PatientsListTable
 
+#for shiny contents
+from bs4 import BeautifulSoup
+
+import requests
 # Create your views here.
 
 def patients_search(request):
@@ -125,3 +133,11 @@ def patients_list(request, trial_pk):
     return render(request, 'patients/patients_list.html', {
         "table": table
     })
+
+def shiny(request):
+    return(render(request, 'patients/shiny.html'))
+
+def shiny_contents(request):
+    response = requests.get('http://localhost:8100')
+    soup = BeautifulSoup(response.content, 'html.parser')
+    return JsonResponse({'html_contents': str(soup)})

@@ -26,7 +26,21 @@ Pre-Requisites
     sudo apt-get install libc6 libstdc++6 libkrb5-3 libcurl3 openssl debconf unixodbc unixodbc-dev
     # install Driver
     sudo dpkg -i msodbcsql17_17.4.2.1-1_amd64.deb
-    
+
+* Installing `R `<https://cloud.r-project.org>_::
+
+    sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/"
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+    sudo add-apt-repository ppa:marutter/rdev
+    sudo apt-get update
+    sudo apt-get install -y r-base
+
+* Installing shiny package::
+
+    sudo R -e "install.packages('shiny', repos='https://cran.rstudio.com/')"
+    # Run shiny application on port 8100
+    sudo R -e "shiny::runApp(appDir='shinyapp', port=8100)"
+
 
 Creating the Virtual Environment
 ================================
@@ -68,6 +82,7 @@ Second, copy example configuration file, edit and migrate database::
 
     cp predicDemo/settings/local.py.example predicDemo/settings/local.py
     manage.py migrate
+
 
 Configuring the Role permissions
 ================================
