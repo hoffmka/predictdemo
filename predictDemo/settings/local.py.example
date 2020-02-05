@@ -25,4 +25,5 @@ DATABASES = {
     }
 }
 
+MOSAIC_HOST = ''
 WSGI_APPLICATION = 'imbintra.wsgi.local.application'

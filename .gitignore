@@ -6,4 +6,4 @@ db.sqlite3
 .DS_Store
 predictDemo/settings/local.py
 predictDemo/settings/production.py
-docs/_build
+docs/build

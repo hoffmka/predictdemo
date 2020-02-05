@@ -1,0 +1,30 @@
+<ol class="breadcrumb my-4">
+    <li class="breadcrumb-item"><a href="{% url 'trials:trials_list' %}">List trials</a></li>
+
+    <!-- Details -->    
+    {% if request.resolver_match.url_name == "trials_detail" %}
+        <li class="breadcrumb-item active">
+            <span class="viewdetailslink">Details</span>
+        </li>
+    {% else %}
+        <li class="breadcrumb-item active">
+            <a class="viewdetailslink" href="{% url "trials:trials_detail" trial.pk %}">Details</a> 
+        </li>
+    {% endif %}
+    <!-- Documents -->    
+    {% if request.resolver_match.url_name == "trials_file_list" %}
+        <li class="breadcrumb-item active">
+            <span class="documentslink">Documents</span>
+        </li>
+    {% else %}
+        <li class="breadcrumb-item active">
+            <a class="documentslink" href="{% url 'trials:trials_file_list' trial.pk %}">Documents</a>
+        </li>
+    {% endif %}
+    <!-- Documents details -->
+    {% comment %} {% if request.resolver_match.url_name == "trials_upload_detail" %}
+        <li class="breadcrumb-item active" aria-current="page">Document details</li>
+    {% endif %} {% endcomment %}
+    <li class="breadcrumb-item"><a class="dbviewslink" href="">Views</a></li>
+    <li class="breadcrumb-item"><a class="permissionlink" href="">Permissions</a></li>
+</ol>

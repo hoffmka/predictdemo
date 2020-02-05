@@ -23,4 +23,5 @@ DATABASES = {
     }
 }
 
+MOSAIC_HOST = ''
 WSGI_APPLICATION = 'predictDemo.wsgi.production.application'

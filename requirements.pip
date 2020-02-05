@@ -37,6 +37,7 @@ django-bootstrap4==0.0.8
 
 # Documentation tool with collected packages
 Sphinx==1.8.5
+sphinx-rtd-theme==0.4.3
 
 # Managing temporary guest accounts
 django-lazysignup==2.0.0

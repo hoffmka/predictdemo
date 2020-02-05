@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item active"><a href="">Patient Overview</a></li>
+            {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+        </ol>
+{% endblock %}
+
+{% block content %}
+<h2>Patient Overview</h2>
+<ul>
+<li>uri_session: {{ uri_session }}</li>
+<li>tokenId: {{ tokenId }}</li>
+<li>response: {{ response }}</li>
+<li>tempId: {{ tempId }}</li>
+</ul>
+
+{% for patient, values in response.items %}
+    {{ patient }}: {{ values }}
+    {% for key, value in values.items %}
+        {{ key }}: {{ value }}
+    {% endfor %}
+{% endfor %}
+{% endblock content %}
