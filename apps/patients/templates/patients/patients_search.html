@@ -4,27 +4,41 @@
 {% block breadcrumb %}
     <div class="container">
         <ol class="breadcrumb my-4">
-            <li class="breadcrumb-item active"><a href="">Patients search</a></li>
-            {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+            <li class="breadcrumb-item active"><a href="">Step 1: Request Patient pseudonym</a></li>
+            <li class="breadcrumb-item" aria-current="page">Step 2: View Model prediction</li>
         </ol>
 {% endblock %}
 
 {% block content %}
-<h2>Search for a patient via <strong>Trusted Third Party</strong></h2>
-<div class="alert alert-primary" role="alert">
-<p>Clinician should search for a patient by patient identifying data (e.g. Name, Date of birth).</p>
-<p>This will be implemented here.</p>
+<h2>Request Model Prediction</strong></h2>
+<div class="row justify-content-left">
+  <div class="col-lg-6">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% bootstrap_form searchPsnByPatientForm %}
+      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+  </div>
+  <div class="col-lg-6">
+    <div class="alert alert-info" role="alert">
+      <p>Authorized clinicians are able to search for a patient by patient identifying data for a specific research / application task, here called as "Model (Domain)".</p>
+      <p>Domains can be individual models or entire departments (e.g. Haematology) with serveral models. The structure depends on the Organization of the Trusted Third Party and their consent management.</p>
+      <p></p>
+    </div>
+  </div>
 </div>
 
-<form method="post" novalidate>
-  {% csrf_token %}
-  {% bootstrap_form searchPsnByPatientForm %}
-  <button type="submit" class="btn btn-primary btn-block">Search Patient via THS</button>
-</form>
 
-<h2>Search for pseudonymized patients by trial</h2>
+
+
+
+{% comment %} <h2>Search for pseudonymized patients by trial</h2>
 <div class="alert alert-primary" role="alert">
 <p>Adding checkbox for trial and go</p>
 <p>Example: DESTINY --> <a href="{% url 'patients:patients_list' 15 %}">GO</a></p>
-</div>
+</div> {% endcomment %}
+
+{% comment %} <div id="shineApp" style="width: 100%; height: 67vh;">
+  <iframe src="http://localhost/patients/patient/shiny/" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
+</div> {% endcomment %}
 {% endblock content %}

@@ -1,26 +1,64 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 
 {% block breadcrumb %}
     <div class="container">
         <ol class="breadcrumb my-4">
-            <li class="breadcrumb-item active"><a href="">Patient Overview</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Request Patient pseudonym</a></li>
+            <li class="breadcrumb-item active">Step 2: Retrieve Model prediction</li>
             {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
         </ol>
 {% endblock %}
 
 {% block content %}
-<h2>Patient Overview</h2>
+<h2>Personalized Model Prediction</h2>
+
+<!--
 <ul>
 <li>uri_session: {{ uri_session }}</li>
 <li>tokenId: {{ tokenId }}</li>
 <li>response: {{ response }}</li>
 <li>tempId: {{ tempId }}</li>
 </ul>
+-->
 
-{% for patient, values in response.items %}
-    {{ patient }}: {{ values }}
-    {% for key, value in values.items %}
-        {{ key }}: {{ value }}
-    {% endfor %}
-{% endfor %}
+<dl class="row">
+    <dt class="col-sm-3">Firstname:</dt>
+    <dd class="col-sm-9">{{ patient_data.firstName }}</dd>
+    <dt class="col-sm-3">Lastname:</dt>
+    <dd class="col-sm-9">{{ patient_data.lastName }}</dd>
+    <dt class="col-sm-3">Gender:</dt>
+    <dd class="col-sm-9">{{ patient_data.gender }}</dd>
+    <dt class="col-sm-3">Birthdate:</dt>
+    <dd class="col-sm-9">{{ patient_data.birthdate }}</dd>
+    <dt class="col-sm-3">Birthplace:</dt>
+    <dd class="col-sm-9">{{ patient_data.birthplace }}</dd>
+    <dt class="col-sm-3">Domain:</dt>
+    <dd class="col-sm-9">{{ domain}}</dd>
+    <dt class="col-sm-3">Pseudonym:</dt>
+    <dd class="col-sm-9">{{ tempId }}</dd>
+</dl>
+
+
+{% comment %} <h2>Step 2: Request MDATS from <strong>Data Warehouse</strong> and execute Model prediction.</h2>
+<div class="alert alert-info" role="alert">
+    <p>With the pseudonym revceived from the Trusted Third Party the medical data (MDATS), which are needed for the calculation of the mathematical models, can be retrieved from the Data Warehouse System.</p>
+</div> {% endcomment %}
+
+{% comment %} <div  class="col-lg-6">
+    <p>Please select a model prediction.</p>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% bootstrap_form modelSelectionForm %}
+        <button type="submit" class="btn btn-primary btn-block">Show Shiny</button>
+    </form>
+</div> {% endcomment %}
+
+<h3>{{ domain }}</h3>
+<div id="shineApp" style="width: 100%; height: 67vh;">
+  <iframe src="http://10.25.69.153/shiny/sample-apps/cmlpedModel/?patientstudyid=3340" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
+</div>
+
+
+
 {% endblock content %}

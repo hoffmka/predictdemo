@@ -41,6 +41,8 @@ urlpatterns = [
     path('trials/', include('apps.trials.urls', namespace='trials')),
     path('views/', include('apps.dbviews.urls', namespace='dbviews')),
     path('destiny/', include('apps.udv_destiny.urls', namespace='udv_destiny')),
+    path('docs/', include('docs.urls')), # third party include
+    path('shiny/', include('apps.shiny.urls')),
 
     # django_plotly_dash app
     path('django_plotly_dash/', include('django_plotly_dash.urls')),

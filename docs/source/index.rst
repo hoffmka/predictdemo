@@ -9,6 +9,8 @@ Welcome to Predict demonstrator's documentation!
 .. toctree::
    :maxdepth: 2
    
+   introduction
+   architecture
    install
    environments
    

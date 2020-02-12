@@ -19,7 +19,7 @@
 <script>
   $(document).ready(function () {
 
-    $.getJSON('{% url "patients:shiny_contents" %}', function (data) {
+    $.getJSON('{% url "shiny:shiny_contents" %}', function (data) {
 
       var iframe = document.createElement("iframe");
       $('#contents').append(iframe);
