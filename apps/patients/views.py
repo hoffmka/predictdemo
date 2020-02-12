@@ -97,8 +97,9 @@ def patients_search(request):
             tempId = response['patients'][0]['tempId']
 
             domain = searchPsnByPatientForm.cleaned_data['domain']
+            domain = dict(searchPsnByPatientForm.fields['domain'].choices)[domain] # to get the label of the choice
             
-            modelSelectionForm = ModelSelectionForm()
+            #modelSelectionForm = ModelSelectionForm()
 
             # render PatientRequestList
             return render(request, 'patients/patient_mdat_view.html', {
@@ -108,7 +109,7 @@ def patients_search(request):
                 #'response': response,
                 'domain': domain,
                 'tempId': tempId,
-                'modelSelectionForm': modelSelectionForm,
+                #'modelSelectionForm': modelSelectionForm,
             })
     else:
         searchPsnByPatientForm = THSSearchPsnByPatientForm()
@@ -137,14 +138,4 @@ def patients_list(request, trial_pk):
     return render(request, 'patients/patients_list.html', {
         "table": table
     })
-<<<<<<< HEAD
 
-def shiny(request):
-    return(render(request, 'patients/shiny.html'))
-
-def shiny_contents(request):
-    response = requests.get('http://10.25.69.153/shiny/sample-apps/cmlpedModel/?patientstudyid=3340')
-    soup = BeautifulSoup(response.content, 'html.parser')
-    return JsonResponse({'html_contents': str(soup)})
-=======
->>>>>>> a12523a52ba55f505d50c856afed9e9aaf4e8b27
