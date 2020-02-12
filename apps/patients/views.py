@@ -1,7 +1,5 @@
+from django.contrib.auth.decorators import login_required
 from django.db import connections
-
-# for shiny contents
-from django.http import JsonResponse
 
 from django.shortcuts import redirect, render
 
@@ -9,21 +7,18 @@ from django_tables2.config import RequestConfig
 from django_tables2.export.export import TableExport
 
 from ..trials.models import Trial
-from .forms import THSSearchPsnByPatientForm
+from .forms import THSSearchPsnByPatientForm #, ModelSelectionForm
 from .tables import PatientsListTable
 
-#for shiny contents
-from bs4 import BeautifulSoup
-
-import requests
 # Create your views here.
 
+@login_required
 def patients_search(request):
     if request.method == 'POST':
         searchPsnByPatientForm = THSSearchPsnByPatientForm(request.POST)
         if searchPsnByPatientForm.is_valid():
             """
-            THS request
+            TTP request
             """
             import json
             import requests
@@ -59,8 +54,10 @@ def patients_search(request):
                 "type": "requestPsnByPatient",
                 "data": {
                     "fields": {
-                        "study_id": searchPsnByPatientForm.cleaned_data['domain'],
-                        "study_name": searchPsnByPatientForm.cleaned_data['domain'],
+                        #"study_id": searchPsnByPatientForm.cleaned_data['domain'],
+                        #"study_name": searchPsnByPatientForm.cleaned_data['domain'],
+                        "study_id": "demo",
+                        "study_name": "demo",
                         "location_id": "loc1",
                         "location_name": "loc1",
                         "event": "demo.requestPsn",
@@ -98,13 +95,20 @@ def patients_search(request):
             r = requests.post(url, data=json.dumps(post_data, cls=DjangoJSONEncoder), headers=headers)
             response = json.loads(r.text)
             tempId = response['patients'][0]['tempId']
+
+            domain = searchPsnByPatientForm.cleaned_data['domain']
             
+            modelSelectionForm = ModelSelectionForm()
+
             # render PatientRequestList
             return render(request, 'patients/patient_mdat_view.html', {
-                'uri_session': uri_session,
-                'tokenId': tokenId,
-                'response': response,
-                'tempId': tempId
+                'patient_data': post_data['patients'][0]['patient'],
+                #'uri_session': uri_session,
+                #'tokenId': tokenId,
+                #'response': response,
+                'domain': domain,
+                'tempId': tempId,
+                'modelSelectionForm': modelSelectionForm,
             })
     else:
         searchPsnByPatientForm = THSSearchPsnByPatientForm()
@@ -113,8 +117,8 @@ def patients_search(request):
         'searchPsnByPatientForm': searchPsnByPatientForm
         })
 
-def patient_mdat_view(request):
-    return render(request, 'patients/patient_mdat_view.html', {})
+#def patient_mdat_view(request):
+#    return render(request, 'patients/patient_mdat_view.html', {})
 
 def patients_list(request, trial_pk):
     trial = Trial.objects.get(id = trial_pk)
@@ -133,11 +137,3 @@ def patients_list(request, trial_pk):
     return render(request, 'patients/patients_list.html', {
         "table": table
     })
-
-def shiny(request):
-    return(render(request, 'patients/shiny.html'))
-
-def shiny_contents(request):
-    response = requests.get('http://localhost:8100')
-    soup = BeautifulSoup(response.content, 'html.parser')
-    return JsonResponse({'html_contents': str(soup)})

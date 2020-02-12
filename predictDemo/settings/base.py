@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.trials',
     'apps.dbviews', # Standard and user defined views
     'apps.udv_destiny', # user defined views for destiny trial
+    'apps.shiny', # embeds shiny apps
 
     #third party apps
     'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'lazysignup', # guest accounts --> https://django-lazysignup.readthedocs.io/en/latest/index.html
     'django_filters', # Filter and Search app
     'django_tables2', # Django tables with filtering and order feature by default
+    'docs',
 
     # django apps
     'django.contrib.admin',
@@ -270,3 +272,12 @@ STATICFILES_FINDERS = [
 # }
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
+# Settings for sphinx documentation that will be used by 'django-docs'
+DOCS_ROOT = os.path.join(BASE_DIR, '../docs/build/html')
+#Docs access level (public by default). Possible values:
+#public - (default) docs are visible to everyone
+#login_required - docs are visible only to authenticated users
+#staff - docs are visible only to staff users (user.is_staff == True)
+#superuser - docs are visible only to superusers (user.is_superuser == True)
+DOCS_ACCESS = 'login_required'
