@@ -27,7 +27,7 @@ Pre-Requisites
     # install Driver
     sudo dpkg -i msodbcsql17_17.4.2.1-1_amd64.deb
 
-* Installing `R `<https://cloud.r-project.org>_::
+* Installing `R <https://cloud.r-project.org>`_::
 
     sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/"
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9

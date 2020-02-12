@@ -138,6 +138,6 @@ def shiny(request):
     return(render(request, 'patients/shiny.html'))
 
 def shiny_contents(request):
-    response = requests.get('http://localhost:8100')
+    response = requests.get('http://10.25.69.153/shiny/sample-apps/cmlpedModel/?patientstudyid=3340')
     soup = BeautifulSoup(response.content, 'html.parser')
     return JsonResponse({'html_contents': str(soup)})
