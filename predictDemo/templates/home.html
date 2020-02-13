@@ -4,30 +4,22 @@
 {% block title %}prediCt{% endblock %}
 {% block content %}
     <div class="container">
-      {% if  not user.is_authenticated %}
-        <div class="jumbotron">
-          <a href="{% url 'home' %}">
-            <img src={% static "images/prediCt_logo_transparent.png" %} width="300px" alt="PrediCt logo"> 
-          </a>
-          <div class=".div-headline">
-            <h1>Mathematical modelling of TKI effects and immune response to predict patient-specific treatment dynamics in CML</h1>
-          </div>
+      <div class="jumbotron">
+        <a href="{% url 'home' %}">
+          <img src={% static "images/prediCt_logo_transparent.png" %} width="300px" alt="PrediCt logo"> 
+        </a>
+        <div class=".div-headline">
+          {% if  not user.is_authenticated %}
+            <h1>Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
+          {% else %}
+            <h1>Welcome to the Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
+          {% endif %}
+        </div>
+          <p  class="lead">An Abstract of this ERACoSysMed Project is <a href="https://www.eracosysmed.eu/lw_resource/datapool/_items/item_560/predict.pdf">here</a> available.</p>
+          <p  class="lead">A detailed documentation of this software framework can you find <a href=" {% url 'docs_root' %}" target= "blank">here</a>.</p>
+        {% if  not user.is_authenticated %}
           <a class="btn btn-lg btn-info" href="{% url 'accounts:lazysignup' %}">Try it out</a>
           <a class="btn btn-lg btn-primary" href="{% url 'accounts:login' %}">Sign up / Login</a>
-        </div>
-      {% else %}
-        <div class="jumbotron">
-          <a href="{% url 'home' %}">
-            <img src={% static "images/prediCt_logo_transparent.png" %} width="300px" alt="PrediCt logo"> 
-          </a>
-          <div class=".div-headline">
-            <h1>Welcome to Mathematical modelling of TKI effects and immune response to predict patient-specific treatment dynamics in CML</h1>
-          </div>
-        </div>    
-      {% endif %}
-      <div>
-        <h3>"PrediCt Demonstrator" is an software environment that allows clinicians to execute mathematical models with the major aim to support clinical decision-making.</h3>
-        <p>An Abstract of this ERACoSysMed Project are <a href="https://www.eracosysmed.eu/lw_resource/datapool/_items/item_560/predict.pdf">here</a> available.</p>
-        <p>A detailed documentation of the software framework can you find <a href=" {% url 'docs_root' %}">here</a>.</p>
+        {% endif %}
       </div>
 {% endblock content %}}

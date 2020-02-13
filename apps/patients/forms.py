@@ -9,7 +9,7 @@ class THSSearchPsnByPatientForm(forms.Form):
         ('FB1', 'Haematology'),
     )
     domain = forms.ChoiceField(widget = forms.Select(),
-            choices = DOMAIN_CHOICES, initial = 'model_A', required = True, label = 'Model (Domain)')
+            choices = DOMAIN_CHOICES, initial = 'model_B', required = True, label = 'Model (Domain)')
     firstname = forms.CharField(max_length = 40, initial = 'Lehmann', required = True)
     lastname =  forms.CharField(max_length = 40, initial = 'Adda', required = True)
     gender = forms.ChoiceField(widget = forms.Select(),
