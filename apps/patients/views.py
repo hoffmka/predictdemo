@@ -18,7 +18,7 @@ def patients_search(request):
         searchPsnByPatientForm = THSSearchPsnByPatientForm(request.POST)
         if searchPsnByPatientForm.is_valid():
             """
-            TTP request
+            HTTP request
             """
             import json
             import requests
@@ -27,7 +27,7 @@ def patients_search(request):
             # request SessionId
 
             ths_host = settings.MOSAIC_HOST
-            url = ths_host + '/test/rest/sessions'
+            url = ths_host + '/ths/rest/sessions'
 
             headers = {}
             headers['Connection'] = 'keep-alive'
@@ -67,7 +67,7 @@ def patients_search(request):
                             "resultType": "simple"
                             }
                 },
-                "callback": "http://localhost:8080/test/rest/test/callback/receive"
+                "callback": "http://localhost:8080/ths/rest/test/callback/receive"
                 }
             }
 
@@ -76,7 +76,7 @@ def patients_search(request):
             tokenId = response['tokenId']
 
             # request pseudonym by patient (THS function name: F_RPP-T_OK-N_TC)
-            url = ths_host + '/test/rest/psn/requestPsnByPatient/'+ tokenId
+            url = ths_host + '/ths/rest/psn/requestPsnByPatient/'+ tokenId
 
             post_data = {
                 "patients": [
@@ -94,7 +94,12 @@ def patients_search(request):
             }
             r = requests.post(url, data=json.dumps(post_data, cls=DjangoJSONEncoder), headers=headers)
             response = json.loads(r.text)
-            tempId = response['patients'][0]['tempId']
+            try:
+                tempId = response['patients'][0]['tempId']
+            except:
+                tempId = None
+                errorCode = response['patients'][0]['errorCode']
+            
 
             domain = searchPsnByPatientForm.cleaned_data['domain']
             domain = dict(searchPsnByPatientForm.fields['domain'].choices)[domain] # to get the label of the choice
@@ -104,9 +109,6 @@ def patients_search(request):
             # render PatientRequestList
             return render(request, 'patients/patient_mdat_view.html', {
                 'patient_data': post_data['patients'][0]['patient'],
-                #'uri_session': uri_session,
-                #'tokenId': tokenId,
-                #'response': response,
                 'domain': domain,
                 'tempId': tempId,
                 #'modelSelectionForm': modelSelectionForm,

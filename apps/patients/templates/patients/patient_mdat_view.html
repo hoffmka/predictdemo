@@ -2,15 +2,24 @@
 {% load bootstrap4 %}
 
 {% block breadcrumb %}
-    <div class="container">
-        <ol class="breadcrumb my-4">
-            <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Request Patient pseudonym</a></li>
-            <li class="breadcrumb-item active">Step 2: Retrieve Model prediction</li>
-            {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
-        </ol>
+    <div class="container-fluid">
+        <div class = "container">
+            <ol class="breadcrumb my-4">
+                <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Request Patient pseudonym</a></li>
+                <li class="breadcrumb-item active">Step 2: Retrieve Model prediction</li>
+                {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+            </ol>
 {% endblock %}
 
 {% block content %}
+
+
+{% if tempId == None %}
+<div class="alert alert-danger" role="alert">
+  The given person could not be surely identified.
+</div>
+<a href="{% url 'patients:patients_search' %}" class="btn btn-secondary">Return to Patient search</a>
+{% else %}
 <h2>Personalized Model Prediction</h2>
 
 <!--
@@ -54,11 +63,23 @@
     </form>
 </div> {% endcomment %}
 
+{% if patient_data.lastName == 'Liebknecht' %}
 <h3>{{ domain }}</h3>
+
+{% comment %} Ende von container {% endcomment %}
+</div>
+
 <div id="shineApp" style="width: 100%; height: 67vh;">
   <iframe src="http://10.25.69.153/shiny/sample-apps/cmlpedModel_V2/?patientstudyid=4210" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
 </div>
+{% endif %}
 
+{% if patient_data.lastName == 'Mustermann' %}
+<h3>{{ domain }}</h3>
+<div id="shineApp" style="width: 100%; height: 67vh;">
+  <iframe src="http://10.25.69.153/shiny/sample-apps/cmlpedModel_V2/?patientstudyid=4211" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
+</div>
+{% endif %}
 
-
+{% endif %}
 {% endblock content %}
