@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}D3 plot Example{% endblock %}
+{% block content %}
+<div class="container">
+<link media="all" href="{% static 'bower_components/nvd3/build/nv.d3.css' %}" type="text/css" rel=
+˓→"stylesheet" />
+<script type="text/javascript" src='{% static 'd3/d3.min.js' %}'></script> <script type="text/javascript" src='{% static 'nvd3/build/nv.d3.min.js' %}'></script>
+
+{% load nvd3_tags %}
+<head>
+    {% include_chart_jscss %}
+    {% load_chart charttype chartdata chartcontainer extra %}
+</head>
+<body>
+    <h1>D3 Example - Fruits vs Calories</h1>
+    {% include_container chartcontainer %}
+</body>
+{% endblock content %}}
