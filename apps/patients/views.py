@@ -141,11 +141,12 @@ def patients_list(request, trial_pk):
     })
 
 def run_magpie_job(request):
+    import os
     import subprocess
 
     #Define command and arguments
     command = 'Rscript'
-    path2script = 'myscript.R'
+    path2script = os.path.join(os.path.dirname(__file__), 'myscript.R')
 
     # variable number of args in a list
     args =['11', '3', '9', '42']
@@ -154,7 +155,12 @@ def run_magpie_job(request):
     cmd = [command, path2script] + args
 
     # check_output will run the command and store to results
-    x = subprocess.check_output(cmd, universal_newlines = True)
+    x = None
+    try:
+        x = subprocess.check_output(cmd, universal_newlines = True)
+    except subprocess.CalledProcessError as e:
+        x = e.output
+
     #print('The maximum of the nubers is:', x)
 
     return render(request, 'patients/magpie.html', {

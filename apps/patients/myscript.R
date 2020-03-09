@@ -5,4 +5,4 @@ myArgs <- commandArgs(trailingOnly = TRUE)
 nums = as.numeric(myArgs)
 
 # cat will write the result to the stdout stream
-cat(nums)
+cat(max(nums))
