@@ -155,8 +155,7 @@ def run_magpie_job(request):
 
     # check_output will run the command and store to results
     x = subprocess.check_output(cmd, universal_newlines = True)
-
-    print('The maximum of the nubers is:', x)
+    #print('The maximum of the nubers is:', x)
 
     return render(request, 'patients/magpie.html', {
         'x': x

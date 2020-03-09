@@ -229,7 +229,7 @@ CHANNEL_LAYERS = {
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'djangobower.finders.BowerFinder',
+    #'djangobower.finders.BowerFinder',
 
     #'django_plotly_dash.finders.DashAssetFinder',
     #'django_plotly_dash.finders.DashComponentFinder',
