@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load bootstrap4 %}
 
 {% block breadcrumb %}
@@ -12,7 +13,9 @@
 {% endblock %}
 
 {% block content %}
-
+<link media="all" href="{% static 'bower_components/nvd3/build/nv.d3.css' %}" type="text/css" rel=
+˓→"stylesheet" />
+<script type="text/javascript" src='{% static 'd3/d3.min.js' %}'></script> <script type="text/javascript" src='{% static 'nvd3/build/nv.d3.min.js' %}'></script>
 
 {% if tempId == None %}
 <div class="alert alert-danger" role="alert">
@@ -69,6 +72,8 @@
 {% comment %} Ende von container {% endcomment %}
 </div>
 
+
+
 <div id="shineApp" style="width: 100%; height: 67vh;">
   <iframe src="http://10.25.69.153/shiny/sample-apps/cmlpedModel_V2/?patientstudyid=4210" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
 </div>
@@ -81,5 +86,10 @@
 </div>
 {% endif %}
 
+<!-- Run R Script Test -->
+
+
 {% endif %}
+
+
 {% endblock content %}
