@@ -36,7 +36,7 @@ de_formats.DATE_FORMAT = "d.m.Y"
 INSTALLED_APPS = [
     # my apps
     'apps.accounts',
-    'apps.d3plots', # embeds d3 plots
+    #'apps.d3plots', # embeds d3 plots
     'apps.dashtest',
     'apps.patients',
     'apps.trials',
@@ -54,8 +54,8 @@ INSTALLED_APPS = [
     'django_filters', # Filter and Search app
     'django_tables2', # Django tables with filtering and order feature by default
     'docs',
-    'django_nvd3',
-    'djangobower',
+    #'django_nvd3',
+    #'djangobower',
 
     # django apps
     'django.contrib.admin',
@@ -289,12 +289,13 @@ DOCS_ACCESS = 'login_required'
 
 # Settings for D3 plots
 #BOWER_COMPONENTS_ROOT = '/PROJECT_ROOT/components/'
-PROJECT_ROOT = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), ".."),
-)
-BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
 
-BOWER_INSTALLED_APPS = (
-    'jquery',
-    'underscore',
-)
+#PROJECT_ROOT = os.path.abspath(
+#    os.path.join(os.path.dirname(__file__), ".."),
+#)
+#BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
+#
+#BOWER_INSTALLED_APPS = (
+#    'jquery',
+#    'underscore',
+#)
