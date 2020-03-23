@@ -38,9 +38,13 @@ Pre-Requisites
 * Installing shiny package::
 
     sudo R -e "install.packages('shiny', repos='https://cran.rstudio.com/')"
-    # Run shiny application on port 8100
+    # Run shiny application on port 8100 (only as test case)
     sudo R -e "shiny::runApp(appDir='shinyapp', port=8100)"
 
+* Installing `shiny server <https://rstudio.com/products/shiny/download-server/ubuntu/>`_::
+
+    sudo apt-get install gdebi-core
+    sudo gdebi shiny-server-<version>.deb
 
 Creating the Virtual Environment
 ================================
