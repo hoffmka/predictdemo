@@ -7,7 +7,7 @@
         <div class = "container">
             <ol class="breadcrumb my-4">
                 <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Request Patient pseudonym</a></li>
-                <li class="breadcrumb-item active">Step 2: Retrieve Model prediction</li>
+                <li class="breadcrumb-item active">Step 2: Retrieve patient-specific medical data</li>
                 {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
             </ol>
 {% endblock %}
@@ -17,13 +17,13 @@
 ˓→"stylesheet" />
 <script type="text/javascript" src='{% static 'd3/d3.min.js' %}'></script> <script type="text/javascript" src='{% static 'nvd3/build/nv.d3.min.js' %}'></script>
 
-{% if tempId == None %}
+{% if targetId == None %}
 <div class="alert alert-danger" role="alert">
   The given person could not be surely identified.
 </div>
 <a href="{% url 'patients:patients_search' %}" class="btn btn-secondary">Return to Patient search</a>
 {% else %}
-<h2>Personalized Model Prediction</h2>
+<h2>Medical data of requested patient</h2>
 
 <!--
 <ul>
@@ -48,7 +48,7 @@
     <dt class="col-sm-3">Domain:</dt>
     <dd class="col-sm-9">{{ domain}}</dd>
     <dt class="col-sm-3">Pseudonym:</dt>
-    <dd class="col-sm-9">{{ tempId }}</dd>
+    <dd class="col-sm-9">{{ targetId }}</dd>
 </dl>
 
 

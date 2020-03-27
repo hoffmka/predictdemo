@@ -46,6 +46,13 @@ Pre-Requisites
     sudo apt-get install gdebi-core
     sudo gdebi shiny-server-<version>.deb
 
+Changing location from /srv/shiny-server to /path/to/predictDemo/shinyapps in /etc/shiny-server/shiny-server.config
+Adding shiny user to /path/to/predictDemo
+
+ * Installing `nginx server`::
+
+    
+
 Creating the Virtual Environment
 ================================
 

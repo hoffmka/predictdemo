@@ -10,6 +10,8 @@ from ..trials.models import Trial
 from .forms import THSSearchPsnByPatientForm #, ModelSelectionForm
 from .tables import PatientsListTable
 
+import json
+import requests
 # Create your views here.
 
 @login_required
@@ -20,8 +22,6 @@ def patients_search(request):
             """
             HTTP request
             """
-            import json
-            import requests
             from django.core.serializers.json import DjangoJSONEncoder
             from django.conf import settings
             # request SessionId
@@ -94,24 +94,21 @@ def patients_search(request):
             r = requests.post(url, data=json.dumps(post_data, cls=DjangoJSONEncoder), headers=headers)
             response = json.loads(r.text)
             try:
-                tempId = response['patients'][0]['targetId']
+                targetId = response['patients'][0]['targetId']
             except:
-                tempId = None
+                targetId = None
                 errorCode = response['patients'][0]['errorCode']
-            
 
             domain = searchPsnByPatientForm.cleaned_data['domain']
             domain = dict(searchPsnByPatientForm.fields['domain'].choices)[domain] # to get the label of the choice
             
-            #modelSelectionForm = ModelSelectionForm()
+            # Passing patient data to session
+            request.session['patient_data'] = json.dumps(post_data['patients'][0]['patient'], cls=DjangoJSONEncoder)
+            request.session['firstName'] = post_data['patients'][0]['patient']['firstName']
+            request.session['targetId'] = targetId
+            request.session['domain'] = domain
 
-            # render PatientRequestList
-            return render(request, 'patients/patient_mdat_view.html', {
-                'patient_data': post_data['patients'][0]['patient'],
-                'domain': domain,
-                'tempId': tempId,
-                #'modelSelectionForm': modelSelectionForm,
-            })
+            return redirect('patients:patient_mdat_view')
     else:
         searchPsnByPatientForm = THSSearchPsnByPatientForm()
 
@@ -119,8 +116,17 @@ def patients_search(request):
         'searchPsnByPatientForm': searchPsnByPatientForm
         })
 
-#def patient_mdat_view(request):
-#    return render(request, 'patients/patient_mdat_view.html', {})
+@login_required
+def patient_mdat_view(request):
+    # get patient data from session
+    patient_data = json.loads(request.session['patient_data'])
+    targetId = request.session['targetId']
+    domain = request.session['domain']
+    return render(request, 'patients/patient_mdat_view.html', {
+        'patient_data' : patient_data,
+        'targetId': targetId,
+        'domain': domain,
+        })
 
 def patients_list(request, trial_pk):
     trial = Trial.objects.get(id = trial_pk)
