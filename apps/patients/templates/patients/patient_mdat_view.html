@@ -6,16 +6,13 @@
     <div class="container-fluid">
         <div class = "container">
             <ol class="breadcrumb my-4">
-                <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Request Patient pseudonym</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
                 <li class="breadcrumb-item active">Step 2: Retrieve patient-specific medical data</li>
                 {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
             </ol>
 {% endblock %}
 
 {% block content %}
-<link media="all" href="{% static 'bower_components/nvd3/build/nv.d3.css' %}" type="text/css" rel=
-˓→"stylesheet" />
-<script type="text/javascript" src='{% static 'd3/d3.min.js' %}'></script> <script type="text/javascript" src='{% static 'nvd3/build/nv.d3.min.js' %}'></script>
 
 {% if targetId == None %}
 <div class="alert alert-danger" role="alert">
@@ -24,15 +21,6 @@
 <a href="{% url 'patients:patients_search' %}" class="btn btn-secondary">Return to Patient search</a>
 {% else %}
 <h2>Medical data of requested patient</h2>
-
-<!--
-<ul>
-<li>uri_session: {{ uri_session }}</li>
-<li>tokenId: {{ tokenId }}</li>
-<li>response: {{ response }}</li>
-<li>tempId: {{ tempId }}</li>
-</ul>
--->
 
 <dl class="row">
     <dt class="col-sm-3">Firstname:</dt>
@@ -52,37 +40,10 @@
 </dl>
 
 
-{% comment %} <h2>Step 2: Request MDATS from <strong>Data Warehouse</strong> and execute Model prediction.</h2>
-<div class="alert alert-info" role="alert">
-    <p>With the pseudonym revceived from the Trusted Third Party the medical data (MDATS), which are needed for the calculation of the mathematical models, can be retrieved from the Data Warehouse System.</p>
-</div> {% endcomment %}
-
-{% comment %} <div  class="col-lg-6">
-    <p>Please select a model prediction.</p>
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {% bootstrap_form modelSelectionForm %}
-        <button type="submit" class="btn btn-primary btn-block">Show Shiny</button>
-    </form>
-</div> {% endcomment %}
-
 {% if patient_data.lastName == 'Liebknecht' %}
-<h3>{{ domain }}</h3>
-
-{% comment %} Ende von container {% endcomment %}
-</div>
-
-
-
 <div id="shineApp" style="width: 100%; height: 67vh;">
-  <iframe src="http://10.25.69.153/shiny/sample-apps/cmlpedModel_V2/?patientstudyid=4210" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
-</div>
-{% endif %}
-
-{% if patient_data.lastName == 'Mustermann' %}
-<h3>{{ domain }}</h3>
-<div id="shineApp" style="width: 100%; height: 67vh;">
-  <iframe src="http://10.25.69.153/shiny/sample-apps/cmlpedModel_V2/?patientstudyid=4211" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
+    <!-- 4476, 4456 -->
+  <iframe src="http://10.25.69.150/shiny/cml-mol-monitor/?PID={{ targetId }}" style="position: relative; top: 0; left: 0; width: 100%; height: 98%;" frameborder="0"></iframe>
 </div>
 {% endif %}
 
@@ -90,6 +51,5 @@
 
 
 {% endif %}
-
-
+</div>
 {% endblock content %}

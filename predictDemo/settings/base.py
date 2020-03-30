@@ -36,7 +36,6 @@ de_formats.DATE_FORMAT = "d.m.Y"
 INSTALLED_APPS = [
     # my apps
     'apps.accounts',
-    #'apps.d3plots', # embeds d3 plots
     'apps.dashtest',
     'apps.patients',
     'apps.trials',

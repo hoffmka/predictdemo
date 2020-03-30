@@ -49,7 +49,17 @@ Pre-Requisites
 Changing location from /srv/shiny-server to /path/to/predictDemo/shinyapps in /etc/shiny-server/shiny-server.config
 Adding shiny user to /path/to/predictDemo
 
- * Installing `nginx server`::
+* Installing needed R packages::
+
+    sudo R
+    install.packages("RODBC")
+    install.packages("ggplot2")
+
+* Adding Database Source Name (DSN = "HaematoOPT") for database access from shiny_::
+
+    sudo nano /etc/odbc.ini
+
+* Installing `nginx server`::
 
     
 
