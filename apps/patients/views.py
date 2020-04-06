@@ -122,10 +122,12 @@ def patient_mdat_view(request):
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
     domain = request.session['domain']
+    dash_context = {"targetId": {"value": targetId}}
     return render(request, 'patients/patient_mdat_view.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
         'domain': domain,
+        'dash_context': dash_context
         })
 
 def patients_list(request, trial_pk):

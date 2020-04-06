@@ -5,16 +5,13 @@ require("ggplot2")
 
 # define constants
 source("paths.R")
-dbDSN <- dbDSN
-dbuid <- dbuid
-dbpwd <- dbpwd
 
 shinyServer(function(input, output, session) {
 
-  ###################  Retrieve Destiny Data ###############################
+  ###################  Retrieve Patient Data (BCR-ABL/BL) ###############################
   lratio <- reactive({
     conn <- odbcConnect(dbDSN, dbuid, dbpwd)
-    # PatientID from URL (Test PatientStudyID <- 4476)
+    # PatientID from URL
     query <- parseQueryString(session$clientData$url_search)
     PID <- query[['PID']]
     
@@ -23,23 +20,48 @@ shinyServer(function(input, output, session) {
     odbcClose(conn)
     
     # prepare data
-    lratio$det <- "detected value"
+    lratio$det[lratio$BCR.ABL.Ratio != 0] <- "detected value"
     lratio$det[lratio$BCR.ABL.Ratio == 0] <- "value below detection limit"
     
     lratio$lratio <- log10(lratio$BCR.ABL.Ratio)
     if (any(!is.na(lratio$ABL)))
         lratio$lql[!is.na(lratio$ABL)] <- log10(3 / lratio$ABL[!is.na(lratio$ABL)] * 100)
     lratio$lratio[which(lratio$BCR.ABL.Ratio == 0)] <- lratio$lql[which(lratio$BCR.ABL.Ratio == 0)]
-    #lratio$date <- lratio$Sample.Date
-    lratio$time <- as.numeric(difftime(as.POSIXct(lratio$Sample.Date), as.POSIXct(min(lratio$Sample.Date)), units = "days")) / 365 * 12
     return(lratio)
   })
 
+  ###################  Retrieve Patient Data (BCR-ABL/BL) ###############################
+  treatment <- reactive({
+    conn <- odbcConnect(dbDSN, dbuid, dbpwd)
+
+    # PatientID from URL
+    query <- parseQueryString(session$clientData$url_search)
+    PID <- query[['PID']]
+
+    SQLStmt = paste("SELECT * FROM [HaematoOPT].[dbo].[udv_PredictDemo_TreatDrug_V] WHERE PID = '", PID, "'", sep="")
+    treatment <- sqlQuery(conn, SQLStmt)
+
+    # prepare treatment data
+    treatment <- treatment[, c("TreatmentValueDateBegin", "TreatmentValueDateEnd", "Name", "Dosage", "DosageUnit", "Interval", "TreatmentSchemeID")]
+    colnames(treatment) <- c("time_start", "time_end", "drug", "dosage", "unit", "interval", "treatment_scheme_id")
+    treatment <- treatment[which(treatment$treatment_scheme_id != 38),]
+
+    odbcClose(conn)
+    return(treatment)
+  })
   ###################  render plot: Model prediction ###############################
   output$plot <- renderPlot({
     # Data request
     lratio <- lratio()
-    
+    treatment <- treatment()
+
+    # calculate time
+    if (nrow(treatment) >0 ){
+      lratio$time <- as.numeric(difftime(as.POSIXct(lratio$Sample.Date), as.POSIXct(min(treatment$time_start[!is.na(treatment$time_start)])), units = "days")) / 365 * 12
+
+    } else {
+      lratio$time <- as.numeric(difftime(as.POSIXct(lratio$Sample.Date), as.POSIXct(min(lratio$Sample.Date)), units = "days")) / 365 * 12
+    }
     # plot
     plot <- ggplot()
     
@@ -51,7 +73,7 @@ shinyServer(function(input, output, session) {
             theme_bw() +
             ggtitle("Molecular Response") +
             scale_y_continuous(name="BCR-ABL / ABL", breaks = -4:2, labels = c('', 'MR5', 'MR4', 'MR3', '1 %', '10 %', '100 %'), limits = c(-4,2)) +
-            scale_x_continuous(name="time [month]") +
+            scale_x_continuous(name="time [month]", sec.axis = sec_axis(trans= ~.)) +
             theme(plot.title = element_text(hjust = 0.5),
             legend.title = element_blank(),
             legend.background = element_rect(fill = alpha("white", 0)),
@@ -60,7 +82,15 @@ shinyServer(function(input, output, session) {
             plot.margin = unit(c(6, 1, 0.5, 0.5), "lines"),
             legend.position="bottom",
             legend.direction = "vertical")
-    
+
+    # treatments
+    for (i in 1:nrow(treatment)) {    
+      plot <- plot +
+          geom_rect(aes(xmin = 0, xmax = 30, ymin = -Inf, ymax = Inf), fill = "orange", alpha = 0.4)
+          #annotate("text", label = "half dose", x = min(patdata$time[patdata$time > 0]) + 0.5, y = max(patdata$lratio), hjust = 0, vjust = 0, size = 5, col = "darkred", alpha = 0.7)
+    }
+
+    # Plot
     plot
     
   }, height = 500)

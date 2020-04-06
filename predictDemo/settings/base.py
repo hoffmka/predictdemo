@@ -47,14 +47,12 @@ INSTALLED_APPS = [
     'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html
     'django_plotly_dash.apps.DjangoPlotlyDashConfig', # for implementation dash apps in django --> https://django-plotly-dash.readthedocs.io/en/latest/index.html
     'bootstrap4',
-#    'channels',
-#    'dpd_static_support',
+ #   'channels',
+ #   'dpd_static_support',
     'lazysignup', # guest accounts --> https://django-lazysignup.readthedocs.io/en/latest/index.html
     'django_filters', # Filter and Search app
     'django_tables2', # Django tables with filtering and order feature by default
     'docs',
-    #'django_nvd3',
-    #'djangobower',
 
     # django apps
     'django.contrib.admin',
@@ -204,7 +202,7 @@ ASGI_APPLICATION = 'predictDemo.routing.application'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://192.168.56.10:6379/1",
+        "LOCATION": "redis://10.25.69.150:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
@@ -218,7 +216,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('192.168.56.10', 6379),],
+            'hosts': [('10.25.69.150', 6379),],
         },
     },
 }
@@ -239,40 +237,40 @@ STATICFILES_FINDERS = [
 # be handled by the Django staticfiles infrastructure
 
 # PLOTLY_COMPONENTS = [
-#     'dash_core_components',
-#     'dash_html_components',
-#     'dash_bootstrap_components',
-#     'dash_renderer',
-#     'dpd_components',
-#     'dpd_static_support',
-# ]
+#    'dash_core_components',
+#    'dash_html_components',
+    #'dash_bootstrap_components',
+#    'dash_renderer',
+    #'dpd_components',
+    #'dpd_static_support',
+#]
 
 # PLOTLY_DASH = {
 
-#     # Route used for the message pipe websocket connection
-#     "ws_route" :   "dpd/ws/channel",
+    # Route used for the message pipe websocket connection
+#    "ws_route" :   "dpd/ws/channel",
 
-#     # Route used for direct http insertion of pipe messages
-#     "http_route" : "dpd/views",
+    # Route used for direct http insertion of pipe messages
+#    "http_route" : "dpd/views",
 
-#     # Flag controlling existince of http poke endpoint
-#     "http_poke_enabled" : True,
+    # Flag controlling existince of http poke endpoint
+#    "http_poke_enabled" : True,
 
-#     # Insert data for the demo when migrating
-#     "insert_demo_migrations" : False,
+    # Insert data for the demo when migrating
+#    "insert_demo_migrations" : False,
 
-#     # Timeout for caching of initial arguments in seconds
-#     "cache_timeout_initial_arguments": 60,
+    # Timeout for caching of initial arguments in seconds
+#    "cache_timeout_initial_arguments": 60,
 
-#     # Name of view wrapping function
-#     "view_decorator": None,
+    # Name of view wrapping function
+#    "view_decorator": None,
 
-#     # Flag to control location of initial argument storage
-#     "cache_arguments": True,
+    # Flag to control location of initial argument storage
+#    "cache_arguments": True,
 
-#     # Flag controlling local serving of assets
-#     "serve_locally": True,
-# }
+    # Flag controlling local serving of assets
+#    "serve_locally": True,
+#} """
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
@@ -284,17 +282,3 @@ DOCS_ROOT = os.path.join(BASE_DIR, '../docs/build/html')
 #staff - docs are visible only to staff users (user.is_staff == True)
 #superuser - docs are visible only to superusers (user.is_superuser == True)
 DOCS_ACCESS = 'login_required'
-
-
-# Settings for D3 plots
-#BOWER_COMPONENTS_ROOT = '/PROJECT_ROOT/components/'
-
-#PROJECT_ROOT = os.path.abspath(
-#    os.path.join(os.path.dirname(__file__), ".."),
-#)
-#BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
-#
-#BOWER_INSTALLED_APPS = (
-#    'jquery',
-#    'underscore',
-#)

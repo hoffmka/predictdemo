@@ -5,7 +5,7 @@ import plotly.graph_objs as go
 
 import pandas as pd
 from apps.dashtest.models import DashSimpleModel
-from django.db import connection
+from django.db import connection, connections
 
 from django_plotly_dash import DjangoDash
 
@@ -15,9 +15,15 @@ app = DjangoDash(name='WebsocketExample')   # replaces dash.Dash
 
 # get new layout when reloading the page
 def serve_layout():
-    # get data
-    query = str(DashSimpleModel.objects.all().query)
-    df = pd.read_sql_query(query, connection)
+    # get data from djangoModel
+    #query = str(DashSimpleModel.objects.all().query)
+    #df = pd.read_sql_query(query, connection)
+
+    with connections['HaematoOPT'].cursor() as cursor:
+        query1 = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where pid = 'mdat_078755'"
+        cursor.execute(query1)
+        results = cursor.fetchall()
+        df = pd.DataFrame(results)
 
     return html.Div(id='main',
                     children=[
@@ -25,65 +31,65 @@ def serve_layout():
         id='live-graph',
         figure={
             'data': [{
-                'x': df['x'], 
-                'y': df['y'], 
+                'x': df[2], 
+                'y': df[3], 
                 'name': 'data points',
                 'mode': 'markers',
                 'marker': {'size': 12}
                 },
-                {
-                'x': [2,4],
-                'y': [20,20],
-                'name': 'therapy with line',
-                'mode': 'lines',
-                'marker': {'size': 30},
-                'line': {'width': 30}
-                }
+                # {
+                # 'x': [2,4],
+                # 'y': [20,20],
+                # 'name': 'therapy with line',
+                # 'mode': 'lines',
+                # 'marker': {'size': 30},
+                # 'line': {'width': 30}
+                # }
             ],
             'layout': {
-                'title': 'Dash Live Update via Websocket',
+                'title': 'Dash test',
                 'xaxis':{
-                    'title':'days'
+                    'title':'Date'
                 },
                 'yaxis': {
-                    'title':'parameter in unit'
+                    'title':'BCR-ABL/ABL'
                 },
                 'legend': {
                     'orientation':'h'
                 },
-            'shapes': [
-                # Rectangle reference to the axes
-                {
-                    'type': 'rect',
-                    'name': 'shape',
-                    'xref': 'x',
-                    'yref': 'y',
-                    'x0': 2.5,
-                    'y0': 0,
-                    'x1': 3.5,
-                    'y1': 2,
-                    'line': {
-                        'color': 'rgb(55, 128, 191)',
-                        'width': 3,
-                    },
-                    'fillcolor': 'rgba(55, 128, 191, 0.6)',
-                },
-                # Rectangle reference to the plot
-                {
-                    'type': 'rect',
-                    'xref': 'x',
-                    'yref': 'paper',
-                    'x0': 0.25,
-                    'y0': 0,
-                    'x1': 0.5,
-                    'y1': 0.5,
-                    'line': {
-                        'color': 'rgb(50, 171, 96)',
-                        'width': 3,
-                    },
-                    'fillcolor': 'rgba(50, 171, 96, 0.6)',
-                },
-            ]
+            # 'shapes': [
+            #     # Rectangle reference to the axes
+            #     {
+            #         'type': 'rect',
+            #         'name': 'shape',
+            #         'xref': 'x',
+            #         'yref': 'y',
+            #         'x0': 2.5,
+            #         'y0': 0,
+            #         'x1': 3.5,
+            #         'y1': 2,
+            #         'line': {
+            #             'color': 'rgb(55, 128, 191)',
+            #             'width': 3,
+            #         },
+            #         'fillcolor': 'rgba(55, 128, 191, 0.6)',
+            #     },
+            #     # Rectangle reference to the plot
+            #     {
+            #         'type': 'rect',
+            #         'xref': 'x',
+            #         'yref': 'paper',
+            #         'x0': 0.25,
+            #         'y0': 0,
+            #         'x1': 0.5,
+            #         'y1': 0.5,
+            #         'line': {
+            #             'color': 'rgb(50, 171, 96)',
+            #             'width': 3,
+            #         },
+            #         'fillcolor': 'rgba(50, 171, 96, 0.6)',
+            #     },
+            # ]
 
             }
         }

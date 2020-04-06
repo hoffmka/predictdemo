@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load bootstrap4 %}
+{% load plotly_dash %}
 
 {% block breadcrumb %}
     <div class="container-fluid">
@@ -49,7 +50,12 @@
 
 <!-- Run R Script Test -->
 
+<!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
+<!--{% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments='{"targetId": {"value": "mdat_078755"}}' ratio=0.5 %}
+-->
 
+{% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
 {% endif %}
+
 </div>
 {% endblock content %}

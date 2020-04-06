@@ -24,6 +24,7 @@ from django.views.generic.base import TemplateView
 
 # Load plotly apps -this triggers their registration
 import plotlydash.DashExampleApp
+import plotlydash.cml_bcr_abl_ratio
 
 from django_plotly_dash.views import add_to_session
 
@@ -36,7 +37,6 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     path('convert/', include('lazysignup.urls')), #convert lazy accounts to real accounts
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    #path('plots/', include('apps.d3plots.urls', namespace='d3plots')),
     path('dash/', views.dashtest, name='dash'),
     path('patients/', include('apps.patients.urls', namespace='patients')),
     path('trials/', include('apps.trials.urls', namespace='trials')),
