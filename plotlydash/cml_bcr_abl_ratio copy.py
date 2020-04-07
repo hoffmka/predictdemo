@@ -19,12 +19,21 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = DjangoDash(name='CML_BCR-ABL-Ratio', id='targetId')
 
-app.layout = html.Div(id= 'main',
+# get new layout when reloading the page
+def serve_layout():
+    return html.Div(id='main',
                     children=[
                         dcc.Input(id='targetId', value='initial value', type='hidden'),
-                        dcc.Graph(id='live-graph'),
-                        html.Div(id='display'),  #To show format of selectData
-                    ])
+                        html.Div(id='output-query'),
+                        dcc.Graph(id='live-graph')
+                    ]) # end of 'main
+
+'''@app.callback(
+    Output('output-query', component_property='children'),
+    [Input('targetId', component_property='value')])
+def run_query(targetId_value):
+    query = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where pid = '%s'" % targetId_value
+    return query'''
 
 @app.callback(
     Output('live-graph', component_property='figure'),
@@ -61,35 +70,20 @@ def execute_query(targetId_value):
             'name': 'detected values',
             'mode': 'markers',
             'marker': {'size': 12, 'color': 'rgb(0, 102, 204)'},
-            'text': df['BCR-ABL-Ratio'],
-            'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
-                '<b>BCR-ABL/ABL Ratio: %{text}</b><br>'
+            'text': df['BCR-ABL-Ratio']
             },
             {
             'x': df['SampleDate'],
             'y': df['lql'],
             'name': 'value below detection limit',
             'mode': 'markers',
-            'marker': {'size': 12, 'symbol': 'triangle-down', 'color': 'rgb(0, 102, 204)'},
-            'text': df['ABL'],
-            'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
-                '<b>BCR-ABL/ABL Ratio: 0</b><br>' +
-                'ABL Numbers: %{text}'
-            },
-            {
-            'x': dfTreat['TreatmentValueDateEnd'],
-            'y': [1.5, 1.5],
-            'mode': 'text',
-            'text': dfTreat['TreatmentSchemeName'],
-            'textposition': 'top left',
-            'showlegend': False
+            'marker': {'size': 12, 'symbol': 'triangle-down', 'color': 'rgb(0, 102, 204)'}  
             }
         ],
         'layout': {
             'title': 'BCR-ABL/ABL Monitoring',
             'xaxis':{
-                'title':'Date',
-                'hoverformat': '%Y-%m-%d'
+                'title':'Date'
             },
             'yaxis': {
                 'title':'BCR-ABL/ABL',
@@ -142,13 +136,8 @@ def execute_query(targetId_value):
 
     return graph_figure
 
-# Show result of selecting data with either box select or lasso
-@app.callback(Output('display','children'),[Input('live-graph','selectedData')])
-def selectData(selectData):
-    return str('Selecting points produces a nested dictionary: {}'.format(selectData))
 
-
-
+app.layout = serve_layout
 
 if __name__ == '__main__':
     app.run_server(debug=True)

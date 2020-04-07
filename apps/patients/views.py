@@ -101,14 +101,14 @@ def patients_search(request):
                 targetId = None
                 errorCode = response['patients'][0]['errorCode']
 
-            domain = searchPsnByPatientForm.cleaned_data['domain']
-            domain = dict(searchPsnByPatientForm.fields['domain'].choices)[domain] # to get the label of the choice
+            #domain = searchPsnByPatientForm.cleaned_data['domain']
+            #domain = dict(searchPsnByPatientForm.fields['domain'].choices)[domain] # to get the label of the choice
             
             # Passing patient data to session
             request.session['patient_data'] = json.dumps(post_data['patients'][0]['patient'], cls=DjangoJSONEncoder)
             request.session['firstName'] = post_data['patients'][0]['patient']['firstName']
             request.session['targetId'] = targetId
-            request.session['domain'] = domain
+            #request.session['domain'] = domain
 
             return redirect('patients:patient_mdat_view')
     else:
@@ -123,14 +123,14 @@ def patient_mdat_view(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
-    domain = request.session['domain']
+    #domain = request.session['domain']
 
     #Visualization with plotly dash    
     dash_context = {"targetId": {"value": targetId}}
     return render(request, 'patients/patient_mdat_view.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
-        'domain': domain,
+        #'domain': domain,
         'dash_context': dash_context
         })
 
@@ -139,7 +139,7 @@ def patient_mdat_view_bcrabl(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
-    domain = request.session['domain']
+    #domain = request.session['domain']
     # get table with BCR-ABL / ABL ratio
     with connections['HaematoOPT'].cursor() as cursor:
         query = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where DosePhaseSample <> 'stop' and pid = '%s'" % targetId
@@ -161,7 +161,7 @@ def patient_mdat_view_bcrabl(request):
     return render(request, 'patients/patient_mdat_view_bcrabl.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
-        'domain': domain,
+        #'domain': domain,
         'diagnosticTable': diagnosticTable
         })
 
@@ -170,7 +170,7 @@ def patient_mdat_view_treatment(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
-    domain = request.session['domain']
+    #domain = request.session['domain']
     # get table with BCR-ABL / ABL ratio
     with connections['HaematoOPT'].cursor() as cursor:
         query = "SELECT * FROM udv_PredictDemo_TreatDrug_V where TreatmentSchemeId <> 38 and pid = '%s'" % targetId
@@ -192,8 +192,20 @@ def patient_mdat_view_treatment(request):
     return render(request, 'patients/patient_mdat_view_treatment.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
-        'domain': domain,
+        #'domain': domain,
         'treatmentTable': treatmentTable
+        })
+
+def patient_predict_view(request):
+    # get patient data from session
+    patient_data = json.loads(request.session['patient_data'])
+    targetId = request.session['targetId']
+    #domain = request.session['domain']
+
+    return render(request, 'patients/patient_predict_view.html', {
+        'patient_data' : patient_data,
+        'targetId': targetId,
+        #'domain': domain,
         })
 
 def patients_list(request, trial_pk):

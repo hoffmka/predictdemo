@@ -10,8 +10,8 @@
         <div class = "container">
             <ol class="breadcrumb my-4">
                 <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
-                <li class="breadcrumb-item active">Step 2: Retrieve patient-specific medical data</li>
-                <li class="breadcrumb-item"><a href="{% url 'patients:patient_predict_view' %}">Step 3: Retrieve patient-specific model prediction</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'patients:patient_mdat_view' %}">Step 2: Retrieve patient-specific medical data</a></li>
+                <li class="breadcrumb-item active">Step 3: Retrieve patient-specific model prediction</li>
             </ol>
 {% endblock %}
 
@@ -29,20 +29,13 @@
 </div>
 <!-- Submenu-->
 <p>
-  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
-  <a class="btn btn-primary" href="{% url 'patients:patient_mdat_view_treatment' %}">TableView "Treatments"</a>
-  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
+  <a class="btn btn-primary" href="#">Latest predictions</a>
+  <a class="btn btn-secondary" href="#">New Prediction</a>
 </p>
 
 <!-- table with BCR-ABL/ABL ratios-->
-<h3>TableView "Treatments"</h3>
-<div class="col-sm-12">
-    <!-- Export -->
-    <div class="float-right">
-        <a href="{% querystring '_export'='csv' %}">Download CSV</a>
-    </div>
-</div>
-{% render_table treatmentTable %}
+<h3>Latest predictions</h3>
+
 
 {% endif %}
 </div>

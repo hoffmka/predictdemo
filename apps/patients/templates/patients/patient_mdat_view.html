@@ -11,7 +11,7 @@
             <ol class="breadcrumb my-4">
                 <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
                 <li class="breadcrumb-item active">Step 2: Retrieve patient-specific medical data</li>
-                {% comment %} <li class="breadcrumb-item active" aria-current="page">Destiny view bla</li> {% endcomment %}
+                <li class="breadcrumb-item"><a href="{% url 'patients:patient_predict_view' %}">Step 3: Retrieve patient-specific model prediction</a></li>
             </ol>
 {% endblock %}
 

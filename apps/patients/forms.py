@@ -8,8 +8,8 @@ class THSSearchPsnByPatientForm(forms.Form):
         ('model_B', 'CML Model: Recurrance probability'),
         ('FB1', 'Haematology'),
     )
-    domain = forms.ChoiceField(widget = forms.Select(),
-            choices = DOMAIN_CHOICES, initial = 'model_B', required = True, label = 'Model (Domain)')
+    #domain = forms.ChoiceField(widget = forms.Select(),
+    #        choices = DOMAIN_CHOICES, initial = 'model_B', required = True, label = 'Model (Domain)')
     firstname = forms.CharField(max_length = 40, initial = 'Peter', required = True)
     lastname =  forms.CharField(max_length = 40, initial = 'Liebknecht', required = True)
     gender = forms.ChoiceField(widget = forms.Select(),
