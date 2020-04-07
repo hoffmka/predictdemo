@@ -29,13 +29,20 @@
 </div>
 <!-- Submenu-->
 <p>
-  <a class="btn btn-primary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
   <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_treatment' %}">TableView "Treatments"</a>
-  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
+  <a class="btn btn-primary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
 </p>
 
-<!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
-{% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
+<!-- table with BCR-ABL/ABL ratios-->
+<h3>TableView "BCR-ABL / ABL"</h3>
+<div class="col-sm-12">
+    <!-- Export -->
+    <div class="float-right">
+        <a href="{% querystring '_export'='csv' %}">Download CSV</a>
+    </div>
+</div>
+{% render_table diagnosticTable %}
 
 {% endif %}
 </div>

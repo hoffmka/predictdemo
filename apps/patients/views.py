@@ -6,6 +6,8 @@ from django.shortcuts import redirect, render
 from django_tables2.config import RequestConfig
 from django_tables2.export.export import TableExport
 
+from .tables import CML_udv_BcrAblRatioTable, CML_udv_treatmentTable
+
 from ..trials.models import Trial
 from .forms import THSSearchPsnByPatientForm #, ModelSelectionForm
 from .tables import PatientsListTable
@@ -122,12 +124,76 @@ def patient_mdat_view(request):
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
     domain = request.session['domain']
+
+    #Visualization with plotly dash    
     dash_context = {"targetId": {"value": targetId}}
     return render(request, 'patients/patient_mdat_view.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
         'domain': domain,
         'dash_context': dash_context
+        })
+
+@login_required
+def patient_mdat_view_bcrabl(request):
+    # get patient data from session
+    patient_data = json.loads(request.session['patient_data'])
+    targetId = request.session['targetId']
+    domain = request.session['domain']
+    # get table with BCR-ABL / ABL ratio
+    with connections['HaematoOPT'].cursor() as cursor:
+        query = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where DosePhaseSample <> 'stop' and pid = '%s'" % targetId
+        cursor = cursor.execute(query)
+        columns = [column[0] for column in cursor.description]
+        results = []
+        for row in cursor.fetchall():
+            results.append(dict(zip(columns,row)))
+    diagnosticTable = CML_udv_BcrAblRatioTable(results)
+
+    RequestConfig(request).configure(diagnosticTable) # Sort
+    diagnosticTable.paginate(page=request.GET.get("page", 1), per_page=10) # Pagination
+    export_format = request.GET.get('_export', None) # Export
+
+    if TableExport.is_valid_format(export_format):
+        exporter = TableExport(export_format, diagnosticTable)
+        return exporter.response("cml_udv_BcrAblRatio.{}".format(export_format))
+
+    return render(request, 'patients/patient_mdat_view_bcrabl.html', {
+        'patient_data' : patient_data,
+        'targetId': targetId,
+        'domain': domain,
+        'diagnosticTable': diagnosticTable
+        })
+
+@login_required
+def patient_mdat_view_treatment(request):
+    # get patient data from session
+    patient_data = json.loads(request.session['patient_data'])
+    targetId = request.session['targetId']
+    domain = request.session['domain']
+    # get table with BCR-ABL / ABL ratio
+    with connections['HaematoOPT'].cursor() as cursor:
+        query = "SELECT * FROM udv_PredictDemo_TreatDrug_V where TreatmentSchemeId <> 38 and pid = '%s'" % targetId
+        cursor = cursor.execute(query)
+        columns = [column[0] for column in cursor.description]
+        results = []
+        for row in cursor.fetchall():
+            results.append(dict(zip(columns,row)))
+    treatmentTable = CML_udv_treatmentTable(results)
+
+    RequestConfig(request).configure(treatmentTable) # Sort
+    treatmentTable.paginate(page=request.GET.get("page", 1), per_page=10) # Pagination
+    export_format = request.GET.get('_export', None) # Export
+
+    if TableExport.is_valid_format(export_format):
+        exporter = TableExport(export_format, treatmentTable)
+        return exporter.response("CML_udv_treatmentTable.{}".format(export_format))
+
+    return render(request, 'patients/patient_mdat_view_treatment.html', {
+        'patient_data' : patient_data,
+        'targetId': targetId,
+        'domain': domain,
+        'treatmentTable': treatmentTable
         })
 
 def patients_list(request, trial_pk):

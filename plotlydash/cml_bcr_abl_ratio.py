@@ -41,7 +41,7 @@ def run_query(targetId_value):
 def execute_query(targetId_value):
     with connections['HaematoOPT'].cursor() as cursor:
         # retrieve diagnostic values 
-        query = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where pid = '%s'" % targetId_value
+        query = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where DosePhaseSample <> 'stop' and pid = '%s'" % targetId_value
         cursor.execute(query)
         results = cursor.fetchall()
         # retrieve treatments
@@ -49,7 +49,7 @@ def execute_query(targetId_value):
         cursor.execute(queryTreat)
         resultsTreat = cursor.fetchall()
     
-    df = pd.DataFrame(results, columns = ['HOPT_PatientID', 'SampleID', 'SampleDate', 'ABL', 'BCR-ABL-Ratio', 'targetId'])
+    df = pd.DataFrame(results, columns = ['HOPT_PatientID', 'SampleID', 'SampleDate', 'ABL', 'BCR-ABL-Ratio', 'targetId', 'DosePhaseSample'])
     df.loc[df['BCR-ABL-Ratio'] != 0, 'det'] = 'detected value'
     df.loc[df['BCR-ABL-Ratio'] == 0, 'det'] = 'not detected value'
 

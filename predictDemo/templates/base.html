@@ -92,22 +92,13 @@
                         </div>
                     </div>
                 </nav>
-
-                <div class="wrapper">
-                    <!-- Sidebar -->
-                    <nav id="sidebar">
-                        <div class="sidebar-header">
-                            <h3>Bootstrap Sidebar</h3>
-                        </div>
-                    </nav>
-                    <div id="content">
-                        <!--breadcrumb-->
-                        {% block breadcrumb %}
-                        {% endblock breadcrumb %}
-                        <!--content-->
-                        {% block content %}
-                        {% endblock content%}
-                    </div>
+                <div id="container">
+                    <!--breadcrumb-->
+                    {% block breadcrumb %}
+                    {% endblock breadcrumb %}
+                    <!--content-->
+                    {% block content %}
+                    {% endblock content%}
                 </div>
             </div> <!-- End of Content wrap (Nav + Content) -->
 
