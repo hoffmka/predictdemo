@@ -11,8 +11,7 @@
         <div class = "container">
             <ol class="breadcrumb my-4">
                 <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'patients:patient_mdat_view' %}">Step 2: Retrieve patient-specific medical data</a></li>
-                <li class="breadcrumb-item active">Step 3: Retrieve patient-specific model prediction</li>
+                <li class="breadcrumb-item active">Step 2: Retrieve patient-specific medical data and predictions</li>
             </ol>
 {% endblock %}
 
@@ -29,16 +28,23 @@
   Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong>
 </div>
 
-<!-- table with BCR-ABL/ABL ratios-->
-<h3>Patient-specific model predictions</h3>
-<ul class="list-inline">
+<!-- Submenu-->
+<p>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_treatment' %}">TableView "Treatments"</a>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
+  <a class="btn btn-primary" href="{% url 'predictions:prediction_list' %}">All Predictions</a>
+</p>
+
+<!--<ul class="list-inline">
 {% if user.is_authenticated and not user|is_lazy_user %}
     <li class="list-inline-item"><a class="addlink" href="#">Add new prediction</a></li>
 {% else %}
     <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add new prediction</a></span></li>
 {% endif %}
 </ul>
-<hr>
+<hr>-->
+
 <!-- List predictions-->
 {% render_table predictionTable %}
 {% endif %}

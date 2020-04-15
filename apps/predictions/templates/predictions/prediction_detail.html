@@ -8,7 +8,6 @@
             <ol class="breadcrumb my-4">
                 <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'patients:patient_mdat_view' %}">Step 2: Retrieve patient-specific medical data</a></li>
-                <li class="breadcrumb-item active"><a href="{% url 'patients:patient_predict_view' %}">Step 3: Retrieve patient-specific model prediction</a></li>
             </ol>
 {% endblock %}
 
@@ -28,16 +27,12 @@
 <!-- Detail of prediction -->
 <h3>Patient-specific model prediction </h3>
 <dl class="row">
-    <dt class="col-sm-3">Model name:</dt>
-    <dd class="col-sm-9">{{ prediction.model }}</dd>
-    <dt class="col-sm-3">MAGPIE ProjectId:</dt>
-    <dd class="col-sm-9">{{ prediction.magpieProjectId }}</dd>
+    <dt class="col-sm-3">Project:</dt>
+    <dd class="col-sm-9">{{ prediction.project }}</dd>
     <dt class="col-sm-3">MAGPIE JobId:</dt>
     <dd class="col-sm-9">{{ prediction.magpieJobId }}</dd>
     <dt class="col-sm-3">Created at:</dt>
     <dd class="col-sm-9">{{ prediction.createdAt }}</dd>
-    <dt class="col-sm-3">Created by:</dt>
-    <dd class="col-sm-9">{{ prediction.createdBy }}</dd>
     <dt class="col-sm-3">Result:</dt>
     <dd class="col-sm-9">Shiny App / Dash App</dd>
 </dl>

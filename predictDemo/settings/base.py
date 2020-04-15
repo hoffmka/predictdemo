@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.dashtest',
     'apps.patients',
+    'apps.predictions',
     'apps.trials',
     'apps.dbviews', # Standard and user defined views
     'apps.udv_destiny', # user defined views for destiny trial

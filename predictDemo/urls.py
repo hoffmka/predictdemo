@@ -39,6 +39,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('dash/', views.dashtest, name='dash'),
     path('patients/', include('apps.patients.urls', namespace='patients')),
+    path('predictions/', include('apps.predictions.urls', namespace='predictions')),
     path('trials/', include('apps.trials.urls', namespace='trials')),
     path('views/', include('apps.dbviews.urls', namespace='dbviews')),
     path('destiny/', include('apps.udv_destiny.urls', namespace='udv_destiny')),
