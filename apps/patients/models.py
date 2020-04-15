@@ -1,20 +1,17 @@
+from django.contrib.auth.models import User
 from django.db import models
 # from .. trials.models import *
 
-# Create your models here.
-# class PatientModel(models.Model):
-#     pid = models.CharField(max_length=40, blank = True)
-#     createdAt = models.DateTimeField(auto_now_add=True)
-#     #createdBy ?
+class Model(models.Model):
+    name = models.CharField(max_length = 40)
 
+    def __str__(self):
+        return '%s' % (self.name)
 
-# class PatientStudyModel(models.Model):
-#     patient = models.ForeignKey(PatientModel, on_delete = models.CASCADE)
-#     trial = models.ForeignKey(Trial, on_delete = models.CASCADE)
-#     studyPatientNumber = models.CharField(max_length = 40)
-#     excluded = models.BooleanField(default = False)
-#     excludedAt = models.DateTimeField(default = False)
-#     createdAt = models.DateTimeField(auto_now_add = True)
-#     #createdBy = ?
-#     #deletedAt = ?
-#     #deletedBy = ?
+class Prediction(models.Model):
+    targetId = models.CharField(max_length = 40)
+    model = models.ForeignKey(Model, on_delete = models.CASCADE)
+    magpieProjectId = models.IntegerField()
+    magpieJobId = models.IntegerField(unique = True)
+    createdAt = models.DateTimeField(auto_now_add = True)
+    createdBy = models.ForeignKey(User, on_delete = models.CASCADE)

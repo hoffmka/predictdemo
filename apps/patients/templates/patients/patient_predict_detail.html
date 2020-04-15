@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load bootstrap4 %}
-{% load django_tables2 %}
-{% load i18n lazysignup_tags %}
-{% load querystring from django_tables2 %}
-{% load plotly_dash %}
 
 {% block breadcrumb %}
     <div class="container-fluid">
@@ -12,7 +8,7 @@
             <ol class="breadcrumb my-4">
                 <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'patients:patient_mdat_view' %}">Step 2: Retrieve patient-specific medical data</a></li>
-                <li class="breadcrumb-item active">Step 3: Retrieve patient-specific model prediction</li>
+                <li class="breadcrumb-item active"><a href="{% url 'patients:patient_predict_view' %}">Step 3: Retrieve patient-specific model prediction</a></li>
             </ol>
 {% endblock %}
 
@@ -29,18 +25,23 @@
   Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong>
 </div>
 
-<!-- table with BCR-ABL/ABL ratios-->
-<h3>Patient-specific model predictions</h3>
-<ul class="list-inline">
-{% if user.is_authenticated and not user|is_lazy_user %}
-    <li class="list-inline-item"><a class="addlink" href="#">Add new prediction</a></li>
-{% else %}
-    <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add new prediction</a></span></li>
-{% endif %}
-</ul>
-<hr>
-<!-- List predictions-->
-{% render_table predictionTable %}
+<!-- Detail of prediction -->
+<h3>Patient-specific model prediction </h3>
+<dl class="row">
+    <dt class="col-sm-3">Model name:</dt>
+    <dd class="col-sm-9">{{ prediction.model }}</dd>
+    <dt class="col-sm-3">MAGPIE ProjectId:</dt>
+    <dd class="col-sm-9">{{ prediction.magpieProjectId }}</dd>
+    <dt class="col-sm-3">MAGPIE JobId:</dt>
+    <dd class="col-sm-9">{{ prediction.magpieJobId }}</dd>
+    <dt class="col-sm-3">Created at:</dt>
+    <dd class="col-sm-9">{{ prediction.createdAt }}</dd>
+    <dt class="col-sm-3">Created by:</dt>
+    <dd class="col-sm-9">{{ prediction.createdBy }}</dd>
+    <dt class="col-sm-3">Result:</dt>
+    <dd class="col-sm-9">Shiny App / Dash App</dd>
+</dl>
+<img src="/media/documents/predictions/RecurranceProbability.png" width="800 px"/>
 {% endif %}
 </div>
 {% endblock content %}

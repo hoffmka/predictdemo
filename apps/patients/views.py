@@ -6,11 +6,12 @@ from django.shortcuts import redirect, render
 from django_tables2.config import RequestConfig
 from django_tables2.export.export import TableExport
 
-from .tables import CML_udv_BcrAblRatioTable, CML_udv_treatmentTable
+from django.views.generic import DetailView
 
 from ..trials.models import Trial
 from .forms import THSSearchPsnByPatientForm #, ModelSelectionForm
-from .tables import PatientsListTable
+from .models import Prediction
+from .tables import PatientsListTable, CML_udv_BcrAblRatioTable, CML_udv_treatmentTable, PredictionTable
 
 import json
 import requests
@@ -201,12 +202,29 @@ def patient_predict_view(request):
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
     #domain = request.session['domain']
+    predictionTable = PredictionTable(Prediction.objects.all())
 
     return render(request, 'patients/patient_predict_view.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
         #'domain': domain,
+        'predictionTable': predictionTable
         })
+
+def prediction_detail(request, prediction_pk):
+    """
+    This view will retrieve the details for a prediction
+    """
+    patient_data = json.loads(request.session['patient_data'])
+    targetId = request.session['targetId']
+    prediction = Prediction.objects.get(id = prediction_pk) 
+
+    return render(request, 'patients/patient_predict_detail.html', {
+        'patient_data' : patient_data,
+        'targetId': targetId,
+        #'domain': domain,      
+        'prediction': prediction 
+    })
 
 def patients_list(request, trial_pk):
     trial = Trial.objects.get(id = trial_pk)

@@ -23,7 +23,7 @@ app.layout = html.Div(id= 'main',
                     children=[
                         dcc.Input(id='targetId', value='initial value', type='hidden'),
                         dcc.Graph(id='live-graph'),
-                        html.Div(id='display'),  #To show format of selectData
+                        #html.Div(id='display'),  #To show format of selectData
                     ])
 
 @app.callback(
@@ -58,7 +58,7 @@ def execute_query(targetId_value):
         'data': [{
             'x': df['SampleDate'], 
             'y': df['lratio'], 
-            'name': 'detected values',
+            'name': 'detected BCR-ABL value',
             'mode': 'markers',
             'marker': {'size': 12, 'color': 'rgb(0, 102, 204)'},
             'text': df['BCR-ABL-Ratio'],
@@ -68,7 +68,7 @@ def execute_query(targetId_value):
             {
             'x': df['SampleDate'],
             'y': df['lql'],
-            'name': 'value below detection limit',
+            'name': 'negative measurement; triangle indicates estimated quantification limit',
             'mode': 'markers',
             'marker': {'size': 12, 'symbol': 'triangle-down', 'color': 'rgb(0, 102, 204)'},
             'text': df['ABL'],
@@ -143,9 +143,9 @@ def execute_query(targetId_value):
     return graph_figure
 
 # Show result of selecting data with either box select or lasso
-@app.callback(Output('display','children'),[Input('live-graph','selectedData')])
-def selectData(selectData):
-    return str('Selecting points produces a nested dictionary: {}'.format(selectData))
+#@app.callback(Output('display','children'),[Input('live-graph','selectedData')])
+#def selectData(selectData):
+#    return str('Selecting points produces a nested dictionary: {}'.format(selectData))
 
 
 

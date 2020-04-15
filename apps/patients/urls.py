@@ -12,5 +12,6 @@ urlpatterns = [
     path('patient/bcrabl', views.patient_mdat_view_bcrabl, name='patient_mdat_view_bcrabl'),
     path('patient/treatment', views.patient_mdat_view_treatment, name='patient_mdat_view_treatment'),
     path('patient/predict', views.patient_predict_view, name='patient_predict_view'),
+    path('patient/predict/detail/<int:prediction_pk>/', views.prediction_detail, name='prediction_detail'),
     path('magpie', views.run_magpie_job, name='run_magpie_job'),
 ]
