@@ -1,17 +1,17 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 
 import pandas as pd
-from apps.dashtest.models import DashSimpleModel
 from django.db import connection, connections
 
 from django_plotly_dash import DjangoDash
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = DjangoDash(name='WebsocketExample')   # replaces dash.Dash
+app = DjangoDash(name='WebsocketExample', id='prediction_id')   # replaces dash.Dash
 
 # get new layout when reloading the page
 def serve_layout():
@@ -27,6 +27,8 @@ def serve_layout():
 
     return html.Div(id='main',
                     children=[
+                        dcc.Input(id='prediction_id', value='initial value'),
+                        html.Div(id='div'),
     dcc.Graph(
         id='live-graph',
         figure={
@@ -98,6 +100,12 @@ def serve_layout():
 ]) # end of 'main
 
 app.layout = serve_layout
+
+@app.callback(
+    Output('div', component_property='children'),
+    [Input('prediction_id', component_property='value')])
+def div_update(prediction_id_value):
+    return prediction_id_value
 
 if __name__ == '__main__':
     app.run_server(debug=True)

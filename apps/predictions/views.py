@@ -1,9 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from django_tables2.config import RequestConfig
 from .models import Prediction
-from .tables import PredictionTable
 
 import json
 import requests
@@ -14,26 +12,18 @@ def prediction_list(request):
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
     #domain = request.session['domain']
-    predictionTable = PredictionTable(Prediction.objects.all())
+    predictions = Prediction.objects.filter(targetId = targetId).order_by('-id')
+    #initial_arguments for dash app
+    dash_context_dict = {}
+    for prediction in predictions:
+        prediction_id = prediction.pk
+        dash_context = {"prediction_id": {"value": prediction_id}}
+        dash_context_dict[prediction_id] = dash_context
 
     return render(request, 'predictions/prediction_list.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
         #'domain': domain,
-        'predictionTable': predictionTable
+        'predictions': predictions,
+        'dash_context_dict': dash_context_dict,
         })
-
-def prediction_detail(request, prediction_pk):
-    """
-    This view will retrieve the details for a prediction
-    """
-    patient_data = json.loads(request.session['patient_data'])
-    targetId = request.session['targetId']
-    prediction = Prediction.objects.get(id = prediction_pk) 
-
-    return render(request, 'predictions/prediction_detail.html', {
-        'patient_data' : patient_data,
-        'targetId': targetId,
-        #'domain': domain,      
-        'prediction': prediction 
-    })

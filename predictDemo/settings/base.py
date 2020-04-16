@@ -36,7 +36,6 @@ de_formats.DATE_FORMAT = "d.m.Y"
 INSTALLED_APPS = [
     # my apps
     'apps.accounts',
-    'apps.dashtest',
     'apps.patients',
     'apps.predictions',
     'apps.trials',

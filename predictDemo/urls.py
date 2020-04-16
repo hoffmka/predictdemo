@@ -28,16 +28,12 @@ import plotlydash.cml_bcr_abl_ratio
 
 from django_plotly_dash.views import add_to_session
 
-
-from apps.dashtest import views
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('about', TemplateView.as_view(template_name='about.html'), name='about'),
     path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     path('convert/', include('lazysignup.urls')), #convert lazy accounts to real accounts
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('dash/', views.dashtest, name='dash'),
     path('patients/', include('apps.patients.urls', namespace='patients')),
     path('predictions/', include('apps.predictions.urls', namespace='predictions')),
     path('trials/', include('apps.trials.urls', namespace='trials')),
