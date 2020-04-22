@@ -51,9 +51,13 @@ Adding shiny user to /path/to/predictDemo
 
 * Installing needed R packages::
 
-    sudo R
-    install.packages("RODBC")
-    install.packages("ggplot2")
+    sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+    sudo -i R
+    install.packages("devtools")
+    require("devtools")
+    install_github("christbald/magpie_api_r")
+    install.packages("RODBC") # not more needed
+    install.packages("ggplot2") # not more needed
 
 * Adding Database Source Name (DSN = "HaematoOPT") for database access from shiny_::
 

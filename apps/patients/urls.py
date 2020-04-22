@@ -11,5 +11,4 @@ urlpatterns = [
     path('patient', views.patient_mdat_view, name='patient_mdat_view'),
     path('patient/bcrabl', views.patient_mdat_view_bcrabl, name='patient_mdat_view_bcrabl'),
     path('patient/treatment', views.patient_mdat_view_treatment, name='patient_mdat_view_treatment'),
-    path('magpie', views.run_magpie_job, name='run_magpie_job'),
 ]
