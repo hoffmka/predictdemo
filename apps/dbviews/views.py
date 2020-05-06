@@ -7,6 +7,9 @@ from django_tables2.export.export import TableExport
 from ..trials.models import Trial
 from .tables import sdv_DiagnosticValuesTable
 
+import json
+import requests
+
 # Create your views here.
 def dbviews_list(request):
     '''
@@ -16,6 +19,7 @@ def dbviews_list(request):
         
     })
 
+# For Research - Query HOPT Database
 def sdv_diagnostic_values(request, trial_pk):
     trial = Trial.objects.get(id = trial_pk)
     hopt_studyid = trial.hopt_studyid

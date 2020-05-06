@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import connections
+from django.db.models import F, Max
 
 from django.shortcuts import redirect, render
 
@@ -8,8 +9,11 @@ from django_tables2.export.export import TableExport
 
 from django.views.generic import DetailView
 
+from django_pivot.pivot import pivot
+
 from ..trials.models import Trial
 from .forms import THSSearchPsnByPatientForm #, ModelSelectionForm
+from ..dbviews.models import Diagnostic, TreatMedication
 from ..predictions.models import Prediction
 from .tables import PatientsListTable, CML_udv_BcrAblRatioTable, CML_udv_treatmentTable
 
@@ -126,15 +130,18 @@ def patient_mdat_view(request):
     targetId = request.session['targetId']
     #domain = request.session['domain']
 
-    # Are prediction available?
+    # Are prediction available? If yes, then plot last prediction
     dash_context_model38 = None
     if Prediction.objects.filter(targetId=targetId).exists():
         l = Prediction.objects.filter(targetId=targetId).last()
         prediction_id = l.id
         dash_context_model38 = {"prediction_id": {"value": prediction_id}}
 
-    #Visualization with plotly dash    
-    dash_context = {"targetId": {"value": targetId}}
+    #Otherwise plot bcr-abl/abl data, if bcr-abl/abl values available
+    dash_context = None
+    if Diagnostic.objects.filter(targetId = targetId, diagType_id = 1).exists():
+        dash_context = {"targetId": {"value": targetId}}
+
     return render(request, 'patients/patient_mdat_view.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
@@ -150,14 +157,13 @@ def patient_mdat_view_bcrabl(request):
     targetId = request.session['targetId']
     #domain = request.session['domain']
     # get table with BCR-ABL / ABL ratio
-    with connections['HaematoOPT'].cursor() as cursor:
-        query = "SELECT * FROM udv_PredictDemo_BCRABLratio_V where DosePhaseSample <> 'stop' and pid = '%s'" % targetId
-        cursor = cursor.execute(query)
-        columns = [column[0] for column in cursor.description]
-        results = []
-        for row in cursor.fetchall():
-            results.append(dict(zip(columns,row)))
-    diagnosticTable = CML_udv_BcrAblRatioTable(results)
+    diagnostic = Diagnostic.objects.filter(targetId = targetId, diagType_id = 1) # diagType = PCR - BCR-ABL/ABL 
+    diag_pivot = pivot(diagnostic, ['sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
+    # change key "BCR-ABL/ABL" to "BCR"
+    if diag_pivot.exists():
+        diag_pivot = diag_pivot.annotate(BCR=F('BCR-ABL/ABL')).values('sampleId', 'sampleDate', 'ABL', 'BCR')
+
+    diagnosticTable = CML_udv_BcrAblRatioTable(data = diag_pivot, empty_text = "No data available.")
 
     RequestConfig(request).configure(diagnosticTable) # Sort
     diagnosticTable.paginate(page=request.GET.get("page", 1), per_page=10) # Pagination
@@ -180,15 +186,9 @@ def patient_mdat_view_treatment(request):
     patient_data = json.loads(request.session['patient_data'])
     targetId = request.session['targetId']
     #domain = request.session['domain']
-    # get table with BCR-ABL / ABL ratio
-    with connections['HaematoOPT'].cursor() as cursor:
-        query = "SELECT * FROM udv_PredictDemo_TreatDrug_V where TreatmentSchemeId <> 38 and pid = '%s'" % targetId
-        cursor = cursor.execute(query)
-        columns = [column[0] for column in cursor.description]
-        results = []
-        for row in cursor.fetchall():
-            results.append(dict(zip(columns,row)))
-    treatmentTable = CML_udv_treatmentTable(results)
+    # get treatment data and pass to table
+    treatment = TreatMedication.objects.filter(targetId = targetId)
+    treatmentTable = CML_udv_treatmentTable(data = treatment, empty_text = "No data available.")
 
     RequestConfig(request).configure(treatmentTable) # Sort
     treatmentTable.paginate(page=request.GET.get("page", 1), per_page=10) # Pagination

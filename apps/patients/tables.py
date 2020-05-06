@@ -12,23 +12,21 @@ class PatientsListTable(tables.Table):
 
 class CML_udv_BcrAblRatioTable(tables.Table):
     #PatientID = tables.Column()
-    SampleID = tables.Column()
-    SampleDate = tables.DateColumn(format ='Y-m-d')
-    ControlGene = tables.Column(verbose_name="Control Gene")
-    BCRABLRatio = tables.Column()
+    sampleId = tables.Column(verbose_name="Sample-ID")
+    sampleDate = tables.DateColumn(verbose_name="Sample Date", format ='Y-m-d', order_by="sampleDate")
+    ABL = tables.Column(verbose_name="ABL")
+    BCR = tables.Column(verbose_name="BCR-ABL/ABL")
     #PID = tables.Column()
 
-    def render_ControlGene(self, value):
-        return '{:.0f}'.format(value)
-
 class CML_udv_treatmentTable(tables.Table):
-    TreatmentValueDateBegin = tables.DateColumn(format ='Y-m-d', verbose_name="Begin of Treatment")
-    TreatmentValueDateEnd = tables.DateColumn(format ='Y-m-d', verbose_name="End of Treatment")
-    Interval = tables.Column()
-    IntervalUnit = tables.Column(verbose_name="Unit of Interval")
-    Name = tables.Column()
-    Dosage = tables.Column()
-    DosageUnit = tables.Column(verbose_name="Unit of Dosage")
+    dateBegin = tables.DateColumn(format ='Y-m-d', verbose_name="Begin of Treatment")
+    dateEnd = tables.DateColumn(format ='Y-m-d', verbose_name="End of Treatment")
+    interval = tables.Column()
+    intervalUnit = tables.Column(verbose_name = "Unit of Interval")
+    drugName = tables.Column(verbose_name = "Drug")
+    dosage = tables.Column()
+    dosageUnit = tables.Column(verbose_name = "Unit of Dosage")
+    medScheme = tables.Column(verbose_name = "Medication Scheme")
  
     def render_Dosage(self, value):
         return '{:.0f}'.format(value)

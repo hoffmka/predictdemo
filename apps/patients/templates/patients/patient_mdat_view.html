@@ -36,10 +36,12 @@
 
 <!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
 
-{% if dash_context_model38 == None %}
+{% if dash_context_model38 != None %}
+  {% plotly_app name="CML_RecurranceModel"   initial_arguments=dash_context_model38  ratio=0.5 %}
+{% elif dash_context != None %}
   {% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
 {% else %}
-  {% plotly_app name="CML_RecurranceModel"   initial_arguments=dash_context_model38  ratio=0.5 %}
+  No plots available.
 {% endif %}
 
 {% endif %}
