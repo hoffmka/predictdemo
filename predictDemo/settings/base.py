@@ -51,6 +51,7 @@ INSTALLED_APPS = [
  #   'dpd_static_support',
     'lazysignup', # guest accounts --> https://django-lazysignup.readthedocs.io/en/latest/index.html
     'django_filters', # Filter and Search app
+    'django_pivot', # Converting long tables as pivot table
     'django_tables2', # Django tables with filtering and order feature by default
     'docs',
 

@@ -25,6 +25,7 @@ from django.views.generic.base import TemplateView
 # Load plotly apps -this triggers their registration
 import plotlydash.DashExampleApp
 import plotlydash.cml_bcr_abl_ratio
+import plotlydash.cml_rec_prob_model
 
 from django_plotly_dash.views import add_to_session
 

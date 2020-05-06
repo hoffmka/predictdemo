@@ -10,6 +10,7 @@ from django.views.generic import DetailView
 
 from ..trials.models import Trial
 from .forms import THSSearchPsnByPatientForm #, ModelSelectionForm
+from ..predictions.models import Prediction
 from .tables import PatientsListTable, CML_udv_BcrAblRatioTable, CML_udv_treatmentTable
 
 import json
@@ -125,13 +126,21 @@ def patient_mdat_view(request):
     targetId = request.session['targetId']
     #domain = request.session['domain']
 
+    # Are prediction available?
+    dash_context_model38 = None
+    if Prediction.objects.filter(targetId=targetId).exists():
+        l = Prediction.objects.filter(targetId=targetId).last()
+        prediction_id = l.id
+        dash_context_model38 = {"prediction_id": {"value": prediction_id}}
+
     #Visualization with plotly dash    
     dash_context = {"targetId": {"value": targetId}}
     return render(request, 'patients/patient_mdat_view.html', {
         'patient_data' : patient_data,
         'targetId': targetId,
         #'domain': domain,
-        'dash_context': dash_context
+        'dash_context': dash_context,
+        'dash_context_model38': dash_context_model38,
         })
 
 @login_required

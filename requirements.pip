@@ -41,6 +41,12 @@ django-filter==2.2.0
 # Export data tables
 tablib==0.13.0
 
+# converting long tables in wide tables
+django-pivot==1.8.1
+
+# Export queryset to csv
+django-queryset-csv
+
 # Dashboard application framework
 django_plotly_dash==1.1.5
 
