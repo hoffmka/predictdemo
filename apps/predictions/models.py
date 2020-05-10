@@ -19,8 +19,14 @@ class Project(models.Model):
         return '%s' % (self.projectName)
 
 class Prediction(models.Model):
+    STATUS = (
+        (0, 'started'),
+        (1, 'finished'),
+        (2, 'failed'),
+    )
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
     targetId = models.CharField(max_length = 40)
     magpieJobId = models.IntegerField(null=True, default = True)
+    status = models.IntegerField(choices = STATUS, default = 0)
     createdAt = models.DateTimeField(auto_now_add = True)
     #createdBy = models.ForeignKey(User, on_delete = models.CASCADE)

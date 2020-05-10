@@ -12,6 +12,6 @@ class ProjectAdmin(admin.ModelAdmin):
 admin.site.register(Project, ProjectAdmin)
 
 class PredictionAdmin(admin.ModelAdmin):
-    list_display = ('project', 'targetId', 'magpieJobId', 'createdAt')
+    list_display = ('project', 'targetId', 'magpieJobId', 'createdAt', 'status')
 
 admin.site.register(Prediction, PredictionAdmin)

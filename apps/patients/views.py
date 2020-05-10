@@ -132,8 +132,8 @@ def patient_mdat_view(request):
 
     # Are prediction available? If yes, then plot last prediction
     dash_context_model38 = None
-    if Prediction.objects.filter(targetId=targetId).exists():
-        l = Prediction.objects.filter(targetId=targetId).last()
+    if Prediction.objects.filter(targetId = targetId, status = 1).exists():
+        l = Prediction.objects.filter(targetId = targetId, status = 1).last()
         prediction_id = l.id
         dash_context_model38 = {"prediction_id": {"value": prediction_id}}
 
@@ -163,7 +163,7 @@ def patient_mdat_view_bcrabl(request):
     if diag_pivot.exists():
         diag_pivot = diag_pivot.annotate(BCR=F('BCR-ABL/ABL')).values('sampleId', 'sampleDate', 'ABL', 'BCR')
 
-    diagnosticTable = CML_udv_BcrAblRatioTable(data = diag_pivot, empty_text = "No data available.")
+    diagnosticTable = CML_udv_BcrAblRatioTable(data = diag_pivot, order_by="-sampleDate", empty_text = "No data available.")
 
     RequestConfig(request).configure(diagnosticTable) # Sort
     diagnosticTable.paginate(page=request.GET.get("page", 1), per_page=10) # Pagination

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max
 #from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from django_pivot.pivot import pivot
 
@@ -56,7 +56,7 @@ def create_magpie_prediction(request):
         write_csv(treatMedication, csv_file, delimiter=';')
 
     diagnostic = Diagnostic.objects.filter(targetId = targetId, diagType_id = 1) # diagType = PCR - BCR-ABL/ABL 
-    diag_pivot = pivot(Diagnostic, ['sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
+    diag_pivot = pivot(diagnostic, ['sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
     with open(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_pcr.csv'))), 'wb') as csv_file:
         write_csv(diag_pivot, csv_file, delimiter=';')
 
@@ -88,14 +88,11 @@ def create_magpie_prediction(request):
         print("%r" % line)
         i = i + 1
         stdout_dict[i] = line
-    magpie_job_id = stdout_dict[2]
+    magpie_job_id = stdout_dict[3]
 
-    # return site
-    return render(request, 'predictions/prediction_create.html', {
-        'targetId': targetId,
-        'x': x,
-        'magpie_job_id': magpie_job_id
-    })
+    Prediction.objects.filter(id = prediction_id).update(magpieJobId = magpie_job_id)
+
+    return redirect('predictions:prediction_list')
 
 @login_required
 def magpie_download_jobresults(request, prediction_id):
@@ -123,44 +120,31 @@ def magpie_download_jobresults(request, prediction_id):
         x = subprocess.check_output(cmd, universal_newlines = True)
     except subprocess.CalledProcessError as e:
         x = e.output
-    
-    # go through stdout, build dict and retrieve output value
+
+    # update prediction with magpie_job_id
     stdout_dict = {}
     i = 0
     for line in x.split('\n'):
         print("%r" % line)
         i = i + 1
         stdout_dict[i] = line
-    str7 = stdout_dict[7] = stdout_dict[7]
-    str7 = str7[5:-1]
-
-    return render(request, 'predictions/Rtest.html', {
-        'x': x,
-        'stdout_dict': stdout_dict
-    })
-
-
-@login_required
-def test_R(request):
-    #Define command and arguments
-    command = 'Rscript'
-    path2script = os.path.join(os.path.dirname(__file__), 'Rscripts/myscript.R')
-
-    # variable number of args in a list
-    args =['11', '3', '9', '42']
-
-    # build subprocess command
-    cmd = [command, path2script] + args
-
-    # check_output will run the command and store to results
-    x = None
+    
+    # set prediction status (to finished)
+    job_status = None
     try:
-        x = subprocess.check_output(cmd, universal_newlines = True)
-    except subprocess.CalledProcessError as e:
-        x = e.output
+        job_status = stdout_dict[4]
+    except:
+        pass
+    if job_status == '2':
+        Prediction.objects.filter(id = prediction_id).update(status = 1)
 
-    #print('The maximum of the nubers is:', x)
+    #failed
+    if Prediction.objects.filter(id = prediction_id, status = 1).exists:
+        try:
+            job_status = stdout_dict[3]
+        except:
+            pass
+        if job_status == '1':
+            Prediction.objects.filter(id = prediction_id).update(status = 2)
 
-    return render(request, 'predictions/Rtest.html', {
-        'x': x
-    })
+    return redirect('predictions:prediction_list')

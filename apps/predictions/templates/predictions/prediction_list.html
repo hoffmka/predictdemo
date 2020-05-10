@@ -37,11 +37,11 @@
 </p>
 
 <ul class="list-inline">
-{% if user.is_authenticated and not user|is_lazy_user %}
-    <li class="list-inline-item"><a class="addlink" href="{% url 'predictions:prediction_create' %}">Add new prediction</a></li>
-{% else %}
-    <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add new prediction</a></span></li>
-{% endif %}
+  {% if user.is_authenticated and not user|is_lazy_user %}
+      <li class="list-inline-item"><a class="addlink" href="{% url 'predictions:prediction_create' %}">Add new prediction</a></li>
+  {% else %}
+      <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add new prediction</a></span></li>
+  {% endif %}
 </ul>
 <hr>
 
@@ -50,7 +50,7 @@
 <div id="all_predicts">
   {% for prediction in predictions %}
     <div class="card">
-      <div class="card-header bg-info" id="predict_{{ prediction.pk }}">
+      <div class="card-header {% if prediction.status == 0 %} bg-light {% elif prediction.status == 1 %} bg-info {% else %} bg-danger {% endif %}" id="predict_{{ prediction.pk }}">
           <a class="btn collapsed" data-toggle="collapse" data-target="#collapse_{{ prediction.pk }}" aria-expanded="false" aria-controls="collapse_{{ prediction.pk }}">
             <strong>{{ prediction.project }}</strong>, created at <strong>{{ prediction.createdAt }}</strong>
           </a>
@@ -59,7 +59,15 @@
         <div class="card-body">
           {% for key, dash_value in dash_context_dict.items %}
             {% if key == prediction.pk %}
-              {% plotly_app name="CML_RecurranceModel"   initial_arguments=dash_value  ratio=0.5 %}
+              {% if prediction.status == 0 %}
+                <a class="downloadlink" href="{% url 'predictions:magpie_download_jobresults' prediction.pk %}">Download prediction results</a>
+              {% endif %}
+              {% if prediction.status == 1 %}
+                {% plotly_app name="CML_RecurranceModel"   initial_arguments=dash_value  ratio=0.5 %}
+              {% endif %}
+              {% if prediction.status == 2 %}
+                The prediction failed while proceeding.
+              {% endif %}
             {% endif %}     
           {% endfor %}
           Prediction ID: {{ prediction.id }}, 
