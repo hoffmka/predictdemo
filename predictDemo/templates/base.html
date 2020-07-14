@@ -38,7 +38,7 @@
                                 <ul class="navbar-nav ml-auto">
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="ForClinicians" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        For Clinicians
+                                        For Clinic
                                         </a>
                                         <!--For clinician menu-->
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForClinicians">
@@ -47,15 +47,13 @@
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="ForResearcher" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        For Researcher
+                                        For Research
                                         </a>
                                         <!--For researcher menu-->
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
                                             <a class="dropdown-item" href="{% url 'trials:trials_list' %}">Trials</a>
                                             <a class="dropdown-item" href="{% url 'dbviews:dbviews_list' %}">Views</a>
                                             <a class="dropdown-item" href="{% url 'shiny:shiny' %}">ShinyExample</a>
-                                            <a class="dropdown-item" href="{% url 'dash' %}">DashExample</a>
-                                            {% comment %} <a class="dropdown-item" href="{% url 'd3plots:demo_piechart' %}">D3 Example</a> {% endcomment %}
                                         </div>
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
                                             
@@ -92,13 +90,14 @@
                         </div>
                     </div>
                 </nav>
-
-                <!--breadcrumb-->
-                {% block breadcrumb %}
-                {% endblock breadcrumb %}
-                <!--content-->
-                {% block content %}
-                {% endblock content%}
+                <div id="container">
+                    <!--breadcrumb-->
+                    {% block breadcrumb %}
+                    {% endblock breadcrumb %}
+                    <!--content-->
+                    {% block content %}
+                    {% endblock content%}
+                </div>
             </div> <!-- End of Content wrap (Nav + Content) -->
 
             <!-- Footer -->

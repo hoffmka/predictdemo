@@ -4,13 +4,13 @@
 {% block breadcrumb %}
     <div class="container">
         <ol class="breadcrumb my-4">
-            <li class="breadcrumb-item active"><a href="">Step 1: Request Patient pseudonym</a></li>
-            <li class="breadcrumb-item" aria-current="page">Step 2: View Model prediction</li>
+            <li class="breadcrumb-item active"><a href="">Step 1: Search for patient</a></li>
+            <li class="breadcrumb-item" aria-current="page">Step 2: Retrieve patient-specific medical data and model predictions</li>
         </ol>
 {% endblock %}
 
 {% block content %}
-<h2>Request Model Prediction</strong></h2>
+<h2>Search for patient via Trusted Third Party</strong></h2>
 <div class="row justify-content-left">
   <div class="col-lg-6">
     <form method="post" novalidate>
@@ -21,9 +21,14 @@
   </div>
   <div class="col-lg-6">
     <div class="alert alert-info" role="alert">
-      <p>Authorized clinicians are able to search for a patient by patient identifying data for a specific research / application task, here called as "Model (Domain)".</p>
+      <p>Authorized clinicians are able to search for a patient by patient identifying data for a specific research / application task, here called as Domain.</p>
       <p>Domains can be individual models or entire departments (e.g. Haematology) with serveral models. The structure depends on the Organization of the Trusted Third Party and their consent management.</p>
-      <p></p>
+      <p>The access rights to patients within domains depends on the group permission of the user.</p>
+      <p>The following fictitous patients can be searched via Trusted Third Party:</p>
+      <ul>
+        <li><strong>Peter Liebknecht, born on 1977-03-03 in Berlin</strong></li>
+        <li><strong>Max Mustermann, born on 1953-06-12 in Dresden</stroing></li>
+      </ul>
     </div>
   </div>
 </div>

@@ -46,6 +46,27 @@ Pre-Requisites
     sudo apt-get install gdebi-core
     sudo gdebi shiny-server-<version>.deb
 
+Changing location from /srv/shiny-server to /path/to/predictDemo/shinyapps in /etc/shiny-server/shiny-server.config
+Adding shiny user to /path/to/predictDemo
+
+* Installing needed R packages::
+
+    sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+    sudo -i R
+    install.packages("devtools")
+    require("devtools")
+    install_github("christbald/magpie_api_r")
+    install.packages("RODBC") # not more needed
+    install.packages("ggplot2") # not more needed
+
+* Adding Database Source Name (DSN = "HaematoOPT") for database access from shiny_::
+
+    sudo nano /etc/odbc.ini
+
+* Installing `nginx server`::
+
+    
+
 Creating the Virtual Environment
 ================================
 

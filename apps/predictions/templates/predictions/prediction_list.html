@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load django_tables2 %}
+{% load i18n lazysignup_tags %}
+{% load querystring from django_tables2 %}
+{% load plotly_dash %}
+
+{% block breadcrumb %}
+    <div class="container-fluid">
+        <div class = "container">
+            <ol class="breadcrumb my-4">
+                <li class="breadcrumb-item"><a href="{% url 'patients:patients_search' %}">Step 1: Search patient</a></li>
+                <li class="breadcrumb-item active">Step 2: Retrieve patient-specific medical data and model predictions</li>
+            </ol>
+{% endblock %}
+
+{% block content %}
+
+{% if targetId == None %}
+<div class="alert alert-danger" role="alert">
+  The given person could not be surely identified.
+</div>
+<a href="{% url 'patients:patients_search' %}" class="btn btn-secondary">Return to Patient search</a>
+{% else %}
+
+<div class="alert alert-info" role="alert">
+  Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong>
+</div>
+
+<!-- Submenu-->
+<p>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_treatment' %}">TableView "Treatments"</a>
+  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
+  <a class="btn btn-primary" href="{% url 'predictions:prediction_list' %}">All Predictions</a>
+</p>
+
+<ul class="list-inline">
+  {% if user.is_authenticated and not user|is_lazy_user %}
+      <li class="list-inline-item"><a class="addlink" href="{% url 'predictions:prediction_create' %}">Add new prediction</a></li>
+  {% else %}
+      <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add new prediction</a></span></li>
+  {% endif %}
+</ul>
+<hr>
+
+<p>Model predictions are listed below.</p>
+<!-- List all predictions with details -->
+<div id="all_predicts">
+  {% for prediction in predictions %}
+    <div class="card">
+      <div class="card-header {% if prediction.status == 0 %} bg-light {% elif prediction.status == 1 %} bg-info {% else %} bg-danger {% endif %}" id="predict_{{ prediction.pk }}">
+          <a class="btn collapsed" data-toggle="collapse" data-target="#collapse_{{ prediction.pk }}" aria-expanded="false" aria-controls="collapse_{{ prediction.pk }}">
+            <strong>{{ prediction.project }}</strong>, created at <strong>{{ prediction.createdAt }}</strong>
+          </a>
+      </div>
+      <div id="collapse_{{ prediction.pk }}" class="collapse" aria-labelledby="heading_{{ prediction.pk }}">
+        <div class="card-body">
+          {% for key, dash_value in dash_context_dict.items %}
+            {% if key == prediction.pk %}
+              {% if prediction.status == 0 %}
+                <a class="downloadlink" href="{% url 'predictions:magpie_download_jobresults' prediction.pk %}">Download prediction results</a>
+              {% endif %}
+              {% if prediction.status == 1 %}
+                {% plotly_app name="CML_RecurranceModel"   initial_arguments=dash_value  ratio=0.5 %}
+              {% endif %}
+              {% if prediction.status == 2 %}
+                The prediction failed while proceeding.
+              {% endif %}
+            {% endif %}     
+          {% endfor %}
+          Prediction ID: {{ prediction.id }}, 
+          Magpie ProjectId: {{ prediction.project.magpieProjectId }}, 
+          Magpie JobId: {{ prediction.magpieJobId }}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+      No predictions available.
+  {% endfor %}
+</div>
+
+{% endif %}
+</div>
+{% endblock content %}

@@ -41,17 +41,25 @@ django-filter==2.2.0
 # Export data tables
 tablib==0.13.0
 
-# D3 library
-django-nvd3==0.9.7
-django-bower==5.2.0
+# converting long tables in wide tables
+django-pivot==1.8.1
+
+# Export queryset to csv
+django-queryset-csv
 
 # Dashboard application framework
-#dash==0.42.0 # the core dash backend
-#dash-daq==0.1.0 # DAQ components
-dash-renderer
-dash-core-components
-dash-html-components
 django_plotly_dash==1.1.5
+
+# Redis as Cache Memory
+channels
+daphne
+redis
+django-redis
+channels-redis
+
+#prepare redis
+#docker pull redis:4
+#docker run -p 6379:6379 -d redis
 
 pandas==0.25.3
 
