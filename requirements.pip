@@ -50,6 +50,9 @@ django-queryset-csv
 # Dashboard application framework
 django_plotly_dash==1.1.5
 
+# Protecting media files
+django-sendfile2==0.6.0
+
 # Redis as Cache Memory
 channels
 daphne
