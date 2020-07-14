@@ -15,12 +15,11 @@
             <h1>Welcome to the Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
           {% endif %}
         </div>
-          <p  class="lead">An Abstract of this ERACoSysMed Project is <a href="https://www.eracosysmed.eu/lw_resource/datapool/_items/item_560/predict.pdf">here</a> available.</p>
         {% if user.is_authenticated %}
           <p  class="lead">A detailed documentation of this software framework can you find <a href=" {% url 'docs_root' %}" target= "blank">here</a>.</p>
         {% else %}
           <a class="btn btn-lg btn-info" href="{% url 'accounts:lazysignup' %}">Try it out</a>
-          <a class="btn btn-lg btn-primary" href="{% url 'accounts:login' %}">Sign up / Login</a>
+          <a class="btn btn-lg btn-primary" href="{% url 'accounts:login' %}">Login</a>
         {% endif %}
       </div>
 {% endblock content %}}
