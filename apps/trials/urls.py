@@ -16,4 +16,6 @@ urlpatterns = [
     path('upload/detail/<int:document_pk>/', TrialUploadDetailView.as_view(), name='trials_upload_detail'),
     path('upload/edit/<int:document_pk>/', TrialUploadUpdateView.as_view(), name='trials_upload_update'),
     path('upload/delete/<int:document_pk>/', TrialUploadDeleteView.as_view(), name='trials_upload_delete'),
+
+    path('secret/', views.my_secret_view, name='secret'),
 ]

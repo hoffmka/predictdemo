@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'lazysignup', # guest accounts --> https://django-lazysignup.readthedocs.io/en/latest/index.html
     'django_filters', # Filter and Search app
     'django_pivot', # Converting long tables as pivot table
+    'django_sendfile',# protecting media files
     'django_tables2', # Django tables with filtering and order feature by default
     'docs',
 
@@ -283,3 +284,7 @@ DOCS_ROOT = os.path.join(BASE_DIR, '../docs/build/html')
 #staff - docs are visible only to staff users (user.is_staff == True)
 #superuser - docs are visible only to superusers (user.is_superuser == True)
 DOCS_ACCESS = 'login_required'
+
+SENDFILE_BACKEND = "django_sendfile.backends.xsendfile"
+SENDFILE_URL = MEDIA_URL
+SENDFILE_ROOT = MEDIA_ROOT

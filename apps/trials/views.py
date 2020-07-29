@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse,reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
@@ -108,6 +109,14 @@ def trials_file_upload(request, trial_pk):
         'trial': trial,
         'form': form
     })
+
+# protecting media files test
+from django_sendfile import sendfile
+
+@login_required
+def my_secret_view(request):
+    return sendfile(request, "documents/trials/2019/12/16/DESTINY_20180711_Hammersmith.csv", mimetype="text/plain")
+
 
 class TrialUploadDetailView(HasObjectPermissionMixin, DetailView):
     """
