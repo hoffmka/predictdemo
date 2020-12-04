@@ -47,8 +47,6 @@ INSTALLED_APPS = [
     'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html
     'django_plotly_dash.apps.DjangoPlotlyDashConfig', # for implementation dash apps in django --> https://django-plotly-dash.readthedocs.io/en/latest/index.html
     'bootstrap4',
- #   'channels',
- #   'dpd_static_support',
     'lazysignup', # guest accounts --> https://django-lazysignup.readthedocs.io/en/latest/index.html
     'django_filters', # Filter and Search app
     'django_pivot', # Converting long tables as pivot table
@@ -102,9 +100,6 @@ STATIC_ROOT = os.path.join(PROJECT_DIR,'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
-
-#PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-#STATIC_ROOT = os.path.join(PROJECT_DIR, 'collectstatic')
 
 #==============================================================================
 # Templates
@@ -199,29 +194,6 @@ ROLEPERMISSIONS_REDIRECT_TO_LOGIN = True
 #-----------------------
 ASGI_APPLICATION = 'predictDemo.routing.application'
 
-# Caching - demo uses redis as this is present due to channels use
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://10.25.69.150:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        },
-        "KEY_PREFIX": "dpd-demo"
-    }
-}
-
-# Channels config, to use channel layers
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('10.25.69.150', 6379),],
-        },
-    },
-}
 
 # Staticfiles finders for locating dash app assets and related files
 
@@ -235,44 +207,6 @@ STATICFILES_FINDERS = [
     #'django_plotly_dash.finders.DashAppDirectoryFinder',
 ]
 
-# Plotly components containing static content that should
-# be handled by the Django staticfiles infrastructure
-
-# PLOTLY_COMPONENTS = [
-#    'dash_core_components',
-#    'dash_html_components',
-    #'dash_bootstrap_components',
-#    'dash_renderer',
-    #'dpd_components',
-    #'dpd_static_support',
-#]
-
-# PLOTLY_DASH = {
-
-    # Route used for the message pipe websocket connection
-#    "ws_route" :   "dpd/ws/channel",
-
-    # Route used for direct http insertion of pipe messages
-#    "http_route" : "dpd/views",
-
-    # Flag controlling existince of http poke endpoint
-#    "http_poke_enabled" : True,
-
-    # Insert data for the demo when migrating
-#    "insert_demo_migrations" : False,
-
-    # Timeout for caching of initial arguments in seconds
-#    "cache_timeout_initial_arguments": 60,
-
-    # Name of view wrapping function
-#    "view_decorator": None,
-
-    # Flag to control location of initial argument storage
-#    "cache_arguments": True,
-
-    # Flag controlling local serving of assets
-#    "serve_locally": True,
-#} """
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
@@ -288,3 +222,8 @@ DOCS_ACCESS = 'login_required'
 SENDFILE_BACKEND = "django_sendfile.backends.xsendfile"
 SENDFILE_URL = MEDIA_URL
 SENDFILE_ROOT = MEDIA_ROOT
+
+PLOTLY_DASH = {
+    # Flag to control location of initial argument storage
+    "cache_arguments": False,
+}

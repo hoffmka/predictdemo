@@ -149,10 +149,9 @@ def execute_query(targetId_value):
             'fillcolor': 'rgb(255, 204, 153)',
             'layer': 'below',
         }
-
         
-        graph_figure['layout']['shapes'].append(shape_1)
-        graph_figure['layout']['shapes'].append(shape_2)
+    graph_figure['layout']['shapes'].append(shape_1)
+    graph_figure['layout']['shapes'].append(shape_2)
         
     return graph_figure
 

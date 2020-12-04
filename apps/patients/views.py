@@ -98,6 +98,22 @@ def patients_search(request):
                 }
                 ]
             }
+            '''
+            post_data = {
+                "patients": [
+                    {
+                    "index": "1",
+                    "patient": {
+                        "firstName": "Peter",
+                        "lastName": "Liebknecht",
+                        "gender": "M",
+                        "birthplace": "Berlin",
+                        "birthdate": "1977-03-03"
+                    }
+                }
+                ]
+            }
+            '''
             r = requests.post(url, data=json.dumps(post_data, cls=DjangoJSONEncoder), headers=headers)
             response = json.loads(r.text)
             try:
