@@ -63,13 +63,13 @@ def patients_search(request):
                     "fields": {
                         #"study_id": searchPsnByPatientForm.cleaned_data['domain'],
                         #"study_name": searchPsnByPatientForm.cleaned_data['domain'],
-                        "study_id": "demo",
-                        "study_name": "demo",
+                        "study_id": "fb_haematology",
+                        "study_name": "fb_haematology",
                         "location_id": "loc1",
                         "location_name": "loc1",
-                        "event": "demo.requestPsn",
+                        "event": "fb_haematology.requestPsn",
                         "reason": "new ic version",
-                        "targetIdType": "mdat",
+                        "targetIdType": "demo_fb_haematology",
                         "options": {
                             "resultType": "simple"
                             }
@@ -147,11 +147,17 @@ def patient_mdat_view(request):
     #domain = request.session['domain']
 
     # Are prediction available? If yes, then plot last prediction
-    dash_context_model38 = None
-    if Prediction.objects.filter(targetId = targetId, status = 1).exists():
-        l = Prediction.objects.filter(targetId = targetId, status = 1).last()
+    dash_context_project1 = None
+    if Prediction.objects.filter(targetId = targetId, project=1, status = 1).exists():
+        l = Prediction.objects.filter(targetId = targetId, project=1, status = 1).last()
         prediction_id = l.id
-        dash_context_model38 = {"prediction_id": {"value": prediction_id}}
+        dash_context_project1 = {"prediction_id": {"value": prediction_id}}
+
+    dash_context_project2 = None
+    if Prediction.objects.filter(targetId = targetId, project=2, status = 1).exists():
+        l = Prediction.objects.filter(targetId = targetId, project=2, status = 1).last()
+        prediction_id = l.id
+        dash_context_project2 = {"prediction_id": {"value": prediction_id}}
 
     #Otherwise plot bcr-abl/abl data, if bcr-abl/abl values available
     dash_context = None
@@ -163,7 +169,8 @@ def patient_mdat_view(request):
         'targetId': targetId,
         #'domain': domain,
         'dash_context': dash_context,
-        'dash_context_model38': dash_context_model38,
+        'dash_context_project1': dash_context_project1,
+        'dash_context_project2': dash_context_project2,
         })
 
 @login_required

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load django_tables2 %}
+
+<!-- Title -->
+{% block title %}
+  Predictions
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item active">Predicitions</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+    {% render_table predictionListTable %}
+{% endblock %}

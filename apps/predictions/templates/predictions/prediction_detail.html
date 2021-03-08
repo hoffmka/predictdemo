@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load django_tables2 %}
+{% load plotly_dash %}
+
+<!-- Title -->
+{% block title %}
+  Prediction detail
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'predictions:prediction_all_list' %}">Predicitions</a></li>
+            <li class="breadcrumb-item active">Detail</li>
+        </ol>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h5 class="card-header">
+            Prediction
+        </h5>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Prediction id:</dt>
+                <dd class="col-sm-9">{{ object.id }}</dd>
+
+                <dt class="col-sm-3">MAGPIE Job id:</dt>
+                <dd class="col-sm-9">{{ object.magpieJobId}}</dd>
+
+                <dt class="col-sm-3">MAGPIE Model (id):</dt>
+                <dd class="col-sm-9">{{ object.project.model}} ({{ object.project.model.magpieModelId}})</dd>
+
+                <dt class="col-sm-3">MAGPIE Project id:</dt>
+                <dd class="col-sm-9">{{ object.project}}</dd>
+
+                <dt class="col-sm-3">Patient (target id):</dt>
+                <dd class="col-sm-9">{{ object.targetId}}</dd>
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">{{ object.get_status_display}}</dd>
+
+                <dt class="col-sm-3">Created at:</dt>
+                <dd class="col-sm-9">{{ object.createdAt}}</dd>
+            </dl>
+        
+        </diV>
+    </div>
+    <a href= "{% url 'predictions:magpie_download_jobresults' object.id %}">Get results</a>
+{{dash_app}}
+{% plotly_app name=dash_app initial_arguments=dash_context ratio=1 %}
+{% endblock %}

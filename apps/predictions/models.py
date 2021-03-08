@@ -10,10 +10,17 @@ class Model(models.Model):
     def __str__(self):
         return '%s' % (self.modelName)
 
+class Dash(models.Model):
+    appname = models.CharField(max_length = 2000)
+
+    def __str__(self):
+        return '%s' % (self.appname)
+
 class Project(models.Model):
     model = models.ForeignKey(Model, on_delete = models.CASCADE) 
     projectName = models.CharField(max_length = 40)
     magpieProjectId = models.IntegerField(unique = True)
+    dash = models.ForeignKey(Dash, on_delete = models.CASCADE, blank = True, null = True)
 
     def __str__(self):
         return '%s' % (self.projectName)
@@ -30,3 +37,4 @@ class Prediction(models.Model):
     status = models.IntegerField(choices = STATUS, default = 0)
     createdAt = models.DateTimeField(auto_now_add = True)
     #createdBy = models.ForeignKey(User, on_delete = models.CASCADE)
+

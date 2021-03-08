@@ -26,6 +26,7 @@ from django.views.generic.base import TemplateView
 import plotlydash.DashExampleApp
 import plotlydash.cml_bcr_abl_ratio
 import plotlydash.cml_rec_prob_model
+import plotlydash.cml_rec_portrait_model
 
 from django_plotly_dash.views import add_to_session
 

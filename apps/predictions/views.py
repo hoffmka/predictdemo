@@ -8,14 +8,50 @@ from django_pivot.pivot import pivot
 
 from djqscsv import write_csv
 
-from .models import Prediction
+from .models import Prediction, Project
+from .tables import *
+
 from ..dbviews.models import Diagnostic, TreatMedication
+
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin, SingleTableView
+from django_tables2.export.views import ExportMixin
 
 import json
 import os
 import requests
 import subprocess
 
+class PredictionListView(SingleTableMixin, ListView):
+    """
+    This view lists predictions
+    """
+    queryset = Prediction.objects.all().order_by('-id')
+    context_table_name = 'predictionListTable'
+    table_class = PredictionListTable
+    table_pagination = {"per_page": 10}
+    template_name = 'predictions/prediction_all_list.html'
+
+class PredictionDetailView(DetailView):
+    """
+    This view displays detail information of a prediction
+    """
+    model = Prediction
+    template_name = 'predictions/prediction_detail.html'
+    pk_url_kwarg = 'prediction_pk'
+
+    def get_context_data(self, *args, **kwargs):
+        # passing prediction_id as initial value to context
+        context = super().get_context_data(*args, **kwargs)
+        prediction_id = self.kwargs['prediction_pk']
+        # dash app name
+        prediction = Prediction.objects.get(id = prediction_id)
+        context['dash_app'] = prediction.project.dash.appname
+        # initial value
+        dash_context = {"prediction_id": {"value": prediction_id}}
+        context['dash_context'] = dash_context
+        return context
 
 @login_required
 def prediction_list(request):
@@ -43,8 +79,9 @@ def prediction_list(request):
 def create_magpie_prediction(request):
     # new prediction object
     targetId = request.session['targetId']
+    projectId = 2
 
-    n = Prediction.objects.create(project_id = 1, targetId = targetId)
+    n = Prediction.objects.create(project_id = projectId, targetId = targetId)
     prediction_id = n.id
 
     # save patdata
@@ -64,8 +101,12 @@ def create_magpie_prediction(request):
     magpie_user = 'katja.hoffmann@tu-dresden.de'
     magpie_password = 'kh09:L'
     magpie_url = 'http://10.25.69.145'
-    magpie_project_id = '97'
-    magpie_model_id = '38'
+
+    # magpie ids for project and model
+    project = Project.objects.get(id = projectId)
+    magpie_project_id = str(project.magpieProjectId)
+    magpie_model_id = str(project.model.magpieModelId)
+
     df_pcr = os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_pcr.csv')))
     df_treat = os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_medi.csv')))
 
@@ -110,6 +151,7 @@ def magpie_download_jobresults(request, prediction_id):
 
     # run R script for job download
     command = 'Rscript'
+    #path2script = '/usr/local/www/djangoprojects/predictDemo/apps/predictions/Rscripts/magpie_download_jobresults.R'
     path2script = os.path.join(os.path.dirname(__file__), 'Rscripts/magpie_download_jobresults.R')
     args = [magpie_user, magpie_password, magpie_url, magpie_project_id, magpie_model_id, magpie_job_id, media_dir]
 
@@ -147,4 +189,4 @@ def magpie_download_jobresults(request, prediction_id):
         if job_status == '1':
             Prediction.objects.filter(id = prediction_id).update(status = 2)
 
-    return redirect('predictions:prediction_list')
+    return redirect('predictions:prediction_all_list')

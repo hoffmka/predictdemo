@@ -10,12 +10,12 @@ class THSSearchPsnByPatientForm(forms.Form):
     )
     #domain = forms.ChoiceField(widget = forms.Select(),
     #        choices = DOMAIN_CHOICES, initial = 'model_B', required = True, label = 'Model (Domain)')
-    firstname = forms.CharField(max_length = 40, required = True)
-    lastname =  forms.CharField(max_length = 40, required = True)
+    firstname = forms.CharField(max_length = 40, required = True, initial = 'Max')
+    lastname =  forms.CharField(max_length = 40, required = True, initial = 'Mustermann')
     gender = forms.ChoiceField(widget = forms.Select(),
-            choices = ([('F','Female'), ('M','Male'), ]), required = True)
+            choices = ([('F','Female'), ('M','Male'), ]), required = True, initial = 'M')
     birthplace = forms.CharField(max_length = 40, required = False)
-    birthdate = forms.DateField(widget=forms.SelectDateWidget(years=range(1900, 2020)), required = True)
+    birthdate = forms.DateField(widget=forms.SelectDateWidget(years=range(1900, 2020)), required = True, initial = '2000-01-01')
 
 # class ModelSelectionForm(forms.Form):
 #     MODEL_CHOICES = (

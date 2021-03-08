@@ -27,6 +27,8 @@
 <div class="alert alert-info" role="alert">
   Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong>
 </div>
+
+
 <!--Submenu-->
 <p>
   <a class="btn btn-primary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
@@ -36,12 +38,22 @@
 </p>
 
 <!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
-{% if dash_context_model38 != None %}
-  {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_model38 ratio=0.5 %}
-{% elif dash_context != None %}
-  {% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
+<h3>Current clinical data</h3>
+{% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
+
+<!-- Latest model predictions -->
+<h3>Latest model predictions</h3>
+
+{% if dash_context_project1 != None %}
+  {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1 ratio=0.5 %}
 {% else %}
-  No plots available.
+  No prediction for project "CML Recurrance probability" available.
+{% endif %}
+
+{% if dash_context_project2 != None %}
+  {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2 ratio=0.6 %}
+{% else %}
+  No prediction for project "CML Phase Portrait" available.
 {% endif %}
 
 {% endif %}

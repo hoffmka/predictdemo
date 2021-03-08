@@ -51,6 +51,7 @@
                                         </a>
                                         <!--For researcher menu-->
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
+                                            <a class="dropdown-item" href="{% url 'predictions:prediction_all_list' %}">Predictions</a>
                                             <a class="dropdown-item" href="{% url 'trials:trials_list' %}">Trials</a>
                                             <a class="dropdown-item" href="{% url 'dbviews:dbviews_list' %}">Views</a>
                                             <a class="dropdown-item" href="{% url 'shiny:shiny' %}">ShinyExample</a>
