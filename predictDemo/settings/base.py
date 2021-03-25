@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'apps.trials',
     'apps.dbviews', # Standard and user defined views
     'apps.udv_destiny', # user defined views for destiny trial
-    'apps.shiny', # embeds shiny apps
 
     #third party apps
     'rolepermissions', # role-permission --> https://django-role-permissions.readthedocs.io/en/stable/index.html
