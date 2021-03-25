@@ -106,13 +106,4 @@
         <li><a href="">Adverse Effects</a></li>
         <li><a href="">Evaluation</a></li>
     </ul>
-    <hr />
-    <h2>User defined views</h2>
-    {% if trial.studyCode == "DESTINY" %}
-        <ul>
-            <li><a href={% url 'udv_destiny:cml_destiny_view1' %}>CML Destiny View bla<a></li>
-            <li>View blu</li>
-            <li>View blub</li>
-        </ul>
-    {% endif %}
 {% endblock content %}

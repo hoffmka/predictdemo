@@ -40,7 +40,6 @@ urlpatterns = [
     path('predictions/', include('apps.predictions.urls', namespace='predictions')),
     path('trials/', include('apps.trials.urls', namespace='trials')),
     path('views/', include('apps.dbviews.urls', namespace='dbviews')),
-    path('destiny/', include('apps.udv_destiny.urls', namespace='udv_destiny')),
     path('docs/', include('docs.urls')), # third party include
 
     # django_plotly_dash app

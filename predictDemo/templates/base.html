@@ -53,12 +53,17 @@
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
                                             <a class="dropdown-item" href="{% url 'predictions:prediction_all_list' %}">Predictions</a>
                                             <a class="dropdown-item" href="{% url 'trials:trials_list' %}">Trials</a>
-                                            <a class="dropdown-item" href="{% url 'dbviews:dbviews_list' %}">Views</a>
+                                            <a class="dropdown-item" href="">My Trials</a>
                                         </div>
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
                                             
                                         </div>                                       
                                     </li>
+                                <!-- Admin menu for staff-->
+                                {% if user.is_staff %}
+                                    <li><a class="nav-link" href="{% url 'admin:index' %}" target= "-blank">Admin</a></li>
+                                    <li><a class="nav-link" href="{% url 'docs_root' %}" target= "-blank">Docs</a></li>
+                                {% endif %}
                                 </ul>
                                 <ul class="navbar-nav ml-auto">
                                     <li class="nav-item dropdown">
