@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load i18n lazysignup_tags %}
+{% load permission_tags %}
 
 {% block breadcrumb %}
     <div class="container">
@@ -10,13 +12,17 @@
 {% endblock %}
 
 {% block content %}
+{% if user|is_lazy_user or user|has_role:'dept_haematology'%}
+{% for group in user.groups.all %}
+  {{group.description}}
+{% endfor %}
 <h2>Search for patient via Trusted Third Party</strong></h2>
 <div class="row justify-content-left">
   <div class="col-lg-6">
     <form method="post" novalidate>
       {% csrf_token %}
       {% bootstrap_form searchPsnByPatientForm %}
-      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
     </form>
   </div>
   <div class="col-lg-6">
@@ -31,6 +37,11 @@
     </div>
   </div>
 </div>
+{% else %}
+<div class="alert alert-danger" role="alert">
+  You are not allowed to access patients from the field of haematology!
+</div>
+{% endif %}
 
 
 

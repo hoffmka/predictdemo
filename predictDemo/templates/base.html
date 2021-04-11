@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 {% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
 {% load i18n lazysignup_tags %}
+{% load permission_tags %}
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -42,8 +44,13 @@
                                         </a>
                                         <!--For clinician menu-->
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForClinicians">
+                                            {% if user|has_role:'dept_haematology'%}
                                             <a class="dropdown-item" href="{% url 'patients:patients_search' %}">Request patient data</a>
+                                            {% else %}
+                                            <span class="isDisabled"><a class="dropdown-item" href="">Request patient data</a></span>
+                                            {% endif %}
                                         </div>
+                                        
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="ForResearcher" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -51,9 +58,13 @@
                                         </a>
                                         <!--For researcher menu-->
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
-                                            <a class="dropdown-item" href="{% url 'predictions:prediction_all_list' %}">Predictions</a>
+                                            <!-- <a class="dropdown-item" href="{% url 'predictions:prediction_all_list' %}">Predictions</a> -->
+                                            {% if user|has_role:'trial_cml'%}
                                             <a class="dropdown-item" href="{% url 'trials:trials_list' %}">Trials</a>
-                                            <a class="dropdown-item" href="">My Trials</a>
+                                            {% else %}
+                                            <span class="isDisabled"><a class="dropdown-item" href="">Trials</a></span>
+                                            {% endif %}
+
                                         </div>
                                         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
                                             
@@ -72,9 +83,14 @@
                                             Logged in as {{ user.username }}
                                             </a>
                                         {% else %}
+                                            {% if user|has_role:'dept_haematology'%}
                                             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                            Logged in as guest
+                                            Logged in as guest physician
+                                            {% elif user|has_role:'trial_cml'%}
+                                            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Logged in as guest researcher
                                             </a>
+                                            {% endif %}
                                         {% endif %}
                                         <!--account setting-->
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">

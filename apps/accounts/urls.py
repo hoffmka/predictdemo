@@ -10,6 +10,7 @@ urlpatterns = [
     path('signup/', views.signup , name='signup'),
     path('lazysignup/', views.lazysignup, name='lazysignup'),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('switchgroup/', views.switch_lazyuser_group, name='switch_lazyuser_group'),
     path('logout/',auth_views.LogoutView.as_view(),name='logout'),
     path('settings/account/', accounts_views.UserUpdateView.as_view(), name='my_account'),
     # password reset urls

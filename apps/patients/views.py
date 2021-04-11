@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.db import connections
 from django.db.models import F, Max
 
@@ -17,11 +18,13 @@ from ..dbviews.models import Diagnostic, TreatMedication
 from ..predictions.models import Prediction
 from .tables import PatientsListTable, CML_udv_BcrAblRatioTable, CML_udv_treatmentTable
 
+from rolepermissions.decorators import has_role_decorator
+
 import json
 import requests
 # Create your views here.
 
-@login_required
+@has_role_decorator('dept_haematology')
 def patients_search(request):
     if request.method == 'POST':
         searchPsnByPatientForm = THSSearchPsnByPatientForm(request.POST)
@@ -57,19 +60,22 @@ def patients_search(request):
             # request TokenId
             url_token = uri_session+'/tokens'
 
+            # get studyId and targetIdTyp from group "dept_haematology"
+            group = Group.objects.get(id=1)
+            
             post_data = {
                 "type": "requestPsnByPatient",
                 "data": {
                     "fields": {
                         #"study_id": searchPsnByPatientForm.cleaned_data['domain'],
                         #"study_name": searchPsnByPatientForm.cleaned_data['domain'],
-                        "study_id": "fb_haematology",
-                        "study_name": "fb_haematology",
+                        "study_id": group.ttp_studyId,
+                        "study_name": group.ttp_studyId,
                         "location_id": "loc1",
                         "location_name": "loc1",
-                        "event": "fb_haematology.requestPsn",
+                        "event": group.ttp_studyId+".requestPsn",
                         "reason": "new ic version",
-                        "targetIdType": "demo_fb_haematology",
+                        "targetIdType": group.ttp_targetIdType,
                         "options": {
                             "resultType": "simple"
                             }
@@ -139,7 +145,7 @@ def patients_search(request):
         'searchPsnByPatientForm': searchPsnByPatientForm
         })
 
-@login_required
+@has_role_decorator('dept_haematology')
 def patient_mdat_view(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
@@ -173,7 +179,7 @@ def patient_mdat_view(request):
         'dash_context_project2': dash_context_project2,
         })
 
-@login_required
+@has_role_decorator('dept_haematology')
 def patient_mdat_view_bcrabl(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
@@ -203,7 +209,7 @@ def patient_mdat_view_bcrabl(request):
         'diagnosticTable': diagnosticTable
         })
 
-@login_required
+@has_role_decorator('dept_haematology')
 def patient_mdat_view_treatment(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
@@ -228,20 +234,20 @@ def patient_mdat_view_treatment(request):
         'treatmentTable': treatmentTable
         })
 
-def patients_list(request, trial_pk):
-    trial = Trial.objects.get(id = trial_pk)
-    hopt_studyid = trial.hopt_studyid
-    with connections['HaematoOPT'].cursor() as cursor:
-        cursor = cursor.execute("SELECT * from Patients_V WHERE StudyID = %s", [hopt_studyid])
-        #results = cursor.fetchall()
-        columns = [column[0] for column in cursor.description]
-        results = []
-        for row in cursor.fetchall():
-            results.append(dict(zip(columns,row)))
-    table = PatientsListTable(results)        
+# def patients_list(request, trial_pk):
+#     trial = Trial.objects.get(id = trial_pk)
+#     hopt_studyid = trial.hopt_studyid
+#     with connections['HaematoOPT'].cursor() as cursor:
+#         cursor = cursor.execute("SELECT * from Patients_V WHERE StudyID = %s", [hopt_studyid])
+#         #results = cursor.fetchall()
+#         columns = [column[0] for column in cursor.description]
+#         results = []
+#         for row in cursor.fetchall():
+#             results.append(dict(zip(columns,row)))
+#     table = PatientsListTable(results)        
 
-    table.paginate(page=request.GET.get("page", 1), per_page=25)
+#     table.paginate(page=request.GET.get("page", 1), per_page=25)
 
-    return render(request, 'patients/patients_list.html', {
-        "table": table
-    })
+#     return render(request, 'patients/patients_list.html', {
+#         "table": table
+#     })

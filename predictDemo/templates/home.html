@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% load static %}
+{% load i18n lazysignup_tags %}
+{% load permission_tags %}
+
 {% block title %}prediCt{% endblock %}
 {% block content %}
     <div class="container">
@@ -11,15 +14,27 @@
         <div class=".div-headline">
           {% if  not user.is_authenticated %}
             <h1>Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
+            <a class="btn btn-lg btn-info" href="{% url 'accounts:lazysignup' %}">Try it out</a>
+            <a class="btn btn-lg btn-primary" href="{% url 'accounts:login' %}">Login</a>
           {% else %}
             <h1>Welcome to the Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
           {% endif %}
         </div>
-        {% if user.is_authenticated %}
-          <p  class="lead">A detailed documentation of this software framework can you find <a href=" {% url 'docs_root' %}" target= "blank">here</a>.</p>
-        {% else %}
-          <a class="btn btn-lg btn-info" href="{% url 'accounts:lazysignup' %}">Try it out</a>
-          <a class="btn btn-lg btn-primary" href="{% url 'accounts:login' %}">Login</a>
-        {% endif %}
       </div>
+      {% if user|is_lazy_user%}
+      <div class="card border-info mb-0">
+        <div class="card-body">
+          <h5 class="card-title">Account Information</h5>
+          {% if user|has_role:'dept_haematology'%}
+            <p class="lead">Your are logged in as <strong class="text-danger font-weight-bold">attending (guest) physician from the haematology department of a clinic</strong>.</p>
+            <p class="leead">Would you like to login as guest researcher?</p>
+            <a class="btn btn-lg btn-primary" href="{% url 'accounts:switch_lazyuser_group' %}">Switch to a guest researcher account.</a>
+          {% elif user|has_role:'trial_cml'%}
+            <p class="lead">Your are logged in as <strong class="text-danger font-weight-bold">guest researcher with permission to access to the "CML trial"</strong>.</p>
+            <p class="leead">Would you like to login as attending (guest) physician?</p>
+            <a class="btn btn-lg btn-primary" href="{% url 'accounts:switch_lazyuser_group' %}">Switch to a guest physician account.</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
 {% endblock content %}}
