@@ -4,8 +4,16 @@ from django.shortcuts import render
 from django_tables2.config import RequestConfig
 from django_tables2.export.export import TableExport
 
+from django.views.generic import DetailView
+
+from django_tables2.export.views import ExportMixin
+from django_tables2.views import SingleTableMixin
+
+from predictDemo.roles.mixins import HasObjectPermissionMixin
+
 from ..trials.models import Trial
-from .tables import sdv_DiagnosticValuesTable
+from . models import Diagnostic, TreatMedication
+from .tables import sdv_DiagnosticValuesTable, TrialDiagnosticTable, TrialMedicationTable
 
 import json
 import requests
@@ -37,3 +45,67 @@ def sdv_diagnostic_values(request, trial_pk):
     return render(request, 'dbviews/sdv_diagnostic_values.html', {
         "sdv_diagnostic_values_table": sdv_diagnostic_values_table
     })
+
+class TrialDiagnosticDetailView(HasObjectPermissionMixin, ExportMixin, SingleTableMixin, DetailView):
+    """
+    This view lists all diagnostic values from a trial
+    """
+    checker_name = 'access_trial'
+    model = Trial
+    pk_url_kwarg = 'trial_pk'
+    table_class = TrialDiagnosticTable
+    context_table_name = 'diagnosticTable'
+    table_pagination = {"per_page": 10}
+    template_name = 'dbviews/diagnostic_trial.html'
+    export_formats = ("csv", "xls")
+
+    def get_table_data(self, **kwargs):
+        """
+        #Filtering diagnostic values by trial_pk
+        """
+        trial = Trial.objects.get(id=self.kwargs['trial_pk'])
+        if (trial.group is not None):
+            qs = Diagnostic.objects.filter(targetId__startswith = trial.group.ttp_targetIdType)
+        else:
+            qs = []
+        return qs
+
+    # def get_queryset(self, **kwargs):
+    #     """
+    #     Filtering diagnostics by project_pk
+    #     """
+    #     qs = ProtocolModel.objects.filter(project = self.kwargs['project_pk']).order_by('-date')
+    #     return qs
+
+    def get_context_data(self, **kwargs):
+        """
+        Passing trial details to template
+        """
+        context = super(TrialDiagnosticDetailView, self).get_context_data(**kwargs)
+        context['trial_pk']= self.kwargs['trial_pk']
+        context['trial'] = Trial.objects.get(id = self.kwargs['trial_pk'])
+        return context
+
+class TrialMedicationDetailView(HasObjectPermissionMixin, ExportMixin, SingleTableMixin, DetailView):
+    """
+    This view lists all medications from a trial
+    """
+    checker_name = 'access_trial'
+    model = Trial
+    pk_url_kwarg = 'trial_pk'
+    table_class = TrialMedicationTable
+    context_table_name = 'medicationTable'
+    table_pagination = {"per_page": 10}
+    template_name = 'dbviews/medication_trial.html'
+    export_formats = ("csv", "xls")
+
+    def get_table_data(self, **kwargs):
+        """
+        #Filtering medication values by trial_pk
+        """
+        trial = Trial.objects.get(id=self.kwargs['trial_pk'])
+        if (trial.group is not None):
+            qs = TreatMedication.objects.filter(targetId__startswith = trial.group.ttp_targetIdType)
+        else:
+            qs = []
+        return qs

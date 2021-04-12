@@ -56,6 +56,7 @@
     </dl>
     <hr />
 
+    <!--
     <h2>Permissions</h2>
     {% can "admin_trial" trial user=user as can_admin_trial %}
     <ul class="list-inline">
@@ -97,13 +98,10 @@
         At present, add, edit and delete permissions aren't implemented in frontend. Changes can be done by admins via Django admin site.
     </div>
     <hr />
-    <h2>Standard views</h2>
+    -->
+    <h2>Access to research data</h2>
     <ul>
-        <li><a href={% url 'patients:patients_list' trial.pk %}>Patients list<a></li>
-        <li><a href="">Patient data</a></li>
-        <li><a href="{% url 'dbviews:sdv_diagnostic_values' trial.pk%}">Diagnostics</a></li>
-        <li><a href="">Treatments</a></li>
-        <li><a href="">Adverse Effects</a></li>
-        <li><a href="">Evaluation</a></li>
+        <li><a href="{% url 'dbviews:trial_diagnostic_values' trial.pk %}">Diagnostic values</a></li>
+        <li><a href="{% url 'dbviews:trial_medication_values' trial.pk %}">Treatments</a></li>
     </ul>
 {% endblock content %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load django_tables2 %}
+
+{% block title %}
+  Medication
+{% endblock %}
+
+{% block breadcrumb %}
+    <div class="container">
+        <ol class="breadcrumb my-4">
+            <li class="breadcrumb-item"><a href="{% url 'trials:trials_detail' trial.pk %}">Main page of "{{trial}}"</a></li>
+            <li class="breadcrumb-item active">Medication</li>
+        </ol>
+{% endblock %}
+
+
+{% block content %}
+    <h3>Medication</h3>
+    <!-- Export -->
+    <div class="col-sm-12">
+        <div class="float-right">
+            {% if view.export_formats %}
+                {% for format in view.export_formats %}
+                <a href="{% export_url format %}" class="btn btn-xs btn-default">
+                    download  <code>.{{ format }}</code>
+                </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-sm-12">
+    {% render_table medicationTable %}
+    </div>
+{% endblock content %}

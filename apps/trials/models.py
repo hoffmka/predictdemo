@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -12,6 +12,7 @@ class Trial(models.Model):
     clinicalTrials = models.CharField(max_length = 40, blank = True)
     eudraCT = models.CharField(max_length = 40, blank = True)
     disease = models.CharField(max_length = 100, blank = True)
+    group = models.ForeignKey(Group, on_delete = models.CASCADE, null=True, blank=True)
     hopt_studyid = models.IntegerField(blank = True, null = True)
     createdAt = models.DateTimeField(auto_now_add = True)
     createdBy = models.ForeignKey(User, on_delete = models.CASCADE, default = None)  

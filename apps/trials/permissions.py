@@ -1,3 +1,4 @@
+from rolepermissions.checkers import has_role
 from rolepermissions.permissions import register_object_checker
 #from predictDemo.roles import SystemAdmin
 
@@ -9,7 +10,9 @@ def access_trial(role, user, trial):
         return True
     if trial.trialpermission_set.filter(user=user):
         return True
-
+    if trial.group is not None:
+        if has_role(user, trial.group.name):
+            return True
     return False
 
 @register_object_checker()
