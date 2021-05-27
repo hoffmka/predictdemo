@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse,reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
-from rolepermissions.mixins import HasPermissionsMixin
+from rolepermissions.mixins import HasPermissionsMixin, HasRoleMixin
 from predictDemo.roles.mixins import HasObjectPermissionMixin
 
 from .models import Trial, Document
@@ -11,20 +12,20 @@ from .forms import DocumentForm
 
 # Create your views here.
 
+@method_decorator(login_required, name='dispatch')
 class TrialListView(ListView):
     """
     This view will list the trials
     """
-    #allowed_roles = 'consultant_admin'
     queryset = Trial.objects.order_by('name')
     context_object_name = 'trials_list'
     template_name = 'trials/trials_list.html'
 
-class TrialCreateView(CreateView):
+class TrialCreateView(HasRoleMixin, CreateView):
     """
     This view will create a trial
     """
-    #allowed_roles = 'consultant_admin'
+    allowed_roles = 'admin'
     model = Trial
     fields =('studyCode', 'name', 'description', 'clinicalTrials', 'eudraCT')
     template_name = 'trials/trials_create.html'

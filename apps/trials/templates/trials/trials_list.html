@@ -17,7 +17,7 @@
 
 {% block content %}
     <ul class="list-inline">
-    {% if user.is_authenticated and not user|is_lazy_user %}
+    {% if user|has_role:'admin' %}
         <li class="list-inline-item"><a class="addlink" href="{% url 'trials:trials_create' %}">Add trial</a></li>
     {% else %}
         <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add trial</a></span></li>

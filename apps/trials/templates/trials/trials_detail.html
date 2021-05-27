@@ -3,6 +3,7 @@
 {% load permission_tags %}
 
 {% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+{% load plotly_dash %}
 
 {% block title %}
   Trial detail
@@ -104,4 +105,17 @@
         <li><a href="{% url 'dbviews:trial_diagnostic_values' trial.pk %}">Diagnostic values</a></li>
         <li><a href="{% url 'dbviews:trial_medication_values' trial.pk %}">Treatments</a></li>
     </ul>
+    <h2>Data visualization</h2>
+
+    {% if trial.pk == 2 %}
+        {% plotly_app name="CML_BCR-ABL-Ratio-enest1st"  initial_arguments='{"trial": {"value": "2"}}' ratio=1 %}
+    {% endif %}
+
+    {% if trial.pk == 9 %}
+        {% plotly_app name="CML_BCR-ABL-Ratio-agg"  initial_arguments='{"trial": {"value": "9"}}' ratio=1 %}
+    {% endif %}
+
+    {% if trial.pk == 15 %}
+        {% plotly_app name="CML_BCR-ABL-Ratio-destiny"  initial_arguments='{"trial": {"value": "9"}}' ratio=1 %}
+    {% endif %}
 {% endblock content %}

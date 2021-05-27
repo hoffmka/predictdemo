@@ -35,7 +35,7 @@ class Diagnostic(models.Model):
     sampleId = models.CharField(max_length = 40)
     sampleDate = models.DateField()
     parameter = models.ForeignKey(DiagParameter, on_delete = models.CASCADE)
-    value = models.CharField(max_length = 100)
+    value = models.CharField(max_length = 100, null = True, blank = True)
     unit = models.CharField(null = True, blank = True, max_length = 20)
     createdAt = models.DateTimeField(auto_now_add = True)
     updatedAt = models.DateTimeField(auto_now=True)
