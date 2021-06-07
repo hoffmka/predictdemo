@@ -58,6 +58,13 @@ class TrialDetailView(HasObjectPermissionMixin, DetailView):
     template_name = 'trials/trials_detail.html'
     pk_url_kwarg = 'trial_pk'
 
+    def get_context_data(self, **kwargs):
+            # Call the base implementation first to get a context
+            context = super().get_context_data(**kwargs)
+            # Add dash_context
+            trial_id = self.kwargs['trial_pk']
+            context['dash_context'] = dash_context = {"trial": {"value": trial_id}}
+            return context
 
 class TrialUpdateView(HasObjectPermissionMixin, UpdateView):
     """

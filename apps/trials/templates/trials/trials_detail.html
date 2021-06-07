@@ -107,15 +107,6 @@
     </ul>
     <h2>Data visualization</h2>
 
-    {% if trial.pk == 2 %}
-        {% plotly_app name="CML_BCR-ABL-Ratio-enest1st"  initial_arguments='{"trial": {"value": "2"}}' ratio=1 %}
-    {% endif %}
-
-    {% if trial.pk == 9 %}
-        {% plotly_app name="CML_BCR-ABL-Ratio-agg"  initial_arguments='{"trial": {"value": "9"}}' ratio=1 %}
-    {% endif %}
-
-    {% if trial.pk == 15 %}
-        {% plotly_app name="CML_BCR-ABL-Ratio-destiny"  initial_arguments='{"trial": {"value": "9"}}' ratio=1 %}
-    {% endif %}
+    {% plotly_app name="CML_BCR-ABL-Ratio-agg"  initial_arguments=dash_context ratio=1 %}
+    
 {% endblock content %}

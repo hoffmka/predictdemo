@@ -3,7 +3,7 @@ from .models import DiagType, DiagParameter, Diagnostic, TreatMedication
 
 # Register your models here.
 class TreatMedicationAdmin(admin.ModelAdmin):
-    list_display = ('targetId', 'dateBegin', 'dateEnd', 'interval', 'intervalUnit', 'drugName', 'dosage', 'dosageUnit', 'medScheme', 'createdAt', 'updatedAt')
+    list_display = ('trial', 'targetId', 'dateBegin', 'dateEnd', 'interval', 'intervalUnit', 'drugName', 'dosage', 'dosageUnit', 'medScheme', 'createdAt', 'updatedAt')
 
 admin.site.register(TreatMedication, TreatMedicationAdmin)
 
@@ -18,7 +18,7 @@ class DiagParameterAdmin(admin.ModelAdmin):
 admin.site.register(DiagParameter, DiagParameterAdmin)
 
 class DiagnosticAdmin(admin.ModelAdmin):
-    list_display = ('diagType', 'targetId', 'sampleId', 'sampleDate', 'parameter', 'value', 'unit', 'createdAt', 'updatedAt')
+    list_display = ('diagType', 'trial', 'targetId', 'sampleId', 'sampleDate', 'parameter', 'value', 'unit', 'createdAt', 'updatedAt')
 
 admin.site.register(Diagnostic, DiagnosticAdmin)
 

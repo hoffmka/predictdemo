@@ -1,10 +1,11 @@
 from django.db import models
-
+from ..trials.models import Trial
 # Create your models here.
 
 # Medication
 
 class TreatMedication(models.Model):
+    trial = models.ForeignKey(Trial, on_delete = models.PROTECT, null = True, blank = True)
     targetId = models.CharField(max_length = 40)
     dateBegin = models.DateField()
     dateEnd = models.DateField(null = True, blank = True)
@@ -30,7 +31,8 @@ class DiagParameter(models.Model):
         return '%s' % (self.parameterName)
         
 class Diagnostic(models.Model):
-    diagType = models.ForeignKey(DiagType, on_delete = models.CASCADE)
+    diagType = models.ForeignKey(DiagType, on_delete = models.PROTECT)
+    trial = models.ForeignKey(Trial, on_delete = models.PROTECT, null = True, blank = True)
     targetId = models.CharField(max_length = 40)
     sampleId = models.CharField(max_length = 40)
     sampleDate = models.DateField()
