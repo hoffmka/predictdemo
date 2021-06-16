@@ -3,9 +3,15 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
+from django.contrib.auth.models import User
 from django.db.models import F, Max, Q
-from apps.dbviews.models import Diagnostic, TreatMedication
 from django_pivot.pivot import pivot
+
+from apps.dbviews.models import PatientTrial, Diagnostic, TreatMedication
+from apps.trials.models import Trial
+from operator import itemgetter
+from rolepermissions.checkers import has_object_permission
+
 
 import plotly
 import plotly.express as px
@@ -32,7 +38,9 @@ app = DjangoDash(name='CML_BCR-ABL-Ratio-agg', id='trial')
 
 app.layout = html.Div(id= 'main',
                     children=[
-                        dcc.Input(id='trial', value='initial value'), #, type='hidden'
+                        dcc.Input(id='trial', value='initial value', type='hidden'),
+                        dcc.Input(id='user', value='initial value', type='hidden'),
+                        # dropdown
                         html.Div(id = 'check_div',
                             style={'align': 'center'},
                             children=[
@@ -40,27 +48,76 @@ app.layout = html.Div(id= 'main',
                                 dcc.Dropdown(
                                     id='dropdown',
                                     options=[
-                                        {'label': 'Median and interquartile range only', 'value': 'graph1'},
-                                        {'label': 'add diagnostics to legends', 'value': 'graph2'},
-                                        {'label': 'show all diagnostics', 'value': 'graph3'},
+                                        {'label': 'Median and interquartile range (without patient-specific time cources)', 'value': 'graph1'},
+                                        {'label': 'Median and interquartile range (with disabled patient-specific time cources)', 'value': 'graph2'},
+                                        {'label': 'Median and interquartile range (with patient-specific time cources)', 'value': 'graph3'},
                                     ],
-                                    value='graph1'
-                                ),
+                                    value='graph2'
+                                )
                             ]),
-                        dcc.Graph(id='live-graph'),
-                        #html.Div(id='display'),  #To show format of selectData
+                        # graph
+                        dcc.Loading(
+                            id="loading-1",
+                            type="default",
+                            children=dcc.Graph(id='live-graph')
+                        ),
+                        # checkbox gender
+                        html.Div(id='div_properties',
+                            style={'align': 'center'},
+                            children=[
+                                html.H4('Select gender:'),
+                                dcc.Checklist(
+                                    id='check_gender',
+                                    options = [
+                                        {'label': 'both gender', 'value': 'bothGender'},
+                                        {'label': 'only males', 'value': 'male', 'disabled': False},
+                                        {'label': 'only females', 'value': 'female', 'disabled': False}
+                                    ],
+                                    value=['bothGender', 'male', 'female']
+                                )
+                            ]
+                        ),
+                        #checkbox Trials
+                        html.Div(id='div_trials',
+                            style={'align': 'center'},
+                            children=[
+                                html.H4('Include patients from other trials:'),
+                                dcc.Checklist(
+                                    id='check_trials',
+                                    value=[],
+                                    labelStyle={'display': 'block'}
+                                )
+                            ]
+                        ),
                     ])
 
 @app.callback(
-    Output(component_id='live-graph', component_property='figure'),
+    [Output(component_id='live-graph', component_property='figure'),
+    Output(component_id='check_trials', component_property='options')],
     [Input(component_id='trial', component_property='value'),
-    Input(component_id='dropdown', component_property='value')])
-def execute_query(trial_value, dropdown_value):
+    Input(component_id='user', component_property='value'),
+    Input(component_id='dropdown', component_property='value'),
+    Input(component_id='check_gender', component_property='value'),
+    Input(component_id='check_trials', component_property='value')])
+def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials):
+    # get permission and build checklist for trials
+    user = User.objects.get(id=user_value)
+    trials = Trial.objects.all()
+    trial_name = Trial.objects.get(id=trial_value).name
+    check_trial_options = []
+    for trial in trials:
+        if has_object_permission('access_trial', user, trial) and trial.id != trial_value:
+            check_trial_options.append({'label': trial.name, 'value': trial.id})
+
+    check_trial_options = sorted(check_trial_options, key=itemgetter('label'))
+
     # get BCR-ABL/ABL values
-    #diagnostic = Diagnostic.objects.filter(targetId__startswith='demo_nordcml006', diagType_id = 1) # diagType = PCR - BCR-ABL/ABL
-    diagnostic = Diagnostic.objects.filter(trial=trial_value, diagType_id = 1)
+    other_trials.append(trial_value)
+    trials=other_trials
+    diagnostic = Diagnostic.objects.filter(trial_id__in=trials, diagType_id = 1)
+
     diag_pivot = pivot(diagnostic, ['trial', 'targetId', 'sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
-    df = pd.DataFrame(diag_pivot, columns = ['targetId', 'sampleId', 'sampleDate', 'ABL', 'BCR-ABL/ABL'])
+    df = pd.DataFrame(diag_pivot, columns = ['trial', 'targetId', 'sampleId', 'sampleDate', 'ABL', 'BCR-ABL/ABL'])
     # prepare data for plot
     df['BCR-ABL/ABL'] = df['BCR-ABL/ABL'].replace('Missing data',np.NaN)
     df['BCR-ABL/ABL'] = pd.to_numeric(df['BCR-ABL/ABL'].replace(',','.', regex=True))
@@ -87,12 +144,18 @@ def execute_query(trial_value, dropdown_value):
     df.loc[df['BCR-ABL/ABL'] == 0, 'ND'] = True 
     # END for R-Script "Median-calculation"
 
+    df_sampleDateMin = df.groupby('targetId').agg({'sampleDate': 'min'}).reset_index()
+    df_sampleDateMin = df_sampleDateMin.rename(columns={'sampleDate':'sampleDate_min'})
+    df = df.merge(df_sampleDateMin, on = 'targetId')
+
+
     #get treatments
-    treatment = TreatMedication.objects.filter(trial=trial_value)
+    treatment = TreatMedication.objects.filter(trial_id__in=trials)
     if treatment.exists():
         treat = treatment.values('targetId', 'dateBegin', 'dateEnd', 'interval', 'intervalUnit', 'drugName', 'dosage', 'dosageUnit','medScheme')
         dfmedi = pd.DataFrame.from_records(data = treat)
-        df = df.merge(dfmedi, on = 'targetId')
+        dfmedi_min = dfmedi.groupby('targetId').agg({'dateBegin':'min'}).reset_index()
+        df = df.merge(dfmedi_min, on = 'targetId', how='left')
         '''
         if dropdown_value == 'graph1':
             df = df
@@ -102,44 +165,62 @@ def execute_query(trial_value, dropdown_value):
             df = df[df['drugName']=='Dasatinib']
         '''
         # for R-Script "Median-calculation" again begin
+        # TIME calculation if tretment exists
         df['TIME'] = (df['sampleDate']-df['dateBegin']) / np.timedelta64(1, 'M')
+        # TIME calculation if treatment not exists
+        df['TIME'].fillna((df['sampleDate']-df['sampleDate_min']) / np.timedelta64(1, 'M'), inplace=True)
     else:
-        df_sampleDateMin = df.groupby('targetId').agg({'sampleDate': 'min'}).reset_index()
-        df = df.merge(df_sampleDateMin, on = 'targetId')
-        df['TIME'] = (df['sampleDate_x']-df['sampleDate_y']) / np.timedelta64(1, 'M')
-    
+        df['TIME'] = (df['sampleDate']-df['sampleDate_min']) / np.timedelta64(1, 'M')
+
     df = df.sort_values(by=['PatID','TIME'])
-    data_Rinput = df[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
-    
+
+    # Exclude/Include gender by checkbox
+    ####################################
+    pat = PatientTrial.objects.filter(trial_id__in=trials)
+    pat = pat.values('targetId', 'gender')
+    dfpat = pd.DataFrame.from_records(data=pat)
+    df = df.merge(dfpat, on='targetId')
+
     #  for R-Script "Median-calculation"
     ####################################
-    # create tempfile
-    tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
-    data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
-
-    args = [tf.name]
-    command = 'Rscript'
-    path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
-    #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
-    cmd = [command, path2script] + args
-
-    x = None
-    try:
-        x = subprocess.check_output(cmd, universal_newlines = True)
-    except subprocess.CalledProcessError as e:
-        x = e.output
-
-    if x!='\n':
-        df_median = pd.read_csv(StringIO(x), sep=",")
     
-    os.remove(tf.name)
-    # end for R-Script calculation
+    # for each gender
+    for gender in gender_value:
+        if gender == 'bothGender':
+            data_Rinput = df[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
+        else:
+            df_subset = df[df['gender']==gender]
+            data_Rinput = df_subset[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
+        # create tempfiles
+        tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
+        data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
+        args = [tf.name]
+        command = 'Rscript'
+        path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
+        #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
+        cmd = [command, path2script] + args
+        # R caclulation
+        x = None
+        try:
+            x = subprocess.check_output(cmd, universal_newlines = True)
+        except subprocess.CalledProcessError as e:
+            x = e.output
+        if x!='\n':
+            if gender == 'bothGender':
+                df_median = pd.read_csv(StringIO(x), sep=",")
+            if gender == 'male':
+                df_median_male = pd.read_csv(StringIO(x), sep=",")
+            if gender == 'female':
+                df_median_female = pd.read_csv(StringIO(x), sep=",")
+        os.remove(tf.name)
+        # end for R-Script calculation
 
     # graph
     graph_figure = go.Figure()
 
     if dropdown_value != 'graph1':
         patlist = sorted(df['targetId'].unique())
+        patlist = patlist[::-1] # reverse order (ascending)
         for patient in patlist:
             df1 = df[df["targetId"] == patient]
             df1['time'] = df1['TIME'].round(0).astype(int)
@@ -173,34 +254,98 @@ def execute_query(trial_value, dropdown_value):
                 #legendgroup=dfmedi['drugName'][0]
                 ))
 
-    if x!='\n':
+    # median both genders
+    try:
         # add 75.Quantil
         graph_figure.add_trace(go.Scatter(
             x=df_median['Time'],
             y=df_median['Quantile75'],
             line={'color':'grey', 'width': 2},
             showlegend=False,
-            name='Quantile75',
+            name='Quantile75 of both genders',
         ))
         # add 25. Quantil
         graph_figure.add_trace(go.Scatter(
             x=df_median['Time'],
         y=df_median['Quantile25'],
-        name='interquartile range',
+        name='interquartile range  of both genders',
         mode='lines',
         line={'color':'grey', 'width': 2},
         fill='tonexty',
-        fillcolor='rgba(0,100,80,0.6)'
+        fillcolor='rgba(0,100,80,0.1)'
         ))
         # add median
         graph_figure.add_trace(go.Scatter(
             x=df_median['Time'],
             y=df_median['Median'],
-            name='median',
+            name='median of both gender',
             mode='lines', 
             line={'color':'black', 'width': 3}, 
         ))
+    except:
+        pass
 
+    #lines for only females
+    try:
+        # add 75.Quantil female
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_female['Time'],
+            y=df_median_female['Quantile75'],
+            line={'color':'coral', 'width': 2},
+            showlegend=False,
+            name='Quantile75 of females only',
+        ))
+        # add 25. Quantil female
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_female['Time'],
+        y=df_median_female['Quantile25'],
+        name='interquartile range of females only',
+        mode='lines',
+        line={'color':'coral', 'width': 2},
+        fill='tonexty',
+        fillcolor='rgba(160,70,80,0.1)'
+        ))
+        # add median female
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_female['Time'],
+            y=df_median_female['Median'],
+            name='median of females only',
+            mode='lines', 
+            line={'color':'coral', 'width': 3}, 
+        ))
+    except:
+        pass
+
+    # lines for only males
+    try:
+        # add 75.Quantil male
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_male['Time'],
+            y=df_median_male['Quantile75'],
+            line={'color':'cornflowerblue', 'width': 2},
+            showlegend=False,
+            name='Quantile75 of males only',
+        ))
+        # add 25. Quantil male
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_male['Time'],
+        y=df_median_male['Quantile25'],
+        name='interquartile range of males only',
+        mode='lines',
+        line={'color':'cornflowerblue', 'width': 2},
+        fill='tonexty',
+        fillcolor='rgba(16,16,90,0.1)'
+        ))
+        # add median male
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_male['Time'],
+            y=df_median_male['Median'],
+            name='median of males only',
+            mode='lines', 
+            line={'color':'cornflowerblue', 'width': 3}, 
+        ))
+    except:
+        pass
     # graph_figure.add_trace(go.Scatter(
     #                 x=[30, 30], 
     #                 y=[2.5, 2],
@@ -212,7 +357,7 @@ def execute_query(trial_value, dropdown_value):
     #                 ))
 
     graph_figure.update_layout(
-        title='BCR-ABL/ABL Aggregation',
+        title='BCR-ABL/ABL Aggregation from trial '+trial_name,
         xaxis={
             'title':'Month',
             #'hoverformat': '%Y-%m-%d',
@@ -233,13 +378,7 @@ def execute_query(trial_value, dropdown_value):
         #     'x':0.5   #play with it
         # },
     )
-    
-    return graph_figure
-
-# Show result of selecting data with either box select or lasso
-#@app.callback(Output('display','children'),[Input('live-graph','selectedData')])
-#def selectData(selectData):
-#    return str('Selecting points produces a nested dictionary: {}'.format(selectData))
+    return [graph_figure, check_trial_options]
 
 
 if __name__ == '__main__':

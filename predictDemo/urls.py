@@ -26,8 +26,6 @@ from django.views.generic.base import TemplateView
 import plotlydash.DashExampleApp
 import plotlydash.cml_bcr_abl_ratio
 import plotlydash.cml_bcr_abl_ratio_agg
-import plotlydash.cml_bcr_abl_ratio_enest1st
-import plotlydash.cml_bcr_abl_ratio_destiny
 import plotlydash.cml_rec_prob_model
 import plotlydash.cml_rec_portrait_model
 

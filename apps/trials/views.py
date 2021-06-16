@@ -9,6 +9,7 @@ from predictDemo.roles.mixins import HasObjectPermissionMixin
 
 from .models import Trial, Document
 from .forms import DocumentForm
+from ..dbviews.models import PatientTrial
 
 # Create your views here.
 
@@ -61,9 +62,12 @@ class TrialDetailView(HasObjectPermissionMixin, DetailView):
     def get_context_data(self, **kwargs):
             # Call the base implementation first to get a context
             context = super().get_context_data(**kwargs)
+            # Add count of patients
+            context['countOfPatients'] = PatientTrial.objects.filter(trial_id=self.kwargs['trial_pk']).count()
             # Add dash_context
             trial_id = self.kwargs['trial_pk']
-            context['dash_context'] = dash_context = {"trial": {"value": trial_id}}
+            user_id = self.request.user.id
+            context['dash_context'] = {"trial": {"value": trial_id}, "user": {"value": user_id}}
             return context
 
 class TrialUpdateView(HasObjectPermissionMixin, UpdateView):

@@ -4,6 +4,15 @@ from ..trials.models import Trial
 
 # Medication
 
+class PatientTrial(models.Model):
+    GENDER = (
+        ('male', 'male'),
+        ('female', 'female')
+    )
+    trial = models.ForeignKey(Trial, on_delete = models.PROTECT, null = True, blank = True)
+    targetId = models.CharField(max_length = 40)
+    gender = models.CharField(choices=GENDER, max_length = 10, null=True, blank=True)
+
 class TreatMedication(models.Model):
     trial = models.ForeignKey(Trial, on_delete = models.PROTECT, null = True, blank = True)
     targetId = models.CharField(max_length = 40)

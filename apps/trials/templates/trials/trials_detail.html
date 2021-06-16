@@ -101,12 +101,12 @@
     <hr />
     -->
     <h2>Access to research data</h2>
+    <p>The trial contains <strong>{{countOfPatients}} patients.</strong></p>
     <ul>
         <li><a href="{% url 'dbviews:trial_diagnostic_values' trial.pk %}">Diagnostic values</a></li>
         <li><a href="{% url 'dbviews:trial_medication_values' trial.pk %}">Treatments</a></li>
     </ul>
     <h2>Data visualization</h2>
-
     {% plotly_app name="CML_BCR-ABL-Ratio-agg"  initial_arguments=dash_context ratio=1 %}
-    
+
 {% endblock content %}

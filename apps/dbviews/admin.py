@@ -1,7 +1,12 @@
 from django.contrib import admin
-from .models import DiagType, DiagParameter, Diagnostic, TreatMedication
+from .models import PatientTrial, DiagType, DiagParameter, Diagnostic, TreatMedication
 
 # Register your models here.
+class PatientTrialAdmin(admin.ModelAdmin):
+    list_display = ('trial', 'targetId', 'gender')
+
+admin.site.register(PatientTrial, PatientTrialAdmin)
+
 class TreatMedicationAdmin(admin.ModelAdmin):
     list_display = ('trial', 'targetId', 'dateBegin', 'dateEnd', 'interval', 'intervalUnit', 'drugName', 'dosage', 'dosageUnit', 'medScheme', 'createdAt', 'updatedAt')
 
