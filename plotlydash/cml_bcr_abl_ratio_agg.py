@@ -13,7 +13,7 @@ from apps.trials.models import Trial
 from operator import itemgetter
 from rolepermissions.checkers import has_object_permission
 
-
+import copy
 import plotly
 import plotly.express as px
 import plotly.graph_objs as go
@@ -22,6 +22,7 @@ import math
 import numpy as np
 import os
 import pandas as pd
+import random
 import requests
 import subprocess
 import sys
@@ -96,10 +97,10 @@ app.layout = html.Div(id= 'main',
                                 html.Table(
                                     html.Tbody(
                                         [html.Tr(
-                                            [html.Td("Include trials seperately (if false: include trials jointly)"),
+                                            [html.Td("Show trials seperately (if false: jointly include trials)"),
                                             html.Td(
                                                 daq.BooleanSwitch(
-                                                    id='include_seperately',
+                                                    id='show_seperately',
                                                     on=True
                                                 )
                                             )]
@@ -127,8 +128,9 @@ app.layout = html.Div(id= 'main',
     Input(component_id='dropdown', component_property='value'),
     Input(component_id='check_gender', component_property='value'),
     Input(component_id='check_trials', component_property='value'),
-    Input(component_id='show_interquartile_ranges', component_property='on')])
-def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials, show_interquartile_ranges):
+    Input(component_id='show_interquartile_ranges', component_property='on'),
+    Input(component_id='show_seperately', component_property='on')])
+def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials, show_interquartile_ranges, show_seperately):
     # get permission and build checklist for trials
     user = User.objects.get(id=user_value)
     trials = Trial.objects.all()
@@ -212,43 +214,110 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
 
     #  for R-Script "Median-calculation"
     ####################################
-    
+    # prepare dictionary object for holding the dataframes
+    dict_of_df = {}
     # for each gender
     for gender in gender_value:
+        #subset gender from df
         if gender == 'bothGender':
-            data_Rinput = df[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
+            df_subset = df
         else:
             df_subset = df[df['gender']==gender]
-            data_Rinput = df_subset[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
-        # create tempfiles
-        tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
-        data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
-        args = [tf.name]
-        command = 'Rscript'
-        path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
-        #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
-        cmd = [command, path2script] + args
-        # R caclulation
-        x = None
-        try:
-            x = subprocess.check_output(cmd, universal_newlines = True)
-        except subprocess.CalledProcessError as e:
-            x = e.output
-        if x!='\n':
-            if gender == 'bothGender':
-                df_median = pd.read_csv(StringIO(x), sep=",")
-            if gender == 'male':
-                df_median_male = pd.read_csv(StringIO(x), sep=",")
-            if gender == 'female':
-                df_median_female = pd.read_csv(StringIO(x), sep=",")
-        os.remove(tf.name)
-        # end for R-Script calculation
+        data_Rinput = df_subset[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
+        if show_seperately:
+            # for each trial
+            for trial in trials:
+                #subset data from trial
+                df_subset2 = df_subset[df_subset['trial']==trial]
+                data_Rinput = df_subset2[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy()
+                # create tempfile
+                tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
+                data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
+                args = [tf.name]
+                command = 'Rscript'
+                path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
+                #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
+                cmd = [command, path2script] + args
+                # R caclulation
+                x = None
+                try:
+                    x = subprocess.check_output(cmd, universal_newlines = True)
+                except subprocess.CalledProcessError as e:
+                    x = e.output
+                if x!='\n':
+                    df_out = pd.read_csv(StringIO(x), sep=",")
+                    key_name = str(Trial.objects.get(id=trial).name) +'('+ str(gender)+')'
+                    dict_of_df[key_name] = copy.deepcopy(df_out)
+                os.remove(tf.name)
+        else:
+            # create tempfile
+            tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
+            data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
+            args = [tf.name]
+            command = 'Rscript'
+            path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
+            #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
+            cmd = [command, path2script] + args
+            # R caclulation
+            x = None
+            try:
+                x = subprocess.check_output(cmd, universal_newlines = True)
+            except subprocess.CalledProcessError as e:
+                x = e.output
+            if x!='\n':
+                if gender == 'bothGender':
+                    df_median = pd.read_csv(StringIO(x), sep=",")
+                if gender == 'male':
+                    df_median_male = pd.read_csv(StringIO(x), sep=",")
+                if gender == 'female':
+                    df_median_female = pd.read_csv(StringIO(x), sep=",")
+            os.remove(tf.name)
+    # end for R-Script calculation
 
     # graph
     graph_figure = go.Figure()
 
     ################################
+    # prepare color generation
+    r = lambda: random.randint(0,255)
     # add aggregation
+    for key in dict_of_df.keys():
+        df_agg = dict_of_df[key]
+        color = '#%02X%02X%02X' % (r(),r(),r())
+        try:
+            if show_interquartile_ranges:
+                # add 75.Quantil
+                graph_figure.add_trace(go.Scatter(
+                    x=df_agg['Time'],
+                    y=df_agg['Quantile75'],
+                    line={'color':color, 'width': 2, 'dash':'dot'},
+                    showlegend=False,
+                    name='Quantile75 of '+key,
+                    hoverlabel = dict(namelength = -1)
+                ))
+                # add 25. Quantil
+                graph_figure.add_trace(go.Scatter(
+                    x=df_agg['Time'],
+                    y=df_agg['Quantile25'],
+                    name='interquartile range  of '+key,
+                    mode='lines',
+                    line={'color':color, 'width': 2, 'dash':'dot'},
+                    fill='tonexty',
+                    fillcolor='rgba(0,100,80,0.1)'
+                    ))
+            # add median
+            graph_figure.add_trace(go.Scatter(
+                x=df_agg['Time'],
+                y=df_agg['Median'],
+                name='median of ' + key,
+                mode='lines', 
+                line={'color':color, 'width': 3},
+                hoverlabel = dict(namelength = -1)
+            ))
+        except:
+            pass
+    
+    #### old version ######
     # median both genders
     try:
         if show_interquartile_ranges:
