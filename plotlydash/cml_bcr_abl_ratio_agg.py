@@ -1,5 +1,6 @@
 import dash
 import dash_core_components as dcc
+import dash_daq as daq
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
@@ -89,6 +90,33 @@ app.layout = html.Div(id= 'main',
                                 )
                             ]
                         ),
+                        html.Div(id='div_displayoptions',
+                            style={'align': 'left'},
+                            children=[
+                                html.Table(
+                                    html.Tbody(
+                                        [html.Tr(
+                                            [html.Td("Include trials seperately (if false: include trials jointly)"),
+                                            html.Td(
+                                                daq.BooleanSwitch(
+                                                    id='include_seperately',
+                                                    on=True
+                                                )
+                                            )]
+                                        ),
+                                        html.Tr(
+                                            [html.Td("Show interquartile ranges"),
+                                            html.Td(
+                                                daq.BooleanSwitch(
+                                                    id='show_interquartile_ranges',
+                                                    on=False
+                                                )
+                                            )]
+                                        )]
+                                    )
+                                )
+                            ]
+                        )
                     ])
 
 @app.callback(
@@ -98,8 +126,9 @@ app.layout = html.Div(id= 'main',
     Input(component_id='user', component_property='value'),
     Input(component_id='dropdown', component_property='value'),
     Input(component_id='check_gender', component_property='value'),
-    Input(component_id='check_trials', component_property='value')])
-def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials):
+    Input(component_id='check_trials', component_property='value'),
+    Input(component_id='show_interquartile_ranges', component_property='on')])
+def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials, show_interquartile_ranges):
     # get permission and build checklist for trials
     user = User.objects.get(id=user_value)
     trials = Trial.objects.all()
@@ -218,6 +247,106 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
     # graph
     graph_figure = go.Figure()
 
+    ################################
+    # add aggregation
+    # median both genders
+    try:
+        if show_interquartile_ranges:
+            # add 75.Quantil
+            graph_figure.add_trace(go.Scatter(
+                x=df_median['Time'],
+                y=df_median['Quantile75'],
+                line={'color':'grey', 'width': 2, 'dash':'dot'},
+                showlegend=False,
+                name='Quantile75 of both genders',
+            ))
+            # add 25. Quantil
+            graph_figure.add_trace(go.Scatter(
+                x=df_median['Time'],
+            y=df_median['Quantile25'],
+            name='interquartile range  of both genders',
+            mode='lines',
+            line={'color':'grey', 'width': 2, 'dash':'dot'},
+            fill='tonexty',
+            fillcolor='rgba(0,100,80,0.1)'
+            ))
+        # add median
+        graph_figure.add_trace(go.Scatter(
+            x=df_median['Time'],
+            y=df_median['Median'],
+            name='median of both gender',
+            mode='lines', 
+            line={'color':'black', 'width': 3}, 
+        ))
+    except:
+        pass
+
+    #lines for only females
+    try:
+        if show_interquartile_ranges:
+            # add 75.Quantil female
+            graph_figure.add_trace(go.Scatter(
+                x=df_median_female['Time'],
+                y=df_median_female['Quantile75'],
+                line={'color':'coral', 'width': 2, 'dash':'dot'},
+                showlegend=False,
+                name='Quantile75 of females only',
+            ))
+            # add 25. Quantil female
+            graph_figure.add_trace(go.Scatter(
+                x=df_median_female['Time'],
+            y=df_median_female['Quantile25'],
+            name='interquartile range of females only',
+            mode='lines',
+            line={'color':'coral', 'width': 2, 'dash':'dot'},
+            fill='tonexty',
+            fillcolor='rgba(160,70,80,0.1)'
+            ))
+        # add median female
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_female['Time'],
+            y=df_median_female['Median'],
+            name='median of females only',
+            mode='lines', 
+            line={'color':'coral', 'width': 3}, 
+        ))
+    except:
+        pass
+
+    # lines for only males
+    try:
+        if show_interquartile_ranges:
+            # add 75.Quantil male
+            graph_figure.add_trace(go.Scatter(
+                x=df_median_male['Time'],
+                y=df_median_male['Quantile75'],
+                line={'color':'cornflowerblue', 'width': 2, 'dash':'dot'},
+                showlegend=False,
+                name='Quantile75 of males only',
+            ))
+            # add 25. Quantil male
+            graph_figure.add_trace(go.Scatter(
+                x=df_median_male['Time'],
+            y=df_median_male['Quantile25'],
+            name='interquartile range of males only',
+            mode='lines',
+            line={'color':'cornflowerblue', 'width': 2, 'dash':'dot'},
+            fill='tonexty',
+            fillcolor='rgba(16,16,90,0.1)'
+            ))
+        # add median male
+        graph_figure.add_trace(go.Scatter(
+            x=df_median_male['Time'],
+            y=df_median_male['Median'],
+            name='median of males only',
+            mode='lines', 
+            line={'color':'cornflowerblue', 'width': 3}, 
+        ))
+    except:
+        pass
+
+    ################################
+    # add patient's time course
     if dropdown_value != 'graph1':
         patlist = sorted(df['targetId'].unique())
         patlist = patlist[::-1] # reverse order (ascending)
@@ -254,98 +383,6 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
                 #legendgroup=dfmedi['drugName'][0]
                 ))
 
-    # median both genders
-    try:
-        # add 75.Quantil
-        graph_figure.add_trace(go.Scatter(
-            x=df_median['Time'],
-            y=df_median['Quantile75'],
-            line={'color':'grey', 'width': 2},
-            showlegend=False,
-            name='Quantile75 of both genders',
-        ))
-        # add 25. Quantil
-        graph_figure.add_trace(go.Scatter(
-            x=df_median['Time'],
-        y=df_median['Quantile25'],
-        name='interquartile range  of both genders',
-        mode='lines',
-        line={'color':'grey', 'width': 2},
-        fill='tonexty',
-        fillcolor='rgba(0,100,80,0.1)'
-        ))
-        # add median
-        graph_figure.add_trace(go.Scatter(
-            x=df_median['Time'],
-            y=df_median['Median'],
-            name='median of both gender',
-            mode='lines', 
-            line={'color':'black', 'width': 3}, 
-        ))
-    except:
-        pass
-
-    #lines for only females
-    try:
-        # add 75.Quantil female
-        graph_figure.add_trace(go.Scatter(
-            x=df_median_female['Time'],
-            y=df_median_female['Quantile75'],
-            line={'color':'coral', 'width': 2},
-            showlegend=False,
-            name='Quantile75 of females only',
-        ))
-        # add 25. Quantil female
-        graph_figure.add_trace(go.Scatter(
-            x=df_median_female['Time'],
-        y=df_median_female['Quantile25'],
-        name='interquartile range of females only',
-        mode='lines',
-        line={'color':'coral', 'width': 2},
-        fill='tonexty',
-        fillcolor='rgba(160,70,80,0.1)'
-        ))
-        # add median female
-        graph_figure.add_trace(go.Scatter(
-            x=df_median_female['Time'],
-            y=df_median_female['Median'],
-            name='median of females only',
-            mode='lines', 
-            line={'color':'coral', 'width': 3}, 
-        ))
-    except:
-        pass
-
-    # lines for only males
-    try:
-        # add 75.Quantil male
-        graph_figure.add_trace(go.Scatter(
-            x=df_median_male['Time'],
-            y=df_median_male['Quantile75'],
-            line={'color':'cornflowerblue', 'width': 2},
-            showlegend=False,
-            name='Quantile75 of males only',
-        ))
-        # add 25. Quantil male
-        graph_figure.add_trace(go.Scatter(
-            x=df_median_male['Time'],
-        y=df_median_male['Quantile25'],
-        name='interquartile range of males only',
-        mode='lines',
-        line={'color':'cornflowerblue', 'width': 2},
-        fill='tonexty',
-        fillcolor='rgba(16,16,90,0.1)'
-        ))
-        # add median male
-        graph_figure.add_trace(go.Scatter(
-            x=df_median_male['Time'],
-            y=df_median_male['Median'],
-            name='median of males only',
-            mode='lines', 
-            line={'color':'cornflowerblue', 'width': 3}, 
-        ))
-    except:
-        pass
     # graph_figure.add_trace(go.Scatter(
     #                 x=[30, 30], 
     #                 y=[2.5, 2],
