@@ -4,6 +4,7 @@ __pycache__
 db.sqlite3
 /static
 .DS_Store
+.vscode
 predictDemo/settings/local.py
 predictDemo/settings/production.py
 docs/build
