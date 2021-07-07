@@ -71,11 +71,11 @@ app.layout = html.Div(id= 'main',
                                 dcc.Checklist(
                                     id='check_gender',
                                     options = [
-                                        {'label': 'both gender', 'value': 'bothGender'},
+                                        {'label': 'both genders', 'value': 'both genders'},
                                         {'label': 'only males', 'value': 'male', 'disabled': False},
                                         {'label': 'only females', 'value': 'female', 'disabled': False}
                                     ],
-                                    value=['bothGender', 'male', 'female']
+                                    value=['both genders', 'male', 'female']
                                 )
                             ]
                         ),
@@ -97,10 +97,10 @@ app.layout = html.Div(id= 'main',
                                 html.Table(
                                     html.Tbody(
                                         [html.Tr(
-                                            [html.Td("Show trials seperately (if false: jointly include trials)"),
+                                            [html.Td("Show trials separately (if false: jointly include trials)"),
                                             html.Td(
                                                 daq.BooleanSwitch(
-                                                    id='show_seperately',
+                                                    id='show_separately',
                                                     on=True
                                                 )
                                             )]
@@ -129,8 +129,8 @@ app.layout = html.Div(id= 'main',
     Input(component_id='check_gender', component_property='value'),
     Input(component_id='check_trials', component_property='value'),
     Input(component_id='show_interquartile_ranges', component_property='on'),
-    Input(component_id='show_seperately', component_property='on')])
-def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials, show_interquartile_ranges, show_seperately):
+    Input(component_id='show_separately', component_property='on')])
+def execute_query(trial_value, user_value, dropdown_value, gender_value, other_trials, show_interquartile_ranges, show_separately):
     # get permission and build checklist for trials
     user = User.objects.get(id=user_value)
     trials = Trial.objects.all()
@@ -219,12 +219,12 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
     # for each gender
     for gender in gender_value:
         #subset gender from df
-        if gender == 'bothGender':
+        if gender == 'both genders':
             df_subset = df
         else:
             df_subset = df[df['gender']==gender]
         data_Rinput = df_subset[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy() 
-        if show_seperately:
+        if show_separately:
             # for each trial
             for trial in trials:
                 #subset data from trial
@@ -265,7 +265,7 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
             except subprocess.CalledProcessError as e:
                 x = e.output
             if x!='\n':
-                if gender == 'bothGender':
+                if gender == 'both genders':
                     df_median = pd.read_csv(StringIO(x), sep=",")
                 if gender == 'male':
                     df_median_male = pd.read_csv(StringIO(x), sep=",")
@@ -343,7 +343,7 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
         graph_figure.add_trace(go.Scatter(
             x=df_median['Time'],
             y=df_median['Median'],
-            name='median of both gender',
+            name='median of both genders',
             mode='lines', 
             line={'color':'black', 'width': 3}, 
         ))
