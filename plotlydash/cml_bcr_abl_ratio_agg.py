@@ -75,7 +75,7 @@ app.layout = html.Div(id= 'main',
                                         {'label': 'only males', 'value': 'male', 'disabled': False},
                                         {'label': 'only females', 'value': 'female', 'disabled': False}
                                     ],
-                                    value=['both genders', 'male', 'female']
+                                    value=['both genders']
                                 )
                             ]
                         ),

@@ -122,9 +122,9 @@ def execute_query(targetId_value):
             'type': 'rect',
             'xref': 'x',
             'yref': 'paper',
-            'x0': dfmedi['dateBegin'].astype(str).tolist()[0],
+            'x0': dfmedi['dateBegin'].astype(str).tolist()[1],
             'y0': 0,
-            'x1': dfmedi['dateEnd'].astype(str).tolist()[0],
+            'x1': dfmedi['dateEnd'].astype(str).tolist()[1],
             'y1': 1,
             'line': {
                 'color': 'rgb(255, 255, 204)',
@@ -138,9 +138,9 @@ def execute_query(targetId_value):
             'type': 'rect',
             'xref': 'x',
             'yref': 'paper',
-            'x0': dfmedi['dateBegin'].astype(str).tolist()[1],
+            'x0': dfmedi['dateBegin'].astype(str).tolist()[0],
             'y0': 0,
-            'x1': dfmedi['dateEnd'].astype(str).tolist()[1],
+            'x1': dfmedi['dateEnd'].astype(str).tolist()[0],
             'y1': 1,
             'line': {
                 'color': 'rgb(255, 204, 153)',
