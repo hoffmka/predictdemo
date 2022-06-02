@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-{% if user|is_lazy_user or user|has_role:'dept_haematology'%}
+{% if user|is_lazy_user or user|has_role:'dept_haematology' or user|has_role:'laypublic'%}
 {% for group in user.groups.all %}
   {{group.description}}
 {% endfor %}

@@ -4,6 +4,7 @@
 <!--{% load django_tables2 %}
 {% load querystring from django_tables2 %}-->
 {% load plotly_dash %}
+{% load permission_tags %}
 
 {% block breadcrumb %}
     <div class="container-fluid">
@@ -29,33 +30,44 @@
 </div>
 
 
-<!--Submenu-->
-<p>
-  <a class="btn btn-primary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
-  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_treatment' %}">TableView "Treatments"</a>
-  <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
-  <a class="btn btn-secondary" href="{% url 'predictions:prediction_list' %}">All Predictions</a>
-</p>
+  <!--Submenu-->
+  {% if user|has_role:'dept_haematology'%}
+    <p>
+      <a class="btn btn-primary" href="{% url 'patients:patient_mdat_view' %}">Dashboard</a>
+      <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_treatment' %}">TableView "Treatments"</a>
+      <a class="btn btn-secondary" href="{% url 'patients:patient_mdat_view_bcrabl' %}">TableView "BCR-ABL / ABL"</a>
+      <a class="btn btn-secondary" href="{% url 'predictions:prediction_list' %}">All Predictions</a>
+    </p>
 
-<!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
-<h3>Current clinical data</h3>
-{% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
+    <!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
+    <h3>Current clinical data</h3>
+    {% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
 
-<!-- Latest model predictions -->
-<h3>Latest model predictions</h3>
+    <!-- Latest model predictions -->
+    <h3>Latest model predictions</h3>
 
-{% if dash_context_project1 != None %}
-  {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1 ratio=0.5 %}
-{% else %}
-  No prediction for project "CML Recurrance probability" available.
-{% endif %}
+    {% if dash_context_project1 != None %}
+      {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1 ratio=0.5 %}
+    {% else %}
+      No prediction for project "CML Recurrance probability" available.
+    {% endif %}
 
-{% if dash_context_project2 != None %}
-  {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2 ratio=0.6 %}
-{% else %}
-  No prediction for project "CML Phase Portrait" available.
-{% endif %}
+    {% if dash_context_project2 != None %}
+      {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2 ratio=0.6 %}
+    {% else %}
+      No prediction for project "CML Phase Portrait" available.
+    {% endif %}
+  {% endif %}
 
+  <!-- Lay public-->
+  {% if user|has_role:'laypublic'%}
+  <h3>Latest model prediction</h3>
+    {% if dash_context_project1 != None %}
+      {% plotly_app name="CML_RecurranceModel_Laypublic" initial_arguments=dash_context_project1 ratio=0.5 %}
+    {% else %}
+      No prediction for project "CML Recurrance probability" available.
+    {% endif %}
+  {% endif %}
 {% endif %}
 </div>
 {% endblock content %}

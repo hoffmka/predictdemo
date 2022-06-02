@@ -24,7 +24,7 @@ import json
 import requests
 # Create your views here.
 
-@has_role_decorator('dept_haematology')
+@has_role_decorator(['dept_haematology','laypublic'])
 def patients_search(request):
     if request.method == 'POST':
         searchPsnByPatientForm = THSSearchPsnByPatientForm(request.POST)
@@ -145,7 +145,7 @@ def patients_search(request):
         'searchPsnByPatientForm': searchPsnByPatientForm
         })
 
-@has_role_decorator('dept_haematology')
+@has_role_decorator(['dept_haematology','laypublic'])
 def patient_mdat_view(request):
     # get patient data from session
     patient_data = json.loads(request.session['patient_data'])
