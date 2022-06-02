@@ -7,7 +7,7 @@ from apps.accounts import views as accounts_views
 
 app_name = 'accounts'
 urlpatterns = [
-    path('signup/', views.signup , name='signup'),
+    #path('signup/', views.signup , name='signup'),
     path('lazysignup/', views.lazysignup, name='lazysignup'),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('switchgroup/', views.switch_lazyuser_group, name='switch_lazyuser_group'),

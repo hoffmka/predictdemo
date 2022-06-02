@@ -21,7 +21,7 @@ def lazysignup(request):
     This view will create a temporary (guest) user account.
     The user is in the group "dept_haematology" and in the group "cml_trial"
     """
-    cml_trial = Group.objects.get(id = 2) 
+    cml_trial = Group.objects.get(id = 1) 
     cml_trial.user_set.add(request.user)
     return redirect('home')
 

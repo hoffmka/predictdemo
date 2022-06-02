@@ -86,6 +86,7 @@
                                             {% if user|has_role:'dept_haematology'%}
                                             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             Logged in as guest physician
+                                            </a>
                                             {% elif user|has_role:'trial_cml'%}
                                             <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             Logged in as guest researcher
@@ -97,8 +98,14 @@
                                             {% if not user|is_lazy_user %}
                                                 <a class="dropdown-item" href="{% url 'accounts:my_account' %}">My account</a>
                                                 <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change password</a>
-                                                <div class="dropdown-divider"></div>
+                                            {% else %}
+                                                {% if user|has_role:'dept_haematology'%}
+                                                    <a class="dropdown-item" href="{% url 'accounts:switch_lazyuser_group' %}">Switch to a guest researcher account.</a>
+                                                {% elif user|has_role:'trial_cml'%}
+                                                    <a class="dropdown-item" href="{% url 'accounts:switch_lazyuser_group' %}">Switch to a guest physician account.</a>
+                                                {% endif %}
                                             {% endif %}
+                                            <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a>
                                         </div>
                                     </li>

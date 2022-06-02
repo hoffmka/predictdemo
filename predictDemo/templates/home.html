@@ -13,11 +13,11 @@
         </a>
         <div class=".div-headline">
           {% if  not user.is_authenticated %}
-            <h1>Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
+            <h3>Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
             <a class="btn btn-lg btn-info" href="{% url 'accounts:lazysignup' %}">Try it out</a>
             <a class="btn btn-lg btn-primary" href="{% url 'accounts:login' %}">Login</a>
           {% else %}
-            <h1>Welcome to the Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
+            <h3>Welcome to the Demonstrator framework for Integration of patient-specific mathematical model predictions into clinical routine workflows to support treatment decision-making in CML</h1>
           {% endif %}
         </div>
       </div>

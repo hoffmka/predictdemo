@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Trial details of trial {{trial.studyCode}} </h2>
+    <h2>Details of {{trial.name}} </h2>
     {% can "change_trial" trial user=user as can_change_trial %}
     {% if can_change_trial %}
         <li class="list-inline-item"><a class="changelink" href="{% url 'trials:trials_update' trial.pk %}">Edit</a></li>
