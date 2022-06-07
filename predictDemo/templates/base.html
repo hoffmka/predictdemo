@@ -50,7 +50,6 @@
                                             <span class="isDisabled"><a class="dropdown-item" href="">Request patient data</a></span>
                                             {% endif %}
                                         </div>
-                                        
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="ForResearcher" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -64,23 +63,8 @@
                                             {% else %}
                                             <span class="isDisabled"><a class="dropdown-item" href="">Trials</a></span>
                                             {% endif %}
-
-                                        </div>
-                                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForResearcher">
-                                            
-                                        </div>                                       
+                                        </div>                                
                                     </li>
-                                    {% if user|has_role:'laypublic'%}
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="ForLayPublic" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        For Lay public
-                                        </a>
-                                        <!--For lay public menu-->
-                                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ForLayPublic">
-                                            <a class="dropdown-item" href="{% url 'patients:patients_search' %}">Request patient data</a>
-                                        </div>                                   
-                                    </li>
-                                    {% endif %}
                                 <!-- Admin menu for staff-->
                                 {% if user.is_staff %}
                                     <li><a class="nav-link" href="{% url 'admin:index' %}" target= "-blank">Admin</a></li>

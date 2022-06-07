@@ -24,13 +24,24 @@ app = DjangoDash(name='CML_RecurranceModel', id='prediction_id')
 app.layout = html.Div(id= 'main',
                     children=[
                         dcc.Input(id='prediction_id', value='initial value', type='hidden'),
-                        dcc.Graph(id='graph'),
+                        dcc.Dropdown(
+                    id="dropdown",
+                    options=[
+                        {"label": "Expert view", "value": "expert"},
+                        {"label": "Simplified view", "value": "simple"},
+                    ],
+                    value="expert"
+                ),
+                    dcc.Graph(id='graph',
+                    config={'displayModeBar': True}
+                    ),
                     ])
 @app.callback(
     Output('graph', component_property='figure'),
-    [Input('prediction_id', component_property='value')]
+    [Input('prediction_id', component_property='value'),
+    Input("dropdown", component_property="value")]
 )
-def graph_update(prediction_id_value):
+def graph_update(prediction_id_value, dropdown_value):
     prediction = Prediction.objects.get(id=prediction_id_value)
     magpieJobId = prediction.magpieJobId
     project_id = prediction.project_id
@@ -55,118 +66,147 @@ def graph_update(prediction_id_value):
     time = df.loc[df['time'] >= 0, 'time']
     df['fit'] = df['slope'] * time + df['intercept']
 
+    ###############
     # update graph
-    figure = {
-        'data': [
-            {
-                'x': df['sampleDate'],
-                'y': df['lratio'],
-                'name': 'detected BCR-ABL value',
-                'mode': 'markers',
-                'marker': {'size': 8, 'color': 'rgb(0, 102, 204)'},
-                'text': df['BCR.ABL.ABL'],
-                'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
-                    '<b>BCR-ABL/ABL Ratio: %{text}</b><br>' + '<extra></extra>'
-            },
-            {
-                'x': df['sampleDate'],
-                'y': df['lql'],
-                'name': 'negative measurement; triangle indicates estimated quantification limit',
-                'mode': 'markers',
-                'marker': {'size': 8, 'symbol': 'triangle-down', 'color': 'rgb(0, 102, 204)'},
-                'text': df['ABL'],
-                'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
-                    '<b>BCR-ABL/ABL Ratio: 0</b><br>' +
-                    'ABL Numbers: %{text}<extra></extra>'
-            },
-            {
-            'x': dfmedi['dateBegin'],
-            'y': [1.5, 1.5],
-            'mode': 'text',
-            'text': dfmedi['interval'].astype(str) + ' x ' + dfmedi['dosage'].astype(str) + ' ' + dfmedi['dosageUnit'] + '<br>' + dfmedi['drugName'],
-            'textposition': 'bottom right',
-            'showlegend': False
-            }
-        ],
-        'layout': {
-                'title': 'Recurrance probability after stopping:<br><b>' + str(prob) + ' %</b>',
-                'xaxis': {
-                    'title':'Date',
-                    'hoverformat': '%Y-%m-%d',
-                    'gridcolor': '#E0E0E0'
+    ##############
+
+    # expert view
+    if dropdown_value == "expert":
+        figure = {
+            'data': [
+                {
+                    'x': df['sampleDate'],
+                    'y': df['lratio'],
+                    'name': 'detected BCR-ABL value',
+                    'mode': 'markers',
+                    'marker': {'size': 8, 'color': 'rgb(0, 102, 204)'},
+                    'text': df['BCR.ABL.ABL'],
+                    'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
+                        '<b>BCR-ABL/ABL Ratio: %{text}</b><br>' + '<extra></extra>'
                 },
-                'yaxis': {
-                    'title':'BCR-ABL/ABL',
-                    'tickvals': [2, 1, 0, -1, -2, -3], 
-                    'ticktext': ['100 %', '10 %', '1 %', 'MR3<br>(0.1 %)', 'MR4<br>(0.01 %)', 'MR5<br>(0.001 %)'],
-                    'zeroline': False,
-                    'gridcolor': '#E0E0E0'
+                {
+                    'x': df['sampleDate'],
+                    'y': df['lql'],
+                    'name': 'negative measurement; triangle indicates estimated quantification limit',
+                    'mode': 'markers',
+                    'marker': {'size': 8, 'symbol': 'triangle-down', 'color': 'rgb(0, 102, 204)'},
+                    'text': df['ABL'],
+                    'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
+                        '<b>BCR-ABL/ABL Ratio: 0</b><br>' +
+                        'ABL Numbers: %{text}<extra></extra>'
                 },
-                'legend': {
-                    #'orientation':'h'
-                    'xanchor':"center",
-                    'yanchor':"top",
-                    'y':-0.3, #play with it
-                    'x':0.5   #play with it
+                {
+                'x': dfmedi['dateBegin'],
+                'y': [1.5, 1.5],
+                'mode': 'text',
+                'text': dfmedi['interval'].astype(str) + ' x ' + dfmedi['dosage'].astype(str) + ' ' + dfmedi['dosageUnit'] + '<br>' + dfmedi['drugName'],
+                'textposition': 'bottom right',
+                'showlegend': False
                 }
-            }  
-    }
+            ],
+            'layout': {
+                    'title': 'Recurrance probability after stopping:<br><b>' + str(prob) + ' %</b>',
+                    'xaxis': {
+                        'title':'Date',
+                        'hoverformat': '%Y-%m-%d',
+                        'gridcolor': '#E0E0E0'
+                    },
+                    'yaxis': {
+                        'title':'BCR-ABL/ABL',
+                        'tickvals': [2, 1, 0, -1, -2, -3], 
+                        'ticktext': ['100 %', '10 %', '1 %', 'MR3<br>(0.1 %)', 'MR4<br>(0.01 %)', 'MR5<br>(0.001 %)'],
+                        'zeroline': False,
+                        'gridcolor': '#E0E0E0'
+                    },
+                    'legend': {
+                        #'orientation':'h'
+                        'xanchor':"center",
+                        'yanchor':"top",
+                        'y':-0.3, #play with it
+                        'x':0.5   #play with it
+                    }
+                }  
+        }
 
-    # Adding fit/line
-    if (df['risk'].min() == 'slope during half dose period (high)'):
-        line_color = '#FF0000'
-    else:
-        line_color = '#009900'
+        # Adding fit/line
+        if (df['risk'].min() == 'slope during half dose period (high)'):
+            line_color = '#FF0000'
+        else:
+            line_color = '#009900'
 
-    line =  {
-        'x': df['sampleDate'],
-        'y': df['fit'],
-        'mode': 'lines',
-        'line': {'color': line_color, 'width': 4},
-        'name': df['risk'].max(),
-        'connectgaps': True,
-        'hoverinfo': 'skip'
-    }
-    
-    # Adding therapy as shape
-    figure['layout']['shapes'] = []
+        line =  {
+            'x': df['sampleDate'],
+            'y': df['fit'],
+            'mode': 'lines',
+            'line': {'color': line_color, 'width': 4},
+            'name': df['risk'].max(),
+            'connectgaps': True,
+            'hoverinfo': 'skip'
+        }
+        
+        # Adding therapy as shape
+        figure['layout']['shapes'] = []
 
-    shape_1 =   {
-        'type': 'rect',
-        'xref': 'x',
-        'yref': 'paper',
-        'x0': dfmedi['dateBegin'].astype(str).tolist()[0],
-        'y0': 0,
-        'x1': dfmedi['dateEnd'].astype(str).tolist()[0],
-        'y1': 1,
-        'line': {
-            'color': 'rgb(255, 255, 204)',
-            'width': 1,
-        },
-        'fillcolor': 'rgb(255, 255, 204)',
-        'layer': 'below',
-    }
+        shape_1 =   {
+            'type': 'rect',
+            'xref': 'x',
+            'yref': 'paper',
+            'x0': dfmedi['dateBegin'].astype(str).tolist()[0],
+            'y0': 0,
+            'x1': dfmedi['dateEnd'].astype(str).tolist()[0],
+            'y1': 1,
+            'line': {
+                'color': 'rgb(255, 255, 204)',
+                'width': 1,
+            },
+            'fillcolor': 'rgb(255, 255, 204)',
+            'layer': 'below',
+        }
 
-    shape_2 =   {
-        'type': 'rect',
-        'xref': 'x',
-        'yref': 'paper',
-        'x0': dfmedi['dateBegin'].astype(str).tolist()[1],
-        'y0': 0,
-        'x1': df.loc[df['time'] == df['HalfDose.time.max'], 'sampleDate'].astype(str).tolist()[0],
-        'y1': 1,
-        'line': {
-            'color': 'rgb(255, 204, 153)',
-            'width': 1,
-        },
-        'fillcolor': 'rgb(255, 204, 153)',
-        'layer': 'below',
-    }
+        shape_2 =   {
+            'type': 'rect',
+            'xref': 'x',
+            'yref': 'paper',
+            'x0': dfmedi['dateBegin'].astype(str).tolist()[1],
+            'y0': 0,
+            'x1': df.loc[df['time'] == df['HalfDose.time.max'], 'sampleDate'].astype(str).tolist()[0],
+            'y1': 1,
+            'line': {
+                'color': 'rgb(255, 204, 153)',
+                'width': 1,
+            },
+            'fillcolor': 'rgb(255, 204, 153)',
+            'layer': 'below',
+        }
 
-    
-    figure['layout']['shapes'].append(shape_1)
-    figure['layout']['shapes'].append(shape_2)
-    figure['data'].append(line)
+        
+        figure['layout']['shapes'].append(shape_1)
+        figure['layout']['shapes'].append(shape_2)
+        figure['data'].append(line)
+
+    # Simplified view
+    if dropdown_value == "simple":
+        prob_rounded = 5*round(prob/5)
+
+        if prob_rounded <=50:
+            bar_col='green'
+        else:
+            bar_col='red'
+
+        figure = go.Figure(go.Indicator(
+            mode="gauge+number",
+            title={'text': 'Recurrence probability after stopping the TKI treatment'},
+            value=prob_rounded,
+            number={"suffix": "%"},
+            delta={"position": "top", "reference": 100},
+            domain={'x': [0, 1], 'y': [0,1]},
+            gauge={'axis':{'range':[None, 100], 'tickfont':{'size':20}},
+                'bar': {'color': bar_col},
+                'steps': [
+                    {'range': [0,50], 'color': 'lightgray'},
+                    {'range': [50,100], 'color':'gray'}]
+            }
+        ))
 
     return figure
 

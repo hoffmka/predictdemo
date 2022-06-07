@@ -9,8 +9,3 @@ class admin(AbstractUserRole):
      available_permissions = {
         #'dept_haematology:can_access_data': TRUE,
      }
-
-class laypublic(AbstractUserRole):
-     available_permissions = {
-        #'dept_haematology:can_access_data': TRUE,
-     }
