@@ -73,6 +73,7 @@ def graph_update(prediction_id_value, modelfit_values):
     df.loc[df['det'] == 'value below detection limit', 'LRATIO'] = None
 
     # Updating time for therapy
+    dfmedi = dfmedi.sort_values(by='dateBegin')
     dfmedi.dateEnd = pd.to_datetime(dfmedi.dateEnd)
     dfmedi.dateBegin = pd.to_datetime(dfmedi.dateBegin)
     dfmedi['timeBegin'] = ((dfmedi.dateBegin-min(dfmedi.dateBegin))/np.timedelta64(1, 'M'))

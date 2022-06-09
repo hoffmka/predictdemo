@@ -76,10 +76,70 @@ def prediction_list(request):
         })
 
 @login_required
-def create_magpie_prediction(request):
+def create_magpie_prediction_recurrence_prob(request):
     # new prediction object
     targetId = request.session['targetId']
-    projectId = 2
+    projectId = 1
+
+    n = Prediction.objects.create(project_id = projectId, targetId = targetId)
+    prediction_id = n.id
+
+    # save patdata
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', str(prediction_id)))):
+        os.makedirs(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', str(prediction_id))))
+
+    treatMedication = TreatMedication.objects.filter(targetId = targetId)
+    with open(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_medi.csv'))), 'wb') as csv_file:
+        write_csv(treatMedication, csv_file, delimiter=';')
+
+    diagnostic = Diagnostic.objects.filter(targetId = targetId, diagType_id = 1) # diagType = PCR - BCR-ABL/ABL 
+    diag_pivot = pivot(diagnostic, ['sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
+    with open(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_pcr.csv'))), 'wb') as csv_file:
+        write_csv(diag_pivot, csv_file, delimiter=';')
+
+    # create magpie job
+    magpie_user = 'katja.hoffmann@tu-dresden.de'
+    magpie_password = 'kh09:L'
+    magpie_url = 'http://10.25.69.145'
+
+    # magpie ids for project and model
+    project = Project.objects.get(id = projectId)
+    magpie_project_id = str(project.magpieProjectId)
+    magpie_model_id = str(project.model.magpieModelId)
+
+    df_pcr = os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_pcr.csv')))
+    df_treat = os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_medi.csv')))
+
+    args = [magpie_user, magpie_password, magpie_url, magpie_project_id, magpie_model_id, df_pcr, df_treat]
+
+    command = 'Rscript'
+    path2script = os.path.join(os.path.dirname(__file__), 'Rscripts/magpie_create_job.R')
+    cmd = [command, path2script] + args
+
+    x = None
+    try:
+        x = subprocess.check_output(cmd, universal_newlines = True)
+    except subprocess.CalledProcessError as e:
+        x = e.output
+
+    # update prediction with magpie_job_id
+    stdout_dict = {}
+    i = 0
+    for line in x.split('\n'):
+        print("%r" % line)
+        i = i + 1
+        stdout_dict[i] = line
+    magpie_job_id = stdout_dict[3]
+
+    Prediction.objects.filter(id = prediction_id).update(magpieJobId = magpie_job_id)
+
+    return redirect('predictions:prediction_list')
+
+@login_required
+def create_magpie_prediction_modelfit(request):
+    # new prediction object
+    targetId = request.session['targetId']
+    projectId = 4
 
     n = Prediction.objects.create(project_id = projectId, targetId = targetId)
     prediction_id = n.id

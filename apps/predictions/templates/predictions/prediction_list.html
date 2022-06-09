@@ -38,9 +38,11 @@
 
 <ul class="list-inline">
   {% if user.is_authenticated and not user|is_lazy_user %}
-      <li class="list-inline-item"><a class="addlink" href="{% url 'predictions:prediction_create' %}">Add new prediction</a></li>
+      <li class="list-inline-item"><a class="addlink" href="{% url 'predictions:prediction_create_recurrence_prob' %}">New prediction of recurrence probability</a></li>
+      <li class="list-inline-item"><a class="addlink" href="{% url 'predictions:prediction_create_modelfit' %}">New modelfit after cessation</a></li>
   {% else %}
-      <li class="list-inline-item"><span class="isDisabled"><a class="addlink">Add new prediction</a></span></li>
+      <li class="list-inline-item"><span class="isDisabled"><a class="addlink">New prediction of recurrence probability</a></span></li>
+      <li class="list-inline-item"><span class="isDisabled"><a class="addlink">New modelfit after cessation</a></span></li>
   {% endif %}
 </ul>
 <hr>

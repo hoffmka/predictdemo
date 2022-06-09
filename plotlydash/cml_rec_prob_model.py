@@ -53,7 +53,8 @@ def graph_update(prediction_id_value, dropdown_value):
 
     path2data_medi = os.path.join(settings.PROJECT_DIR, os.path.join('media/documents/predictions/', os.path.join(str(prediction_id_value), os.path.join('projects', os.path.join(str(magpieProjectId), os.path.join('jobs', os.path.join(str(magpieJobId), 'results/patient_treatments.csv')))))))
     dfmedi = pd.read_csv(path2data_medi, sep=',')
-    
+    dfmedi = dfmedi.sort_values(by='dateBegin')
+
     # Deleting lql / lratio values for detected / non detected
     df.loc[df['det'] == 'detected value', 'lql'] = None
     df.loc[df['det'] == 'value below detection limit', 'lratio'] = None
