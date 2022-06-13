@@ -30,9 +30,11 @@
       <p>Authorized clinicians are able to search for a patient by patient identifying data.</p>
       <p>The following fictitous patients can be searched via Trusted Third Party by everyone:</p>
       <ul>
-        <li><strong>Max Mustermann, Male, born on 2000-01-01</strong></li>
-        <li><strong>Erika Mustermann, Female, born on 1990-01-01</strong></li>
-        <li><strong>Kari Nordmann, Female, born on 1980-01-01</strong></li>
+        <li><a href="#" onClick="autoFill('Max', 'Mustermann', 'M', '2000'); return true;" ><strong>Max Mustermann, Male, born on 2000-01-01</strong></a></li>
+        <li><a href="#" onClick="autoFill('Erika', 'Mustermann', 'F', '1990'); return true;" ><strong>Erika Mustermann, Female, born on 1990-01-01</strong></a></li>
+        <li><a href="#" onClick="autoFill('Kari', 'Nordmann', 'F', '1980'); return true;" ><strong>Kari Nordmann, Female, born on 1980-01-01</strong></a></li>
+        <li><a href="#" onClick="autoFill('Lieschen', 'Müller', 'F', '1970'); return true;" ><strong>Lieschen Müller, Female, born on 1970-01-01</strong></li>
+        <li><a href="#" onClick="autoFill('Otto', 'Normalo', 'M', '1960'); return true;" ><strong>Otto Normalo, Male, born on 1960-01-01</strong></li>
       </ul>
     </div>
   </div>
@@ -43,7 +45,14 @@
 </div>
 {% endif %}
 
-
+<script type="text/javascript">
+  function autoFill(firstname, lastname, id_gender, id_birthdate_year) {
+    document.getElementById('id_firstname').value = firstname;
+    document.getElementById('id_lastname').value = lastname;
+    document.getElementById('id_gender').value = id_gender;
+    document.getElementById('id_birthdate_year').value = id_birthdate_year;
+  }
+</script>
 
 
 
