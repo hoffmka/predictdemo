@@ -160,8 +160,8 @@ def patient_mdat_view(request):
         dash_context_project1 = {"prediction_id": {"value": prediction_id}}
 
     dash_context_project2 = None
-    if Prediction.objects.filter(targetId = targetId, project=2, status = 1).exists():
-        l = Prediction.objects.filter(targetId = targetId, project=2, status = 1).last()
+    if Prediction.objects.filter(targetId = targetId, project=5, status = 1).exists():
+        l = Prediction.objects.filter(targetId = targetId, project=5, status = 1).last()
         prediction_id = l.id
         dash_context_project2 = {"prediction_id": {"value": prediction_id}}
 

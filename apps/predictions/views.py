@@ -139,7 +139,7 @@ def create_magpie_prediction_recurrence_prob(request):
 def create_magpie_prediction_modelfit(request):
     # new prediction object
     targetId = request.session['targetId']
-    projectId = 4
+    projectId = 5
 
     n = Prediction.objects.create(project_id = projectId, targetId = targetId)
     prediction_id = n.id

@@ -26,7 +26,7 @@
 {% else %}
 
 <div class="alert alert-info" role="alert">
-  Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong>
+  Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong> {{targetId}}
 </div>
 
 
@@ -50,11 +50,11 @@
   {% else %}
     No prediction for project "CML Recurrance probability" available.
   {% endif %}
-
+  <hr />
   {% if dash_context_project2 != None %}
     {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2 ratio=0.6 %}
   {% else %}
-    No prediction for project "CML Phase Portrait" available.
+    No prediction for project "Model-predict immune classification" available.
   {% endif %}
 {% endif %}
 </div>
