@@ -1,4 +1,5 @@
 import dash
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -18,7 +19,7 @@ import plotly.graph_objs as go
 
 import requests
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 app = DjangoDash(name='CML_PhasePortrait', id='prediction_id')
 
@@ -33,7 +34,8 @@ app.layout = html.Div(id= 'main',
                                         {"label": "Expert view", "value": "expert"},
                                         {"label": "Simplified view", "value": "simple"},
                                     ],
-                                    value="expert"
+                                    value="simple",
+                                    style={"display": "none"},  # hide dropdown
                                 ),
                         dcc.Graph(id='graph'),
                     ])
@@ -167,6 +169,7 @@ def graph_update(prediction_id_value, dropdown_value):
                         'text': 'Model-predicted immune classification',
                         'xanchor': 'center',
                         'yanchor': 'top',
+                        'font': {'size':22}
                         #'y': -0.7,
                     },
                     'xaxis': {
@@ -313,16 +316,17 @@ def graph_update(prediction_id_value, dropdown_value):
                     marker={'colors':['red', 'green', 'grey']},
                     sort= False,
                     textfont={'color': '#FFFFFF', 'size': 20},
+                    texttemplate = "%{percent:.0%}",
+                    textposition = "inside",
                     )
         data = [trace]
         figure = go.Figure(data = data)
         figure.update_layout(
                     title={
                         'text':'Model-predicted immune classification',
-                        'xanchor': 'left',
-	                    'yanchor': 'bottom',
-	                    'xref': 'paper',
-                        #'x':0.5
+                        'xanchor': 'center',
+                        'x': 0.5,
+                        'font': {'size':22}
                         },
                     legend={
                         #'orientation':'h'
@@ -330,7 +334,8 @@ def graph_update(prediction_id_value, dropdown_value):
                         'yanchor':"top",
                         'y':-0.3, #play with it
                         'x':0.5   #play with it
-                        }
+                        },
+                    margin=dict(t=50, b=0, l=0, r=0, pad = 0)
                     )
     
     return figure

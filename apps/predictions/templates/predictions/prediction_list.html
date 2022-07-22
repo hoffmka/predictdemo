@@ -46,7 +46,6 @@
   {% endif %}
 </ul>
 <hr>
-
 <p>Model predictions are listed below.</p>
 <!-- List all predictions with details -->
 <div id="all_predicts">
@@ -65,7 +64,17 @@
                 <a class="downloadlink" href="{% url 'predictions:magpie_download_jobresults' prediction.pk %}">Download prediction results</a>
               {% endif %}
               {% if prediction.status == 1 %}
-                {% plotly_app name=prediction.project.dash.appname initial_arguments=dash_value ratio=0.5 %}
+                {% plotly_app name=prediction.project.dash.appname initial_arguments=dash_value.simple ratio=0.45 %}
+                <p>
+                  <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel1Expert" role="button" aria-expanded="false" aria-controls="collapseModel1Expert">
+                    Show/Hide Expert View
+                  </a>
+                </p>
+                <div class="collapse" id="collapseModel1Expert">
+                  <div class="card-body">
+                    {% plotly_app name=prediction.project.dash.appname initial_arguments=dash_value.expert ratio=0.6%}
+                  </div>
+                </div> 
               {% endif %}
               {% if prediction.status == 2 %}
                 The prediction failed while proceeding.

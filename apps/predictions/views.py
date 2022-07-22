@@ -64,8 +64,11 @@ def prediction_list(request):
     dash_context_dict = {}
     for prediction in predictions:
         prediction_id = prediction.pk
-        dash_context = {"prediction_id": {"value": prediction_id}}
-        dash_context_dict[prediction_id] = dash_context
+        dash_context_simple = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "simple"}}
+        dash_context_expert = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "expert"}}
+        dash_context_dict[prediction_id] = {}
+        dash_context_dict[prediction_id]['simple'] = dash_context_simple
+        dash_context_dict[prediction_id]['expert'] = dash_context_expert
 
     return render(request, 'predictions/prediction_list.html', {
         'patient_data' : patient_data,

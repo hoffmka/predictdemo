@@ -1,7 +1,8 @@
 import dash
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output
+#import dash_html_components as html
+from dash import Input, Output, html
 
 from django.conf import settings
 from django_plotly_dash import DjangoDash
@@ -17,29 +18,40 @@ import plotly.graph_objs as go
 
 import requests
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
-app = DjangoDash(name='CML_RecurranceModel', id='prediction_id')
+app = DjangoDash(
+    name='CML_RecurranceModel', 
+    add_bootstrap_links=True, 
+    id='prediction_id')
 
-app.layout = html.Div(id= 'main',
-                    children=[
-                        dcc.Input(id='prediction_id', value='initial value', type='hidden'),
-                        dcc.Dropdown(
-                    id="dropdown",
-                    options=[
-                        {"label": "Expert view", "value": "expert"},
-                        {"label": "Simplified view", "value": "simple"},
-                    ],
-                    value="expert"
-                ),
-                    dcc.Graph(id='graph',
-                    config={'displayModeBar': True}
-                    ),
-                    ])
+app.layout = html.Div(
+    id= 'main',
+    children=[
+        dcc.Input(
+            id='prediction_id', 
+            value='initial value', 
+            type='hidden'
+            ),
+        dcc.Dropdown(
+            id="dropdown",
+            options=[
+                {"label": "Expert view", "value": "expert"},
+                {"label": "Simplified view", "value": "simple"},
+            ],
+            value='simple',
+            style={"display": "none"},  # hide dropdown
+        ),
+        dcc.Graph(
+            id='graph'
+        ),
+    ]
+)
+
 @app.callback(
     Output('graph', component_property='figure'),
     [Input('prediction_id', component_property='value'),
-    Input("dropdown", component_property="value")]
+    Input('dropdown', component_property='value')],
 )
 def graph_update(prediction_id_value, dropdown_value):
     prediction = Prediction.objects.get(id=prediction_id_value)
@@ -210,6 +222,7 @@ def graph_update(prediction_id_value, dropdown_value):
         ))
 
     return figure
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

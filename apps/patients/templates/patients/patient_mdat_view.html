@@ -26,9 +26,8 @@
 {% else %}
 
 <div class="alert alert-info" role="alert">
-  Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong> {{targetId}}
+  Patient: <strong>{{ patient_data.lastName }}, {{ patient_data.firstName }}  born on {{ patient_data.birthdate }} in {{ patient_data.birthplace }} ({{ patient_data.gender }})</strong>
 </div>
-
 
   <!--Submenu-->
   <p>
@@ -38,24 +37,87 @@
     <a class="btn btn-secondary" href="{% url 'predictions:prediction_list' %}">All Predictions</a>
   </p>
 
-  <!-- Plotly Dash Visualization of BCR-ABL/ABL diagnostics-->
-  <h3>Current clinical data</h3>
-  {% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
+    <!-- Content Row -->
 
-  <!-- Latest model predictions -->
-  <h3>Latest model predictions</h3>
+    <div class="row">
+        <!-- Area Chart -->
+        <div class="col-xl-12 col-lg-9">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold">Latest clinical data</h6>
+                    
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                      {% plotly_app name="CML_BCR-ABL-Ratio"  initial_arguments=dash_context  ratio=0.5 %}
+                </div>
+            </div>
+        </div>
+    </div>
 
-  {% if dash_context_project1 != None %}
-    {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1 ratio=0.5 %}
-  {% else %}
-    No prediction for project "CML Recurrance probability" available.
-  {% endif %}
-  <hr />
-  {% if dash_context_project2 != None %}
-    {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2 ratio=0.6 %}
-  {% else %}
-    No prediction for project "Model-predict immune classification" available.
-  {% endif %}
+    <!-- Content Row -->
+    <div class="row">
+      <div class="col-xl-12 col-lg-9">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 >Latest prediction from model: "Recurrence probability after stopping V1"</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+              {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1_simple ratio=0.45 %}
+              <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel1Expert" role="button" aria-expanded="false" aria-controls="collapseModel1Expert">
+                  Show/Hide Expert View
+                </a>
+              </p>
+              <div class="collapse" id="collapseModel1Expert">
+                <div class="card-body">
+                  {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1_expert  ratio=0.45%}
+                </div>
+              </div> 
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+      <div class="col-xl-12 col-lg-9">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold">Latest prediction from model: "CML Recurrance phase portrait (32 fits)"</h6>
+              <div class="dropdown no-arrow">
+                  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                  </div>
+              </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+              {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2_simple ratio=0.5 %}
+              <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel2Expert" role="button" aria-expanded="false" aria-controls="collapseModel2Expert">
+                  Show/Hide Expert View
+                </a>
+              </p>
+              <div class="collapse" id="collapseModel2Expert">
+                  {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2_expert  ratio=0.6%}
+              </div> 
+            </div>
+        </div>
+      </div>
+    </div>
+
 {% endif %}
 </div>
 {% endblock content %}

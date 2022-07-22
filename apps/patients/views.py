@@ -153,17 +153,21 @@ def patient_mdat_view(request):
     #domain = request.session['domain']
 
     # Are prediction available? If yes, then plot last prediction
-    dash_context_project1 = None
+    dash_context_project1_simple = None
+    dash_context_project1_expert = None
     if Prediction.objects.filter(targetId = targetId, project=1, status = 1).exists():
         l = Prediction.objects.filter(targetId = targetId, project=1, status = 1).last()
         prediction_id = l.id
-        dash_context_project1 = {"prediction_id": {"value": prediction_id}}
+        dash_context_project1_simple = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "simple"}}
+        dash_context_project1_expert = {"prediction_id": {"value": prediction_id},"dropdown": {"value": "expert"}}
 
-    dash_context_project2 = None
+    dash_context_project2_simple = None
+    dash_context_project2_expert = None
     if Prediction.objects.filter(targetId = targetId, project=5, status = 1).exists():
         l = Prediction.objects.filter(targetId = targetId, project=5, status = 1).last()
         prediction_id = l.id
-        dash_context_project2 = {"prediction_id": {"value": prediction_id}}
+        dash_context_project2_simple = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "simple"}}
+        dash_context_project2_expert = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "expert"}}
 
     #Otherwise plot bcr-abl/abl data, if bcr-abl/abl values available
     dash_context = None
@@ -175,8 +179,10 @@ def patient_mdat_view(request):
         'targetId': targetId,
         #'domain': domain,
         'dash_context': dash_context,
-        'dash_context_project1': dash_context_project1,
-        'dash_context_project2': dash_context_project2,
+        'dash_context_project1_simple': dash_context_project1_simple,
+        'dash_context_project1_expert': dash_context_project1_expert,
+        'dash_context_project2_simple': dash_context_project2_simple,
+        'dash_context_project2_expert': dash_context_project2_expert,
         })
 
 @has_role_decorator('dept_haematology')
