@@ -20,20 +20,13 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '',
-    },
-    'HaematoOPT': {
-        'NAME': 'HaematoOPT',
-        'ENGINE': 'sql_server.pyodbc',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '1433',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-        },
     }
 }
 
 MOSAIC_HOST = 'http://...'
+
+MAGPIE_URL = 'ip'
+MAGPIE_USER = 'username'
+MAGPIE_PASSWORD = 'password'
 
 WSGI_APPLICATION = 'predictDemo.wsgi.production.application'

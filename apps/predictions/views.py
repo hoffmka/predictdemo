@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.db.models import Max
 #from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -101,9 +102,9 @@ def create_magpie_prediction_recurrence_prob(request):
         write_csv(diag_pivot, csv_file, delimiter=';')
 
     # create magpie job
-    magpie_user = 'katja.hoffmann@tu-dresden.de'
-    magpie_password = 'kh09:L'
-    magpie_url = 'http://10.25.69.145'
+    magpie_url = settings.MAGPIE_URL
+    magpie_user = settings.MAGPIE_USER
+    magpie_password = settings.MAGPIE_PASSWORD
 
     # magpie ids for project and model
     project = Project.objects.get(id = projectId)
@@ -161,9 +162,9 @@ def create_magpie_prediction_modelfit(request):
         write_csv(diag_pivot, csv_file, delimiter=';')
 
     # create magpie job
-    magpie_user = 'katja.hoffmann@tu-dresden.de'
-    magpie_password = 'kh09:L'
-    magpie_url = 'http://10.25.69.145'
+    magpie_url = settings.MAGPIE_URL
+    magpie_user = settings.MAGPIE_USER
+    magpie_password = settings.MAGPIE_PASSWORD
 
     # magpie ids for project and model
     project = Project.objects.get(id = projectId)
@@ -204,9 +205,9 @@ def magpie_download_jobresults(request, prediction_id):
     prediction = Prediction.objects.get(id = prediction_id)
 
     # variable number of args in a list
-    magpie_user = 'katja.hoffmann@tu-dresden.de'
-    magpie_password = 'kh09:L'
-    magpie_url = 'http://10.25.69.145'
+    magpie_url = settings.MAGPIE_URL
+    magpie_user = settings.MAGPIE_USER
+    magpie_password = settings.MAGPIE_PASSWORD
     magpie_project_id = str(prediction.project.magpieProjectId)
     magpie_model_id = str(prediction.project.model.magpieModelId)
     magpie_job_id = str(prediction.magpieJobId)
