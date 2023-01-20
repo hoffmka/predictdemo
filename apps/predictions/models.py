@@ -6,6 +6,8 @@ class Model(models.Model):
     modelName = models.CharField(max_length = 40)
     magpieModelId = models.IntegerField(unique = True)
     active = models.BooleanField(default = True)
+    doi = models.CharField(max_length = 250, blank = True, null = True)
+    description = models.TextField(max_length = 4000, blank = True, null = True)
 
     def __str__(self):
         return '%s' % (self.modelName)
@@ -21,7 +23,8 @@ class Project(models.Model):
     projectName = models.CharField(max_length = 40)
     magpieProjectId = models.IntegerField(unique = True)
     dash = models.ForeignKey(Dash, on_delete = models.CASCADE, blank = True, null = True)
-
+    description = models.TextField(max_length = 4000, blank = True, null = True)
+    
     def __str__(self):
         return '%s' % (self.projectName)
 

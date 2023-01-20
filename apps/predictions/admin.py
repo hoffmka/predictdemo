@@ -3,7 +3,7 @@ from .models import Dash, Model, Project, Prediction
 
 # Register your models here.
 class ModelAdmin(admin.ModelAdmin):
-    list_display = ('modelName', 'magpieModelId', 'active')
+    list_display = ('modelName', 'magpieModelId', 'active', 'doi', 'description')
 admin.site.register(Model, ModelAdmin)
 
 class DashAdmin(admin.ModelAdmin):
@@ -11,7 +11,7 @@ class DashAdmin(admin.ModelAdmin):
 admin.site.register(Dash, DashAdmin)
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('model', 'projectName', 'magpieProjectId', 'dash')
+    list_display = ('model', 'projectName', 'magpieProjectId', 'dash', 'description')
 admin.site.register(Project, ProjectAdmin)
 
 class PredictionAdmin(admin.ModelAdmin):

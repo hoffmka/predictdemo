@@ -67,11 +67,16 @@
             <!-- Card Body -->
             <div class="card-body">
               {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1_simple ratio=0.45 %}
-              <p>
+              <div class="row">
+                <div class="col">
                 <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel1Expert" role="button" aria-expanded="false" aria-controls="collapseModel1Expert">
                   Show/Hide Expert View
                 </a>
-              </p>
+                </div>
+                <div class="col text-right">
+                  Reference to the model: <a href='https://doi.org/10.1182/blood.2019003395'>https://doi.org/10.1182/blood.2019003395<a>
+                </div>
+              </div>
               <div class="collapse" id="collapseModel1Expert">
                 <div class="card-body">
                   {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1_expert  ratio=0.45%}
@@ -105,11 +110,16 @@
             <!-- Card Body -->
             <div class="card-body">
               {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2_simple ratio=0.5 %}
-              <p>
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel2Expert" role="button" aria-expanded="false" aria-controls="collapseModel2Expert">
-                  Show/Hide Expert View
-                </a>
-              </p>
+              <div class="row">
+                <div class="col">
+                  <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel2Expert" role="button" aria-expanded="false" aria-controls="collapseModel2Expert">
+                    Show/Hide Expert View
+                  </a>
+              </div>
+              <div class="col text-right">
+                Reference to the model: <a href='https://10.3389/fonc.2022.1028871'>10.3389/fonc.2022.1028871<a>
+              </div>
+            </div>
               <div class="collapse" id="collapseModel2Expert">
                   {% plotly_app name="CML_PhasePortrait" initial_arguments=dash_context_project2_expert  ratio=0.6%}
               </div> 

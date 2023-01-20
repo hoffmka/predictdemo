@@ -65,11 +65,18 @@
               {% endif %}
               {% if prediction.status == 1 %}
                 {% plotly_app name=prediction.project.dash.appname initial_arguments=dash_value.simple ratio=0.45 %}
-                <p>
-                  <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel1Expert" role="button" aria-expanded="false" aria-controls="collapseModel1Expert">
-                    Show/Hide Expert View
-                  </a>
-                </p>
+                <div class = "row">
+                  <div class = "col">
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel1Expert" role="button" aria-expanded="false" aria-controls="collapseModel1Expert">
+                      Show/Hide Expert View
+                    </a>
+                  </div>
+                  {% if prediction.project.model.doi %}
+                  <div col="col text-right">
+                    Reference to the model: <a href='prediction.project.model.doi'>{{ prediction.project.model.doi }}<a>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="collapse" id="collapseModel1Expert">
                   <div class="card-body">
                     {% plotly_app name=prediction.project.dash.appname initial_arguments=dash_value.expert ratio=0.6%}
