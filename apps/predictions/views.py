@@ -83,7 +83,7 @@ def prediction_list(request):
 def create_magpie_prediction_recurrence_prob(request):
     # new prediction object
     targetId = request.session['targetId']
-    projectId = 1
+    projectId = 6
 
     n = Prediction.objects.create(project_id = projectId, targetId = targetId)
     prediction_id = n.id

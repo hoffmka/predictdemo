@@ -62,11 +62,11 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-              <h6 >Latest prediction from model: "Recurrence probability after stopping V1"</h6>
+              <h6 >Latest prediction from model: "Recurrence probability after stopping V2"</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
-              {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1_simple ratio=0.45 %}
+              {% plotly_app name="CML_RecurranceModel_V2" initial_arguments=dash_context_project1_simple ratio=0.45 %}
               <div class="row">
                 <div class="col">
                 <a class="btn btn-primary" data-toggle="collapse" href="#collapseModel1Expert" role="button" aria-expanded="false" aria-controls="collapseModel1Expert">
@@ -79,7 +79,7 @@
               </div>
               <div class="collapse" id="collapseModel1Expert">
                 <div class="card-body">
-                  {% plotly_app name="CML_RecurranceModel" initial_arguments=dash_context_project1_expert  ratio=0.45%}
+                  {% plotly_app name="CML_RecurranceModel_V2" initial_arguments=dash_context_project1_expert  ratio=0.45%}
                 </div>
               </div> 
             </div>

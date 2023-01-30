@@ -155,8 +155,8 @@ def patient_mdat_view(request):
     # Are prediction available? If yes, then plot last prediction
     dash_context_project1_simple = None
     dash_context_project1_expert = None
-    if Prediction.objects.filter(targetId = targetId, project=1, status = 1).exists():
-        l = Prediction.objects.filter(targetId = targetId, project=1, status = 1).last()
+    if Prediction.objects.filter(targetId = targetId, project=6, status = 1).exists():
+        l = Prediction.objects.filter(targetId = targetId, project=6, status = 1).last()
         prediction_id = l.id
         dash_context_project1_simple = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "simple"}}
         dash_context_project1_expert = {"prediction_id": {"value": prediction_id},"dropdown": {"value": "expert"}}
