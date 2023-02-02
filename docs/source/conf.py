@@ -17,12 +17,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Predict demonstrator'
-copyright = '2020, Katja Hoffmann'
+project = 'Data integration between clinical research and patient care: a framework for context-depending data sharing and in silico predictions'
+copyright = '2023, Katja Hoffmann'
 author = 'Katja Hoffmann'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = '0.0.9'
 
 
 # -- General configuration ---------------------------------------------------
