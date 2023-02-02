@@ -8,20 +8,17 @@
 django==2.2.7
 
 # postgresSQL adapter for python
-psycopg2==2.7.7
-psycopg2-binary==2.7.7
-
-# MS SQL adapter for python
-pyodbc==4.0.27
-django-mssql-backend==2.3.0
+psycopg2==2.8.5
+psycopg2-binary==2.8.5
+pyodbc==4.0.30
 
 # rendering datepicker
-django-bootstrap4==0.0.8
-#django-bootstrap-datepicker-plus==3.0.5
+django-bootstrap4==2.2.0
 
 # Documentation tool with collected packages
 Sphinx==2.3.1
 sphinx-rtd-theme==0.4.3
+Jinja2<3.1
 
 # Serving Sphinx documentation directly from django
 django-docs==0.3.1
@@ -48,7 +45,15 @@ django-pivot==1.8.1
 django-queryset-csv
 
 # Dashboard application framework
-django_plotly_dash==1.1.5
+django-plotly-dash==1.4.2
+dash==2.5.1
+dash-core-components==2.0.0
+dash-html-components==2.0.0
+dash-daq==0.5.0
+dash-renderer==1.6.0
+dash-table==5.0.0
+dash_bootstrap_components==1.2.0
+plotly==5.9.0
 
 # Protecting media files
 django-sendfile2==0.6.0
@@ -65,5 +70,6 @@ channels-redis
 #docker run -p 6379:6379 -d redis
 
 pandas==0.25.3
+numpy==1.19.1
 
 beautifulsoup4==4.8.2
