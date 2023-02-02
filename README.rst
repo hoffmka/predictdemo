@@ -56,7 +56,7 @@ To bootstrap the Django project
 
 * Configure the environment by creating and editing the setting file ``local.py`` or ``production.py``::
     
-    cp predicDemo/settings/local.py.example predicDemo/settings/local.py
+    cp predictDemo/settings/local.py.example predictDemo/settings/local.py
 
 * Applying database schema::
 
@@ -64,7 +64,7 @@ To bootstrap the Django project
 
 * Create a super user with admin privileges::
 
-    python mange.py createsuperuser [--settings=predictDemo.settings.local]
+    python manage.py createsuperuser [--settings=predictDemo.settings.local]
 
 * Synchronize role permissions with specific settings to admin interface::
 
