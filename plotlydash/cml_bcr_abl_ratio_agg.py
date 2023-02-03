@@ -1,9 +1,10 @@
 import dash
-import dash_core_components as dcc
+from dash import dcc
 import dash_daq as daq
-import dash_html_components as html
+from dash import html
 from dash.dependencies import Input, Output
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import F, Max, Q
 from django_pivot.pivot import pivot
@@ -231,11 +232,11 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
                 df_subset2 = df_subset[df_subset['trial']==trial]
                 data_Rinput = df_subset2[['PatID', 'TIME', 'LRATIO', 'lQL','ND']].copy()
                 # create tempfile
-                tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
+                tf = tempfile.NamedTemporaryFile(suffix='.csv', dir=os.path.join(settings.PROJECT_DIR,'media/documents/predictions/'), delete=False)
                 data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
                 args = [tf.name]
                 command = 'Rscript'
-                path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
+                path2script = os.path.join(settings.PROJECT_DIR, "plotlydash/medianCalculations.R")
                 #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
                 cmd = [command, path2script] + args
                 # R caclulation
@@ -251,11 +252,11 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
                 os.remove(tf.name)
         else:
             # create tempfile
-            tf = tempfile.NamedTemporaryFile(suffix='.csv', dir='/usr/local/www/djangoprojects/predictDemo/media/documents/predictions/', delete=False)
+            tf = tempfile.NamedTemporaryFile(suffix='.csv', dir=os.path.join(settings.PROJECT_DIR, 'media/documents/predictions/'), delete=False)
             data_in = data_Rinput.to_csv(tf.name, sep=';', na_rep='Nan',index=False)
             args = [tf.name]
             command = 'Rscript'
-            path2script = "/usr/local/www/djangoprojects/predictDemo/plotlydash/medianCalculations.R"
+            path2script = os.path.join(settings.PROJECT_DIR, "plotlydash/medianCalculations.R")
             #path2script = os.path.join(os.path.dirname(__file__), 'medianCalculations.R')
             cmd = [command, path2script] + args
             # R caclulation
