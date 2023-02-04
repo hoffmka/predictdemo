@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.db.models import Max
+from django.db.models import Max, Q
 #from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -95,8 +95,13 @@ def create_magpie_prediction_recurrence_prob(request):
     treatMedication = TreatMedication.objects.filter(targetId = targetId)
     with open(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_medi.csv'))), 'wb') as csv_file:
         write_csv(treatMedication, csv_file, delimiter=';')
+    
+    diagnostic = Diagnostic.objects.filter(targetId = targetId, diagType_id = 1) # diagType = PCR - BCR-ABL/ABL
 
-    diagnostic = Diagnostic.objects.filter(targetId = targetId, diagType_id = 1) # diagType = PCR - BCR-ABL/ABL 
+    #exclude observations after stop
+    if treatMedication.filter(medScheme='stop').exists():
+        diagnostic = diagnostic.filter(sampleDate__lte = treatMedication.filter(medScheme='stop')[0].dateBegin)
+
     diag_pivot = pivot(diagnostic, ['sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
     with open(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_pcr.csv'))), 'wb') as csv_file:
         write_csv(diag_pivot, csv_file, delimiter=';')
