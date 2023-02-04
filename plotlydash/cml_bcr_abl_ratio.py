@@ -118,13 +118,14 @@ def execute_query(targetId_value):
     if treatment.exists():
         graph_figure['layout']['shapes'] = []
 
+        dfmedi_fulldose = dfmedi[dfmedi['medScheme']=='full dose']
         shape_1 =   {
             'type': 'rect',
             'xref': 'x',
             'yref': 'paper',
-            'x0': dfmedi['dateBegin'].astype(str).tolist()[1],
+            'x0': dfmedi_fulldose['dateBegin'].astype(str).tolist()[0],
             'y0': 0,
-            'x1': dfmedi['dateEnd'].astype(str).tolist()[1],
+            'x1': dfmedi_fulldose['dateEnd'].astype(str).tolist()[0],
             'y1': 1,
             'line': {
                 'color': 'rgb(255, 255, 204)',
@@ -134,13 +135,14 @@ def execute_query(targetId_value):
             'layer': 'below',
         }
 
+        dfmedi_halfdose = dfmedi[dfmedi['medScheme']=='half dose']
         shape_2 =   {
             'type': 'rect',
             'xref': 'x',
             'yref': 'paper',
-            'x0': dfmedi['dateBegin'].astype(str).tolist()[0],
+            'x0': dfmedi_halfdose['dateBegin'].astype(str).tolist()[0],
             'y0': 0,
-            'x1': dfmedi['dateEnd'].astype(str).tolist()[0],
+            'x1': dfmedi_halfdose['dateEnd'].astype(str).tolist()[0],
             'y1': 1,
             'line': {
                 'color': 'rgb(255, 204, 153)',
