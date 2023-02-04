@@ -99,8 +99,7 @@ def create_magpie_prediction_recurrence_prob(request):
     diagnostic = Diagnostic.objects.filter(targetId = targetId, diagType_id = 1) # diagType = PCR - BCR-ABL/ABL
 
     #exclude observations after stop
-    if treatMedication.filter(medScheme='stop').exists():
-        diagnostic = diagnostic.filter(sampleDate__lte = treatMedication.filter(medScheme='stop')[0].dateBegin)
+    diagnostic = diagnostic.filter(sampleDate__lte = treatMedication.filter(medScheme='half dose')[0].dateEnd)
 
     diag_pivot = pivot(diagnostic, ['sampleId', 'sampleDate'], 'parameter_id__parameterName', 'value', aggregation=Max)
     with open(os.path.join(settings.MEDIA_ROOT, os.path.join('documents/predictions', os.path.join(str(prediction_id), 'patdata_pcr.csv'))), 'wb') as csv_file:
