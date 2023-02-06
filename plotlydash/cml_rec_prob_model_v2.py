@@ -240,22 +240,34 @@ def graph_update(prediction_id_value, dropdown_value):
                             font=dict(
                                 size=14,
                                 )
+                        ),
+                        go.layout.Annotation(
+                            text='~'+str(prob_rounded)+'%',
+                            align='center',
+                            showarrow=False,
+                            xref='paper',
+                            yref='paper',
+                            x=0.5,
+                            y=0.3,
+                            font=dict(
+                                size=48,
+                                )
                         )
                     ]
             )
         )
             
         figure.add_trace(go.Indicator(
-            mode="gauge+number",
+            mode="gauge",
             title={'text': 'Recurrence probability after stopping the TKI treatment'},
-            value=prob_rounded,
-            number={"suffix": "%"},
+            value=prob,
+            #number={"prefix": "~", "suffix": "%"},
             delta={"position": "top", "reference": 100},
             domain={'x': [0, 1], 'y': [0.1,1]},
             gauge={'axis':{'range':[None, 100], 'tickfont':{'size':12}},
                 'bar': {'color': bar_col},
                 'steps': [
-                    {'range': [ci_min_rounded, ci_max_rounded], 'color': ci_col}],
+                    {'range': [ci_min, ci_max], 'color': ci_col}],
                 'threshold' : {'line': {'color': "darkred", 'width': 4}, 'thickness': 0.75, 'value': 50}
             }
         ))
