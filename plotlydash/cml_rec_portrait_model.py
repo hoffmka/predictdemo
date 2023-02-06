@@ -130,7 +130,7 @@ def graph_update(prediction_id_value, dropdown_value):
                     'y': df['LRATIO'],
                     'name': 'detected BCR-ABL value',
                     'mode': 'markers',
-                    'marker': {'size': 8, 'color': 'rgb(0, 102, 204)'},
+                    'marker': {'size': 8, 'color': 'rgb(0, 37, 87)'},
                     'text': df['BCR.ABL.ABL'],
                     'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
                         '<b>BCR-ABL/ABL Ratio: %{text}</b><br>' + '<extra></extra>',
@@ -140,7 +140,7 @@ def graph_update(prediction_id_value, dropdown_value):
                     'y': df['lQL'],
                     'name': 'negative measurement; triangle indicates estimated quantification limit',
                     'mode': 'markers',
-                    'marker': {'size': 8, 'symbol': 'triangle-down', 'color': 'rgb(0, 102, 204)'},
+                    'marker': {'size': 8, 'symbol': 'triangle-down', 'color': 'rgb(0, 37, 87)'},
                     'text': df['ABL'],
                     'hovertemplate': '%{xaxis.title.text}: %{x}<br>' + 
                         '<b>BCR-ABL/ABL Ratio: 0</b><br>' +
@@ -219,22 +219,24 @@ def graph_update(prediction_id_value, dropdown_value):
 
         figure['layout']['shapes'] = []
 
+        dfmedi_fulldose = dfmedi[dfmedi['medScheme']=='full dose']
         shape_1 =   {
             'type': 'rect',
             'xref': 'x',
             'yref': 'paper',
-            'x0': dfmedi['dateBegin'].astype(str).tolist()[0],
+            'x0': dfmedi_fulldose['dateBegin'].astype(str).tolist()[0],
             'y0': 0,
-            'x1': dfmedi['dateEnd'].astype(str).tolist()[0],
+            'x1': dfmedi_fulldose['dateEnd'].astype(str).tolist()[0],
             'y1': 1,
             'line': {
-                'color': 'rgb(255, 255, 204)',
+                'color': 'rgb(255, 204, 153)',
                 'width': 1,
             },
-            'fillcolor': 'rgb(255, 255, 204)',
+            'fillcolor': 'rgb(255, 204, 153)',
             'layer': 'below',
         }
 
+        dfmedi_halfdose = dfmedi[dfmedi['medScheme']=='half dose']
         shape_2 =   {
             'type': 'rect',
             'xref': 'x',
@@ -244,10 +246,10 @@ def graph_update(prediction_id_value, dropdown_value):
             'x1': dfmedi['dateEnd'].astype(str).tolist()[1],
             'y1': 1,
             'line': {
-                'color': 'rgb(255, 204, 153)',
+                'color': 'rgba(255, 204, 153, 0.5)',
                 'width': 1,
             },
-            'fillcolor': 'rgb(255, 204, 153)',
+            'fillcolor': 'rgba(255, 204, 153, 0.5)',
             'layer': 'below',
         }
 

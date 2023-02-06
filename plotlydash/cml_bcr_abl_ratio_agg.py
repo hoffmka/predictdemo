@@ -425,7 +425,7 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
             df1['time'] = df1['TIME'].round(0).astype(int)
             df1 = df1.sort_values(by='time')
             #treatment = TreatMedication.objects.filter(targetId=patient)
-            color = 'blue'
+            color = 'rgb(0, 37, 87)'
             # if treatment.exists():
             #     treat = treatment.values('targetId', 'dateBegin', 'dateEnd', 'interval', 'intervalUnit', 'drugName', 'dosage', 'dosageUnit','medScheme')
             #     dfmedi = pd.DataFrame.from_records(data = treat)
@@ -448,7 +448,7 @@ def execute_query(trial_value, user_value, dropdown_value, gender_value, other_t
                 name=patient,
                 mode='lines+markers', 
                 line={'color':color}, 
-                marker= {'size': 12, 'symbol':df1['marker']},
+                marker= {'size': 8, 'symbol':df1['marker'], 'color': 'rgb(0, 37, 87)'},
                 visible=visible
                 #legendgroup=dfmedi['drugName'][0]
                 ))
