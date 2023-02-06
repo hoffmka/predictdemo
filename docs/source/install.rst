@@ -44,4 +44,15 @@ To bootstrap the project
 
     python manage.py runserver [--settings=predictDemo.settings.local]
 
-* Go to Django Admin > Authentication and Authorization > Groups and amend the field ``TTP StudyId``, ``TTP TargetIDType`` to the groups **dept_haematology** and **trial_cml**. The field ``TTP StudyId`` corresponds to the corresponding (domain) consent name implemented in the gICS module of MOSAIC TTP server. The field ``TTP TargetIDType`` corresponds to the corresponding system name implemented in the gPAS module of the MOSAIC TTP server.
+To connect the MOSAIC TTP Server
+================================
+
+* Go to **Django Admin > Authentication and Authorization > Groups** and amend the fields ``TTP StudyId`` and ``TTP TargetIDType`` to the groups **dept_haematology** and **trial_cml**. Both values for each group have to be configured in the dispatcher module of the MOSAIC TTP server. 
+
+This can be done:
+
+
+#. ... by modifying the pre-configured XML entry located in the database ``ttp_dispatcher``, table ``configuration``, column ``configKey`` of the dataset ``dispatcher.config.1``. For each group, a new study with name ``<TTP StudyId>`` must be added and associated with the corresponding consent, represented as domain in the gICS module of the MOSAIC TTP server, and the organizational entity (identity), represented as domain in the EPIX module of the MOSAIC TTP server.
+
+
+#. ... by adding an entry (alias) for each group to the database ``ttp_dispatcher``, table ``alias`` with values ``<TTP TargetIDType>`` as ``alias`` and ``"PSN"`` as ``aliasContext``. The alias ``<TTP TargetIDType>`` corresponds to the domain in the gPAS module of the MOSAIC TTP server. The domain in gPAS has to be named ``system.<TTP TargetIDType>``.
