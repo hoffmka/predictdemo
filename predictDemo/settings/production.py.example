@@ -31,6 +31,9 @@ DATABASES = {
 }
 
 MOSAIC_HOST = 'http://...'
+MOSAIC_APIKEY= 'apikey'
+MOSAIC_USERID = 'userid'
+MOSAIC_USER = 'username'
 
 MAGPIE_URL = 'ip'
 MAGPIE_USER = 'username'

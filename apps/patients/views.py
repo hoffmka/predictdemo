@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.db import connections
 from django.db.models import F, Max
 
+from django.conf import settings
 from django.shortcuts import redirect, render
 
 from django_tables2.config import RequestConfig
@@ -33,7 +34,6 @@ def patients_search(request):
             HTTP request
             """
             from django.core.serializers.json import DjangoJSONEncoder
-            from django.conf import settings
             # request SessionId
 
             ths_host = settings.MOSAIC_HOST
@@ -42,23 +42,23 @@ def patients_search(request):
             headers = {}
             headers['Connection'] = 'keep-alive'
             headers['Content-Type'] = 'application/json; charset=utf-8'
-            headers['apiKey'] = 'admin'
+            headers['apiKey'] = settings.MOSAIC_APIKEY
 
             post_data = {
                 "data": {
                     "fields": {
-                        "user_id": "8989",
-                        "user_name": "TestUser"
+                        "user_id": settings.MOSAIC_USERID,
+                        "user_name": settings.MOSAIC_USER
                     }
                 }
             }
 
             r = requests.post(url, data=json.dumps(post_data), headers=headers)
             response = json.loads(r.text)
-            uri_session = response['uri']
+            sessionId = response['sessionId']
 
             # request TokenId
-            url_token = uri_session+'/tokens'
+            url_token = ths_host+'/ths/rest/sessions/'+sessionId+'/tokens'
 
             # get studyId and targetIdTyp from group "dept_haematology"
             group = Group.objects.get(id=1)
@@ -89,7 +89,6 @@ def patients_search(request):
 
             # request pseudonym by patient (THS function name: F_RPP-T_OK-N_TC)
             url = ths_host + '/ths/rest/psn/requestPsnByPatient/'+ tokenId
-
             post_data = {
                 "patients": [
                     {
@@ -104,22 +103,7 @@ def patients_search(request):
                 }
                 ]
             }
-            '''
-            post_data = {
-                "patients": [
-                    {
-                    "index": "1",
-                    "patient": {
-                        "firstName": "Peter",
-                        "lastName": "Liebknecht",
-                        "gender": "M",
-                        "birthplace": "Berlin",
-                        "birthdate": "1977-03-03"
-                    }
-                }
-                ]
-            }
-            '''
+            
             r = requests.post(url, data=json.dumps(post_data, cls=DjangoJSONEncoder), headers=headers)
             response = json.loads(r.text)
             try:

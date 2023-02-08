@@ -29,10 +29,10 @@ DATABASES = {
     }
 }
 
-MOSAIC_HOST = 'http://...'
-MOSAIC_APIKEY= 'apikey'
-MOSAIC_USERID = 'userid'
-MOSAIC_USER = 'username'
+MOSAIC_HOST = 'https://predict.imb.medizin.tu-dresden.de/mosaic'
+MOSAIC_APIKEY= 'admin'
+MOSAIC_USERID = '8989'
+MOSAIC_USER = 'TestUser'
 
 MAGPIE_URL = 'ip'
 MAGPIE_USER = 'username'
