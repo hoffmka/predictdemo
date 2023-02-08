@@ -20,7 +20,7 @@ class Dash(models.Model):
 
 class Project(models.Model):
     model = models.ForeignKey(Model, on_delete = models.CASCADE) 
-    projectName = models.CharField(max_length = 40)
+    projectName = models.CharField(max_length = 200)
     magpieProjectId = models.IntegerField(unique = True)
     dash = models.ForeignKey(Dash, on_delete = models.CASCADE, blank = True, null = True)
     description = models.TextField(max_length = 4000, blank = True, null = True)
