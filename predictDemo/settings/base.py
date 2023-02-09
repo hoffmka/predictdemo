@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.patients',
     'apps.predictions',
+    'apps.rest',
     'apps.trials',
     'apps.dbviews', # Standard and user defined views
 
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'django_sendfile',# protecting media files
     'django_tables2', # Django tables with filtering and order feature by default
     'docs',
+    'rest_framework',
 
     # django apps
     'django.contrib.admin',

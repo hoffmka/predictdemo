@@ -7,6 +7,10 @@
 # Django
 django==2.2.7
 
+# Django Rest Framework
+djangorestframework==3.13.1
+markdown==3.4.1
+
 # postgresSQL adapter for python
 psycopg2==2.8.5
 psycopg2-binary==2.8.5
