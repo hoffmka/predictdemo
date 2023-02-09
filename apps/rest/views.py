@@ -17,8 +17,7 @@ import requests
 
 from .. predictions.models import *
 
-class PredictionView(HasRoleMixin, APIView):
-    allowed_roles = 'dept_haematology'
+class PredictionView(APIView):
 
     @staticmethod
     def _requestPSN(group, domain, localName, localIdentifier):

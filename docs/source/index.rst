@@ -11,4 +11,5 @@ Welcome to the demo server documentation!
    
    readme
    install
+   rest
 

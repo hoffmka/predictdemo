@@ -217,7 +217,7 @@ DOCS_ROOT = os.path.join(BASE_DIR, '../docs/build/html')
 #login_required - docs are visible only to authenticated users
 #staff - docs are visible only to staff users (user.is_staff == True)
 #superuser - docs are visible only to superusers (user.is_superuser == True)
-DOCS_ACCESS = 'login_required'
+#DOCS_ACCESS = 'login_required'
 
 SENDFILE_BACKEND = "django_sendfile.backends.xsendfile"
 SENDFILE_URL = MEDIA_URL
