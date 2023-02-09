@@ -43,11 +43,14 @@
 
                 <dt class="col-sm-3">Created at:</dt>
                 <dd class="col-sm-9">{{ object.createdAt}}</dd>
+
+                <dt class="col-sm-3">Reference to the model:</dt>
+                <dd class="col-sm-9"><a href='prediction.project.model.doi'>{{ prediction.project.model.doi }}<a></dd>
             </dl>
         
         </diV>
     </div>
-    <a href= "{% url 'predictions:magpie_download_jobresults' object.id %}">Get results</a>
-{{dash_app}}
-{% plotly_app name=dash_app initial_arguments=dash_context ratio=1 %}
+     
+    {% plotly_app name=dash_app initial_arguments=dash_context_simple ratio=0.5 %}
+    {% plotly_app name=dash_app initial_arguments=dash_context_expert ratio=0.6 %}
 {% endblock %}

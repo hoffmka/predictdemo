@@ -50,8 +50,10 @@ class PredictionDetailView(DetailView):
         prediction = Prediction.objects.get(id = prediction_id)
         context['dash_app'] = prediction.project.dash.appname
         # initial value
-        dash_context = {"prediction_id": {"value": prediction_id}}
-        context['dash_context'] = dash_context
+        dash_context_simple = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "simple"}}
+        dash_context_expert = {"prediction_id": {"value": prediction_id}, "dropdown": {"value": "expert"}}
+        context['dash_context_simple'] = dash_context_simple
+        context['dash_context_expert'] = dash_context_expert
         return context
 
 @login_required
