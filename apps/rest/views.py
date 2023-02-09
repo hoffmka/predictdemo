@@ -106,7 +106,7 @@ class PredictionView(HasRoleMixin, APIView):
                 prediction_targetId = ttp_response['patients'][0]['targetId']
 
                 #Query predictions for targetId
-                predictions = Prediction.objects.all().filter(targetId=prediction_targetId, status=1).annotate(url=Value("placeholder", output_field=CharField()))
+                predictions = Prediction.objects.all().filter(targetId=prediction_targetId, status=1).annotate(url=Value("placeholder", output_field=CharField())).order_by('-id')
                 # get host
                 host = request.META['HTTP_HOST']
                 # get prefix
