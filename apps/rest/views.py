@@ -109,9 +109,13 @@ class PredictionView(HasRoleMixin, APIView):
                 predictions = Prediction.objects.all().filter(targetId=prediction_targetId).annotate(url=Value("placeholder", output_field=CharField()))
                 # get host
                 host = request.META['HTTP_HOST']
-                http_s = request.META['HTTP_REFERER']
+                # get prefix
+                if (request.META['SERVER_PORT']==443):
+                    prefix = "https://"
+                else:
+                    prefix = "http://"
                 for prediction in predictions:
-                    prediction.url = http_s+"://"+host+reverse('predictions:prediction_detail', args=(prediction.id,))
+                    prediction.url = prefix+host+reverse('predictions:prediction_detail', args=(prediction.id,))
 
                 serializer=PredictionSerializer(predictions, many=True)
                 #return Response(host)
