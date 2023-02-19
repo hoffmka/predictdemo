@@ -70,6 +70,8 @@ def graph_update(prediction_id_value, dropdown_value):
     df.loc[df['det'] == 'detected value', 'lQL'] = None
     df.loc[df['det'] == 'value below detection limit', 'LRATIO'] = None
 
+    df.loc[df['BCR.ABL.ABL'] == 0, 'lql'] = np.log10(3 / df.loc[df['BCR.ABL.ABL'] == 0, 'ABL'] * 100)
+
     # Updating time for therapy
     dfmedi = dfmedi.sort_values(by='dateBegin')
     dfmedi.dateEnd = pd.to_datetime(dfmedi.dateEnd)
@@ -137,7 +139,7 @@ def graph_update(prediction_id_value, dropdown_value):
                 },
                 {
                     'x': df['sampleDate'],
-                    'y': df['lQL'],
+                    'y': df['lql'],
                     'name': 'negative measurement; triangle indicates estimated quantification limit',
                     'mode': 'markers',
                     'marker': {'size': 8, 'symbol': 'triangle-down', 'color': 'rgb(0, 37, 87)'},
